@@ -47,72 +47,82 @@ export default function Sidebar({ params, setParams, collapsed, onClose, onCalcu
           onClick={onClose}
         />
       )}
-      <aside className={`
-        ${collapsed ? 'w-0' : 'w-72 sm:w-80'} 
-        bg-endfield-dark/95 md:bg-endfield-dark/80 
-        border-r border-endfield-gray-light 
-        overflow-hidden flex flex-col shrink-0 
-        transition-all duration-300
-        fixed md:relative inset-y-0 left-0 z-30 md:z-10
-        ${collapsed ? '-translate-x-full md:translate-x-0' : 'translate-x-0'}
-      `}>
+      <aside 
+        className={`
+          ${collapsed ? 'w-0' : 'w-72 sm:w-80'} 
+          bg-endfield-dark/95 md:bg-endfield-dark/80 
+          border-r border-endfield-gray-light 
+          overflow-hidden flex flex-col shrink-0 
+          transition-all duration-300
+          fixed md:relative inset-y-0 left-0 z-30 md:z-10
+          ${collapsed ? '-translate-x-full md:translate-x-0' : 'translate-x-0'}
+        `}
+        role="complementary"
+        aria-label="参数配置面板"
+        aria-hidden={collapsed}
+      >
         {/* 移动端关闭按钮 */}
         <div className={`md:hidden shrink-0 p-3 border-b border-endfield-gray-light flex items-center justify-between ${collapsed ? 'hidden' : ''}`}>
           <span className="text-sm font-bold text-endfield-text-light">{t('constraints')}</span>
           <button 
             onClick={onClose}
             className="w-8 h-8 flex items-center justify-center text-endfield-text hover:text-endfield-text-light"
+            aria-label="关闭侧边栏"
           >
-            <span className="material-symbols-outlined">close</span>
+            <span className="material-symbols-outlined" aria-hidden="true">close</span>
           </button>
         </div>
         
         {/* Sidebar Content */}
         <div className={`flex-1 overflow-y-auto p-4 sm:p-6 flex flex-col gap-4 sm:gap-6 ${collapsed ? 'hidden' : ''}`}>
       {/* 目标发电量 */}
-      <div className="space-y-4">
-        <h3 className="text-sm font-bold text-endfield-text uppercase tracking-widest flex items-center gap-2">
-          <span className="material-symbols-outlined text-base text-endfield-yellow">target</span>
+      <fieldset className="space-y-4 border-none p-0 m-0">
+        <legend className="text-sm font-bold text-endfield-text uppercase tracking-widest flex items-center gap-2 p-0">
+          <span className="material-symbols-outlined text-base text-endfield-yellow" aria-hidden="true">target</span>
           {t('targetPower')}
-        </h3>
+        </legend>
         <div className="space-y-2">
           <div className="flex justify-between">
-            <label className="text-sm text-endfield-text">{t('power')} (w)</label>
-            <span className="text-sm text-endfield-yellow">{params.targetPower}</span>
+            <label htmlFor="target-power-input" className="text-sm text-endfield-text">{t('power')} (w)</label>
+            <span className="text-sm text-endfield-yellow" aria-live="polite">{params.targetPower}</span>
           </div>
           <div className="flex gap-2">
             <input
+              id="target-power-input"
               type="number"
               value={params.targetPower}
               onChange={(e) => handleChange('targetPower', parseInt(e.target.value) || 0)}
               onKeyDown={(e) => e.key === 'Enter' && onCalculate()}
               className="flex-1 bg-endfield-gray border border-endfield-gray-light px-3 py-2 text-sm text-endfield-text-light focus:border-endfield-yellow focus:outline-none"
+              aria-describedby="target-power-desc"
             />
             <button
               onClick={onRandomCalculate}
               className="w-10 h-10 bg-endfield-gray border border-endfield-gray-light hover:border-endfield-yellow transition-colors flex items-center justify-center text-endfield-text-light hover:text-endfield-yellow cursor-pointer shrink-0"
               title={t('random')}
+              aria-label={t('random')}
             >
-              <span className="material-symbols-outlined text-base">casino</span>
+              <span className="material-symbols-outlined text-base" aria-hidden="true">casino</span>
             </button>
           </div>
         </div>
-      </div>
+      </fieldset>
 
       <div className="h-px bg-endfield-gray-light"></div>
 
       {/* 约束条件 */}
-      <div className="space-y-4">
-        <h3 className="text-sm font-bold text-endfield-text uppercase tracking-widest flex items-center gap-2">
-          <span className="material-symbols-outlined text-base text-endfield-yellow">tune</span>
+      <fieldset className="space-y-4 border-none p-0 m-0">
+        <legend className="text-sm font-bold text-endfield-text uppercase tracking-widest flex items-center gap-2 p-0">
+          <span className="material-symbols-outlined text-base text-endfield-yellow" aria-hidden="true">tune</span>
           {t('constraints')}
-        </h3>
+        </legend>
 
         <div className="space-y-2">
           <div className="flex justify-between items-center">
-            <label className="text-sm text-endfield-text">{t('minBatteryPercent')}</label>
+            <label htmlFor="min-battery-input" className="text-sm text-endfield-text">{t('minBatteryPercent')}</label>
             <div className="flex items-center">
               <input
+                id="min-battery-input"
                 type="number"
                 min="0"
                 max="100"
@@ -123,6 +133,9 @@ export default function Sidebar({ params, setParams, collapsed, onClose, onCalcu
                 }}
                 onKeyDown={(e) => e.key === 'Enter' && onCalculate()}
                 className="w-12 bg-transparent border-b border-endfield-gray-light px-1 py-0.5 text-sm text-endfield-text-light text-right focus:border-endfield-yellow focus:outline-none"
+                aria-valuemin={0}
+                aria-valuemax={100}
+                aria-valuenow={params.minBatteryPercent}
               />
               <span className="text-sm text-endfield-text-light">%</span>
             </div>
@@ -134,15 +147,20 @@ export default function Sidebar({ params, setParams, collapsed, onClose, onCalcu
             value={params.minBatteryPercent}
             onChange={(e) => handleChange('minBatteryPercent', parseInt(e.target.value))}
             className="w-full cursor-pointer"
+            aria-label={t('minBatteryPercent')}
+            aria-valuemin={0}
+            aria-valuemax={100}
+            aria-valuenow={params.minBatteryPercent}
           />
         </div>
 
         <div className="space-y-2">
           <div className="flex justify-between">
-            <label className="text-sm text-endfield-text">{t('maxWaste')}</label>
-            <span className="text-sm text-endfield-text-light">{params.maxWaste} w</span>
+            <label htmlFor="max-waste-input" className="text-sm text-endfield-text">{t('maxWaste')}</label>
+            <span className="text-sm text-endfield-text-light" aria-live="polite">{params.maxWaste} w</span>
           </div>
           <input
+            id="max-waste-input"
             type="number"
             value={params.maxWaste}
             onChange={(e) => handleChange('maxWaste', parseInt(e.target.value) || 0)}
@@ -150,20 +168,20 @@ export default function Sidebar({ params, setParams, collapsed, onClose, onCalcu
             className="w-full bg-endfield-gray border border-endfield-gray-light px-3 py-2 text-sm text-endfield-text-light focus:border-endfield-yellow focus:outline-none"
           />
         </div>
-      </div>
+      </fieldset>
 
       <div className="h-px bg-endfield-gray-light"></div>
 
       {/* 燃料选择 */}
-      <div className="space-y-4">
-        <h3 className="text-sm font-bold text-endfield-text uppercase tracking-widest flex items-center gap-2">
-          <span className="material-symbols-outlined text-base text-endfield-yellow">local_gas_station</span>
+      <fieldset className="space-y-4 border-none p-0 m-0">
+        <legend className="text-sm font-bold text-endfield-text uppercase tracking-widest flex items-center gap-2 p-0">
+          <span className="material-symbols-outlined text-base text-endfield-yellow" aria-hidden="true">local_gas_station</span>
           {t('fuelConfig')}
-        </h3>
+        </legend>
 
         {/* 主燃料 */}
         <div className="space-y-2">
-          <label className="text-sm text-endfield-text">{t('primaryFuel')}</label>
+          <label id="primary-fuel-label" className="text-sm text-endfield-text">{t('primaryFuel')}</label>
           <div className="relative" ref={primaryFuelRef}>
             <button
               onClick={() => {
@@ -171,6 +189,9 @@ export default function Sidebar({ params, setParams, collapsed, onClose, onCalcu
                 setShowSecondaryFuelMenu(false);
               }}
               className="w-full h-10 bg-endfield-gray border border-endfield-gray-light hover:border-endfield-yellow transition-colors flex items-center justify-between px-3 text-sm text-endfield-text-light cursor-pointer"
+              aria-expanded={showPrimaryFuelMenu}
+              aria-haspopup="listbox"
+              aria-labelledby="primary-fuel-label"
             >
               <span className="flex items-center gap-2">
                 {(() => {
@@ -178,34 +199,35 @@ export default function Sidebar({ params, setParams, collapsed, onClose, onCalcu
                   if (!fuel) return '';
                   return (
                     <>
-                      {fuel.image && <img src={fuel.image} alt={getFuelName(fuel)} className="w-6 h-6 object-contain" />}
+                      {fuel.image && <img src={fuel.image} alt="" className="w-6 h-6 object-contain" aria-hidden="true" />}
                       <span>{getFuelName(fuel)}</span>
                     </>
                   );
                 })()}
               </span>
-              <span className="material-symbols-outlined text-base">
+              <span className="material-symbols-outlined text-base" aria-hidden="true">
                 {showPrimaryFuelMenu ? 'expand_less' : 'expand_more'}
               </span>
             </button>
 
             {showPrimaryFuelMenu && (
-              <div className="absolute left-0 right-0 top-full mt-1 bg-endfield-gray border border-endfield-gray-light z-50 max-h-60 overflow-y-auto">
+              <ul className="absolute left-0 right-0 top-full mt-1 bg-endfield-gray border border-endfield-gray-light z-50 max-h-60 overflow-y-auto list-none p-0 m-0" role="listbox" aria-labelledby="primary-fuel-label">
                 {FUEL_OPTIONS.map((fuel) => (
-                  <button
-                    key={fuel.id}
-                    onClick={() => {
-                      handleChange('primaryFuelId', fuel.id);
-                      setShowPrimaryFuelMenu(false);
-                    }}
-                    className={`w-full px-3 py-2 text-left text-sm hover:bg-endfield-gray-light transition-colors cursor-pointer flex items-center gap-2
-                      ${params.primaryFuelId === fuel.id ? 'text-endfield-yellow' : 'text-endfield-text-light'}`}
-                  >
-                    {fuel.image && <img src={fuel.image} alt={getFuelName(fuel)} className="w-6 h-6 object-contain" />}
-                    <span>{getFuelName(fuel)}</span>
-                  </button>
+                  <li key={fuel.id} role="option" aria-selected={params.primaryFuelId === fuel.id}>
+                    <button
+                      onClick={() => {
+                        handleChange('primaryFuelId', fuel.id);
+                        setShowPrimaryFuelMenu(false);
+                      }}
+                      className={`w-full px-3 py-2 text-left text-sm hover:bg-endfield-gray-light transition-colors cursor-pointer flex items-center gap-2
+                        ${params.primaryFuelId === fuel.id ? 'text-endfield-yellow' : 'text-endfield-text-light'}`}
+                    >
+                      {fuel.image && <img src={fuel.image} alt="" className="w-6 h-6 object-contain" aria-hidden="true" />}
+                      <span>{getFuelName(fuel)}</span>
+                    </button>
+                  </li>
                 ))}
-              </div>
+              </ul>
             )}
           </div>
           {(() => {
@@ -221,7 +243,7 @@ export default function Sidebar({ params, setParams, collapsed, onClose, onCalcu
 
         {/* 副燃料 */}
         <div className="space-y-2">
-          <label className="text-sm text-endfield-text">{t('secondaryFuel')}</label>
+          <label id="secondary-fuel-label" className="text-sm text-endfield-text">{t('secondaryFuel')}</label>
           <div className="relative" ref={secondaryFuelRef}>
             <button
               onClick={() => {
@@ -229,6 +251,9 @@ export default function Sidebar({ params, setParams, collapsed, onClose, onCalcu
                 setShowPrimaryFuelMenu(false);
               }}
               className="w-full h-10 bg-endfield-gray border border-endfield-gray-light hover:border-endfield-yellow transition-colors flex items-center justify-between px-3 text-sm text-endfield-text-light cursor-pointer"
+              aria-expanded={showSecondaryFuelMenu}
+              aria-haspopup="listbox"
+              aria-labelledby="secondary-fuel-label"
             >
               <span className="flex items-center gap-2">
                 {(() => {
@@ -236,34 +261,35 @@ export default function Sidebar({ params, setParams, collapsed, onClose, onCalcu
                   if (!fuel) return '';
                   return (
                     <>
-                      {fuel.image && <img src={fuel.image} alt={getFuelName(fuel)} className="w-6 h-6 object-contain" />}
+                      {fuel.image && <img src={fuel.image} alt="" className="w-6 h-6 object-contain" aria-hidden="true" />}
                       <span>{getFuelName(fuel)}</span>
                     </>
                   );
                 })()}
               </span>
-              <span className="material-symbols-outlined text-base">
+              <span className="material-symbols-outlined text-base" aria-hidden="true">
                 {showSecondaryFuelMenu ? 'expand_less' : 'expand_more'}
               </span>
             </button>
 
             {showSecondaryFuelMenu && (
-              <div className="absolute left-0 right-0 top-full mt-1 bg-endfield-gray border border-endfield-gray-light z-50 max-h-60 overflow-y-auto">
+              <ul className="absolute left-0 right-0 top-full mt-1 bg-endfield-gray border border-endfield-gray-light z-50 max-h-60 overflow-y-auto list-none p-0 m-0" role="listbox" aria-labelledby="secondary-fuel-label">
                 {SECONDARY_FUEL_OPTIONS.map((fuel) => (
-                  <button
-                    key={fuel.id}
-                    onClick={() => {
-                      handleChange('secondaryFuelId', fuel.id);
-                      setShowSecondaryFuelMenu(false);
-                    }}
-                    className={`w-full px-3 py-2 text-left text-sm hover:bg-endfield-gray-light transition-colors cursor-pointer flex items-center gap-2
-                      ${params.secondaryFuelId === fuel.id ? 'text-endfield-yellow' : 'text-endfield-text-light'}`}
-                  >
-                    {fuel.image && <img src={fuel.image} alt={getFuelName(fuel)} className="w-6 h-6 object-contain" />}
-                    <span>{getFuelName(fuel)}</span>
-                  </button>
+                  <li key={fuel.id} role="option" aria-selected={params.secondaryFuelId === fuel.id}>
+                    <button
+                      onClick={() => {
+                        handleChange('secondaryFuelId', fuel.id);
+                        setShowSecondaryFuelMenu(false);
+                      }}
+                      className={`w-full px-3 py-2 text-left text-sm hover:bg-endfield-gray-light transition-colors cursor-pointer flex items-center gap-2
+                        ${params.secondaryFuelId === fuel.id ? 'text-endfield-yellow' : 'text-endfield-text-light'}`}
+                    >
+                      {fuel.image && <img src={fuel.image} alt="" className="w-6 h-6 object-contain" aria-hidden="true" />}
+                      <span>{getFuelName(fuel)}</span>
+                    </button>
+                  </li>
                 ))}
-              </div>
+              </ul>
             )}
           </div>
           {(() => {
@@ -278,7 +304,7 @@ export default function Sidebar({ params, setParams, collapsed, onClose, onCalcu
             );
           })()}
         </div>
-      </div>
+      </fieldset>
 
       <div className="h-px bg-endfield-gray-light"></div>
 

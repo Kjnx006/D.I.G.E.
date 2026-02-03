@@ -1,8 +1,11 @@
 export const locales = {
   en: {
+    // SEO
+    seoTitle: 'D.I.G.E. - Dijiang Integrated Generator Efficiency',
+    seoDescription: 'D.I.G.E. is a thermal pool optimization calculator designed for Arknights: Endfield. Automatically calculate optimal power generation solutions with multiple fuel configurations and oscillating strategies.',
+    
     // Header
     appTitle: 'D.I.G.E.',
-    appVersion: 'v1.1',
     appSubtitle: 'Dijiang Integrated Generator Efficiency',
     calculate: 'CALCULATE',
     
@@ -121,9 +124,12 @@ export const locales = {
   },
   
   zh: {
+    // SEO
+    seoTitle: 'D.I.G.E. - 帝江号严选精细化集成工业系统能源生产及存储管理系统设计器',
+    seoDescription: 'D.I.G.E. 是一款专为明日方舟：终末地设计的热能池优化计算器。自动计算最优发电方案，支持多种燃料配置、震荡发电策略，帮助您高效管理能源生产与存储。',
+    
     // Header
     appTitle: 'D.I.G.E.',
-    appVersion: 'v1.1',
     appSubtitle: '帝江号严选精细化集成工业系统能源生产及存储管理系统设计器',
     calculate: '计算',
     
@@ -242,9 +248,12 @@ export const locales = {
   },
   
   ja: {
+    // SEO
+    seoTitle: 'D.I.G.E. - 帝江号厳選精密統合工業システムエネルギー生産貯蔵管理システム設計器',
+    seoDescription: 'D.I.G.E.はアークナイツ：エンドフィールド向けの熱エネルギープール最適化計算機です。最適な発電方案を自動計算し、複数の燃料設定と振動発電戦略をサポートします。',
+    
     // Header
     appTitle: 'D.I.G.E.',
-    appVersion: 'v1.1',
     appSubtitle: '帝江号厳選精密統合工業システムエネルギー生産貯蔵管理システム設計器',
     calculate: '計算',
     
@@ -363,9 +372,12 @@ export const locales = {
   },
   
   ko: {
+    // SEO
+    seoTitle: 'D.I.G.E. - 제강호엄선정밀통합산업시스템에너지생산저장관리시스템설계기',
+    seoDescription: 'D.I.G.E.는 명일방주: 엔드필드를 위한 열에너지 풀 최적화 계산기입니다. 다양한 연료 구성과 진동 발전 전략으로 최적의 발전 방안을 자동으로 계산합니다.',
+    
     // Header
     appTitle: 'D.I.G.E.',
-    appVersion: 'v1.1',
     appSubtitle: '제강호엄선정밀통합산업시스템에너지생산저장관리시스템설계기',
     calculate: '계산',
     

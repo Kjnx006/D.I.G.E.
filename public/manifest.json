@@ -1,0 +1,21 @@
+{
+  "name": "D.I.G.E. - 帝江号严选精细化集成工业系统能源生产及存储管理系统设计器",
+  "short_name": "D.I.G.E.",
+  "description": "专为明日方舟：终末地设计的热能池优化计算器",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#1a1a2e",
+  "theme_color": "#1a1a2e",
+  "orientation": "any",
+  "icons": [
+    {
+      "src": "/favicon.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["games", "utilities"],
+  "lang": "zh-CN",
+  "dir": "ltr"
+}

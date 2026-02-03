@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  
+  <!-- Main page - Chinese (Default) -->
+  <url>
+    <loc>https://dige.aunly.cn/</loc>
+    <lastmod>2026-02-03</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://dige.aunly.cn/?lang=zh"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dige.aunly.cn/?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://dige.aunly.cn/?lang=ja"/>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://dige.aunly.cn/?lang=ko"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://dige.aunly.cn/"/>
+  </url>
+  
+  <!-- English version -->
+  <url>
+    <loc>https://dige.aunly.cn/?lang=en</loc>
+    <lastmod>2026-02-03</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://dige.aunly.cn/?lang=zh"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dige.aunly.cn/?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://dige.aunly.cn/?lang=ja"/>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://dige.aunly.cn/?lang=ko"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://dige.aunly.cn/"/>
+  </url>
+  
+  <!-- Japanese version -->
+  <url>
+    <loc>https://dige.aunly.cn/?lang=ja</loc>
+    <lastmod>2026-02-03</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://dige.aunly.cn/?lang=zh"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dige.aunly.cn/?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://dige.aunly.cn/?lang=ja"/>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://dige.aunly.cn/?lang=ko"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://dige.aunly.cn/"/>
+  </url>
+  
+  <!-- Korean version -->
+  <url>
+    <loc>https://dige.aunly.cn/?lang=ko</loc>
+    <lastmod>2026-02-03</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://dige.aunly.cn/?lang=zh"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dige.aunly.cn/?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://dige.aunly.cn/?lang=ja"/>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://dige.aunly.cn/?lang=ko"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://dige.aunly.cn/"/>
+  </url>
+
+</urlset>

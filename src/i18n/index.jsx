@@ -3,9 +3,66 @@ import { locales, languageOptions } from './locales';
 
 const I18nContext = createContext(null);
 
+// 语言代码到 HTML lang 属性的映射
+const langCodeMap = {
+  zh: 'zh-CN',
+  en: 'en',
+  ja: 'ja',
+  ko: 'ko'
+};
+
+// 从 URL 参数获取语言
+function getLanguageFromURL() {
+  const params = new URLSearchParams(window.location.search);
+  const lang = params.get('lang');
+  if (lang && locales[lang]) {
+    return lang;
+  }
+  return null;
+}
+
+// 更新 URL 参数（不刷新页面）
+function updateURLLanguage(lang) {
+  const url = new URL(window.location.href);
+  url.searchParams.set('lang', lang);
+  window.history.replaceState({}, '', url.toString());
+}
+
+// 更新 SEO 相关的 meta 标签
+function updateSEOMeta(locale) {
+  const t = locales[locale] || locales.en;
+  const title = t.seoTitle || 'D.I.G.E.';
+  const description = t.seoDescription || '';
+  const htmlLang = langCodeMap[locale] || locale;
+  
+  // 更新 document.title
+  document.title = title;
+  
+  // 更新 meta 标签的辅助函数
+  const updateMeta = (selector, content) => {
+    const el = document.querySelector(selector);
+    if (el) el.setAttribute('content', content);
+  };
+  
+  // 更新各种 meta 标签
+  updateMeta('meta[name="title"]', title);
+  updateMeta('meta[name="description"]', description);
+  updateMeta('meta[property="og:title"]', title);
+  updateMeta('meta[property="og:description"]', description);
+  updateMeta('meta[property="og:locale"]', htmlLang.replace('-', '_'));
+  updateMeta('meta[name="twitter:title"]', title);
+  updateMeta('meta[name="twitter:description"]', description);
+}
+
 export function I18nProvider({ children }) {
   const [locale, setLocale] = useState(() => {
-    // Try to get saved language or detect from browser
+    // 优先级：1. URL 参数 > 2. localStorage > 3. 浏览器语言 > 4. 默认英语
+    const urlLang = getLanguageFromURL();
+    if (urlLang) {
+      localStorage.setItem('language', urlLang);
+      return urlLang;
+    }
+    
     const saved = localStorage.getItem('language');
     if (saved && locales[saved]) return saved;
     
@@ -15,9 +72,26 @@ export function I18nProvider({ children }) {
     return 'en';
   });
 
-  // 更新 HTML lang 属性
+  // 更新 HTML lang 属性、URL 参数和 SEO meta 标签
   useEffect(() => {
-    document.documentElement.lang = locale;
+    const htmlLang = langCodeMap[locale] || locale;
+    document.documentElement.lang = htmlLang;
+    updateURLLanguage(locale);
+    updateSEOMeta(locale);
+  }, [locale]);
+
+  // 监听 URL 变化（浏览器前进/后退）
+  useEffect(() => {
+    const handlePopState = () => {
+      const urlLang = getLanguageFromURL();
+      if (urlLang && urlLang !== locale) {
+        setLocale(urlLang);
+        localStorage.setItem('language', urlLang);
+      }
+    };
+    
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
   }, [locale]);
 
   const t = useCallback((key) => {
@@ -28,6 +102,7 @@ export function I18nProvider({ children }) {
     if (locales[newLocale]) {
       setLocale(newLocale);
       localStorage.setItem('language', newLocale);
+      updateURLLanguage(newLocale);
     }
   }, []);
 

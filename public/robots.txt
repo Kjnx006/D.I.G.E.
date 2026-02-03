@@ -1,0 +1,39 @@
+# D.I.G.E. - Robots.txt
+# https://dige.aunly.cn
+
+# Allow all crawlers
+User-agent: *
+Allow: /
+
+# Sitemap location
+Sitemap: https://dige.aunly.cn/sitemap.xml
+
+# Crawl-delay for polite crawling
+Crawl-delay: 1
+
+# Block unnecessary paths
+Disallow: /node_modules/
+Disallow: /*.json$
+Disallow: /*.map$
+
+# Allow specific file types
+Allow: /*.js$
+Allow: /*.css$
+Allow: /*.png$
+Allow: /*.jpg$
+Allow: /*.svg$
+
+# Google specific
+User-agent: Googlebot
+Allow: /
+Crawl-delay: 0
+
+# Bing specific
+User-agent: Bingbot
+Allow: /
+Crawl-delay: 1
+
+# Baidu specific (important for Chinese audience)
+User-agent: Baiduspider
+Allow: /
+Crawl-delay: 1
