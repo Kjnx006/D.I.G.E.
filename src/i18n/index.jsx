@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useCallback } from 'react';
+import { createContext, useContext, useState, useCallback, useEffect } from 'react';
 import { locales, languageOptions } from './locales';
 
 const I18nContext = createContext(null);
@@ -14,6 +14,11 @@ export function I18nProvider({ children }) {
     
     return 'en';
   });
+
+  // 更新 HTML lang 属性
+  useEffect(() => {
+    document.documentElement.lang = locale;
+  }, [locale]);
 
   const t = useCallback((key) => {
     return locales[locale]?.[key] || locales.en[key] || key;

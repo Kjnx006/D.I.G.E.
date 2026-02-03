@@ -85,6 +85,7 @@ export default function Sidebar({ params, setParams, collapsed, onClose, onCalcu
               type="number"
               value={params.targetPower}
               onChange={(e) => handleChange('targetPower', parseInt(e.target.value) || 0)}
+              onKeyDown={(e) => e.key === 'Enter' && onCalculate()}
               className="flex-1 bg-endfield-gray border border-endfield-gray-light px-3 py-2 text-sm text-endfield-text-light focus:border-endfield-yellow focus:outline-none"
             />
             <button
@@ -120,6 +121,7 @@ export default function Sidebar({ params, setParams, collapsed, onClose, onCalcu
                   const val = Math.min(100, Math.max(0, parseInt(e.target.value) || 0));
                   handleChange('minBatteryPercent', val);
                 }}
+                onKeyDown={(e) => e.key === 'Enter' && onCalculate()}
                 className="w-12 bg-transparent border-b border-endfield-gray-light px-1 py-0.5 text-sm text-endfield-text-light text-right focus:border-endfield-yellow focus:outline-none"
               />
               <span className="text-sm text-endfield-text-light">%</span>
@@ -144,6 +146,7 @@ export default function Sidebar({ params, setParams, collapsed, onClose, onCalcu
             type="number"
             value={params.maxWaste}
             onChange={(e) => handleChange('maxWaste', parseInt(e.target.value) || 0)}
+            onKeyDown={(e) => e.key === 'Enter' && onCalculate()}
             className="w-full bg-endfield-gray border border-endfield-gray-light px-3 py-2 text-sm text-endfield-text-light focus:border-endfield-yellow focus:outline-none"
           />
         </div>

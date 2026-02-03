@@ -13,7 +13,7 @@ const getRandomTargetPower = () => Math.floor(Math.random() * 4500) + 500;
 
 function AppContent({ onOpenAnnouncement }) {
   const [params, setParams] = useState(() => ({
-    targetPower: getRandomTargetPower(),
+    targetPower: 2656,
     minBatteryPercent: 5,
     maxWaste: 30,
     primaryFuelId: 'wulingLow',
