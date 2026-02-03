@@ -195,7 +195,7 @@ export default function SolutionDiagram({ solution }) {
       {/* 震荡发电 - 每个分支可独立拖拽 */}
       {oscillating && oscillating.length > 0 && (
         <div className="border border-endfield-gray-light bg-endfield-gray/30">
-          <div className="flex flex-wrap items-center gap-2 px-3 py-2 border-b border-endfield-gray-light bg-endfield-gray/50">
+          <div className="flex flex-wrap items-center gap-2 p-3 border-b border-endfield-gray-light bg-endfield-gray/50">
             <span className="material-symbols-outlined text-sm text-endfield-yellow">electric_bolt</span>
             <span className="text-sm text-endfield-text uppercase">{t('oscillatingShort')}:</span>
             <span className="text-sm font-bold text-endfield-text-light">{oscillating.length}</span>

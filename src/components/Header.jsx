@@ -145,6 +145,7 @@ export default function Header({ onCalculate, sidebarCollapsed, onToggleSidebar,
           aria-label={t('calculate')}
         >
           <span className="material-symbols-outlined text-base" aria-hidden="true">calculate</span>
+          <span>{t('calculate')}</span>
         </button>
       </div>
     </header>

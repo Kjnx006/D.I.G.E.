@@ -25,6 +25,32 @@ export default function SolutionList({ solutions, selectedIndex, onSelectSolutio
     return fuel.name[locale] || fuel.name.en;
   };
 
+  const getOscillatingSavings = () => {
+    const oscillatingConsumption = selectedSolution?.fuelConsumption?.oscillating;
+    const fuel = oscillatingConsumption?.fuel;
+    const oscillatingBranches = selectedSolution?.oscillating || [];
+
+    if (!fuel || oscillatingBranches.length === 0 || !fuel.power || !fuel.burnTime) {
+      return null;
+    }
+
+    const oscillatingPower = oscillatingBranches.reduce((sum, branch) => sum + branch.power, 0);
+    const neededGens = Math.max(1, Math.ceil(oscillatingPower / fuel.power));
+    const fullBeltPerDay = neededGens * (1 / fuel.burnTime) * 86400;
+    const savedPerDay = fullBeltPerDay - oscillatingConsumption.perDay;
+
+    if (savedPerDay <= 0) {
+      return null;
+    }
+
+    return {
+      savedPerDay,
+      savedPercent: fullBeltPerDay > 0 ? (savedPerDay / fullBeltPerDay * 100) : 0,
+    };
+  };
+
+  const oscillatingSavings = getOscillatingSavings();
+
   return (
     <div className="flex-1 flex flex-col overflow-hidden">
       {/* 方案选择 + 数据摘要 - 紧凑横向布局 */}
@@ -116,7 +142,7 @@ export default function SolutionList({ solutions, selectedIndex, onSelectSolutio
                     <th className="text-right p-2 text-endfield-text font-normal">{t('perMinute')}</th>
                     <th className="text-right p-2 text-endfield-text font-normal">{t('perHour')}</th>
                     <th className="text-right p-2 text-endfield-text font-normal">{t('perDay')}</th>
-                    <th className="text-right p-2 text-endfield-text font-normal">{t('savedPerDay')}</th>
+                    <th className="hidden md:table-cell text-right p-2 text-endfield-text font-normal">{t('savedPerDay')}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -129,7 +155,7 @@ export default function SolutionList({ solutions, selectedIndex, onSelectSolutio
                       <td className="p-2 text-right text-endfield-text-light">{selectedSolution.fuelConsumption.base.perMinute.toFixed(2)}</td>
                       <td className="p-2 text-right text-endfield-text-light">{selectedSolution.fuelConsumption.base.perHour.toFixed(1)}</td>
                       <td className="p-2 text-right text-endfield-yellow font-bold">{selectedSolution.fuelConsumption.base.perDay.toFixed(0)}</td>
-                      <td className="p-2 text-right text-endfield-text/50">-</td>
+                      <td className="hidden md:table-cell p-2 text-right text-endfield-text/50">-</td>
                     </tr>
                   )}
                   {selectedSolution.fuelConsumption.oscillating.perDay > 0 && (
@@ -141,45 +167,31 @@ export default function SolutionList({ solutions, selectedIndex, onSelectSolutio
                       <td className="p-2 text-right text-endfield-text-light">{selectedSolution.fuelConsumption.oscillating.perMinute.toFixed(2)}</td>
                       <td className="p-2 text-right text-endfield-text-light">{selectedSolution.fuelConsumption.oscillating.perHour.toFixed(1)}</td>
                       <td className="p-2 text-right text-endfield-yellow font-bold">{selectedSolution.fuelConsumption.oscillating.perDay.toFixed(0)}</td>
-                      <td className="p-2 text-right">
-                        {(() => {
-                          // 计算：如果用满带达到相同的震荡功率，需要多少燃料
-                          const fuel = selectedSolution.fuelConsumption.oscillating.fuel;
-                          const oscillatingBranches = selectedSolution.oscillating || [];
-                          
-                          if (!fuel || oscillatingBranches.length === 0) {
-                            return <span className="text-endfield-text/50">-</span>;
-                          }
-                          
-                          // 震荡总功率
-                          const oscillatingPower = oscillatingBranches.reduce((sum, b) => sum + b.power, 0);
-                          
-                          // 如果用满带达到相同功率需要多少发电机（至少1个）
-                          const fullBeltPower = fuel.power;
-                          const neededGens = Math.max(1, Math.ceil(oscillatingPower / fullBeltPower));
-                          
-                          // 这些发电机用满带需要多少燃料/天
-                          // 每个发电机消耗 = 1/燃烧时间 个/秒
-                          const fullBeltPerDay = neededGens * (1 / fuel.burnTime) * 86400;
-                          
-                          const actualPerDay = selectedSolution.fuelConsumption.oscillating.perDay;
-                          const savedPerDay = fullBeltPerDay - actualPerDay;
-                          const savedPercent = fullBeltPerDay > 0 ? (savedPerDay / fullBeltPerDay * 100) : 0;
-                          
-                          if (savedPerDay > 0) {
-                            return (
-                              <span className="text-green-400 font-bold">
-                                {savedPerDay.toFixed(0)} ({savedPercent.toFixed(1)}%)
-                              </span>
-                            );
-                          }
-                          return <span className="text-endfield-text/50">-</span>;
-                        })()}
+                      <td className="hidden md:table-cell p-2 text-right">
+                        {oscillatingSavings ? (
+                          <span className="text-green-400 font-bold">
+                            {oscillatingSavings.savedPerDay.toFixed(0)} ({oscillatingSavings.savedPercent.toFixed(1)}%)
+                          </span>
+                        ) : (
+                          <span className="text-endfield-text/50">-</span>
+                        )}
                       </td>
                     </tr>
                   )}
                 </tbody>
               </table>
+              {selectedSolution.fuelConsumption.oscillating.perDay > 0 && (
+                <div className="md:hidden border-t border-endfield-gray-light px-2 py-2 flex items-center justify-between text-sm">
+                  <span className="text-endfield-text">{t('savedPerDay')}:</span>
+                  {oscillatingSavings ? (
+                    <span className="text-green-400 font-bold">
+                      {oscillatingSavings.savedPerDay.toFixed(0)} ({oscillatingSavings.savedPercent.toFixed(1)}%)
+                    </span>
+                  ) : (
+                    <span className="text-endfield-text/50">-</span>
+                  )}
+                </div>
+              )}
             </div>
           </div>
         )}
