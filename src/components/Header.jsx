@@ -140,7 +140,7 @@ export default function Header({ onCalculate, sidebarCollapsed, onToggleSidebar,
 
         {/* 移动端计算按钮 */}
         <button
-          onClick={onCalculate}
+          onClick={() => onCalculate()}
           className="md:hidden h-9 px-3 bg-endfield-yellow hover:bg-endfield-yellow-glow text-endfield-black font-bold tracking-wider transition-all flex items-center gap-1.5 text-sm glow-yellow"
           aria-label={t('calculate')}
         >
