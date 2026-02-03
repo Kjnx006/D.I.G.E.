@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { useI18n } from '../i18n';
 import { FUEL_OPTIONS, SECONDARY_FUEL_OPTIONS } from '../utils/constants';
 
-export default function Sidebar({ params, setParams, collapsed, onClose, onCalculate, onOpenAnnouncement }) {
+export default function Sidebar({ params, setParams, collapsed, onClose, onCalculate, onRandomCalculate, onOpenAnnouncement }) {
   const { t, locale, changeLocale, languageOptions } = useI18n();
   const [showLangMenu, setShowLangMenu] = useState(false);
   const [showPrimaryFuelMenu, setShowPrimaryFuelMenu] = useState(false);
@@ -88,13 +88,8 @@ export default function Sidebar({ params, setParams, collapsed, onClose, onCalcu
               className="flex-1 bg-endfield-gray border border-endfield-gray-light px-3 py-2 text-sm text-endfield-text-light focus:border-endfield-yellow focus:outline-none"
             />
             <button
-              onClick={() => {
-                const newPower = Math.floor(Math.random() * 4500) + 500;
-                handleChange('targetPower', newPower);
-                // 延迟一帧确保状态更新后再计算
-                setTimeout(() => onCalculate(), 0);
-              }}
-              className="w-10 h-10 bg-endfield-gray border border-endfield-gray-light hover:border-endfield-yellow transition-colors flex items-center justify-center text-endfield-text-light hover:text-endfield-yellow cursor-pointer"
+              onClick={onRandomCalculate}
+              className="w-10 h-10 bg-endfield-gray border border-endfield-gray-light hover:border-endfield-yellow transition-colors flex items-center justify-center text-endfield-text-light hover:text-endfield-yellow cursor-pointer shrink-0"
               title={t('random')}
             >
               <span className="material-symbols-outlined text-base">casino</span>
@@ -302,8 +297,8 @@ export default function Sidebar({ params, setParams, collapsed, onClose, onCalcu
 
         {/* 桌面端计算按钮 */}
         <button
-          onClick={onCalculate}
-          className="hidden md:flex w-full mt-4 h-10 bg-endfield-yellow hover:bg-endfield-yellow-glow text-endfield-black font-bold tracking-wider transition-all items-center justify-center gap-2 text-sm glow-yellow"
+          onClick={() => onCalculate()}
+          className="hidden md:flex w-full mt-4 h-10 bg-endfield-yellow hover:bg-endfield-yellow-glow text-endfield-black font-bold tracking-wider transition-all items-center justify-center gap-2 text-sm glow-yellow shrink-0"
         >
           <span className="material-symbols-outlined text-base">calculate</span>
           {t('calculate')}

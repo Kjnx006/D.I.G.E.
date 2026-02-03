@@ -27,7 +27,7 @@ function AppContent({ onOpenAnnouncement }) {
   // 默认展开侧边栏
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
-  const runCalculation = useCallback(async () => {
+  const runCalculation = useCallback(async (overrideParams = null) => {
     setIsLoading(true);
     setShowError(false);
 
@@ -35,7 +35,8 @@ function AppContent({ onOpenAnnouncement }) {
     await new Promise(r => setTimeout(r, 50));
 
     try {
-      const designer = new FactoryDesigner(params);
+      const calcParams = overrideParams || params;
+      const designer = new FactoryDesigner(calcParams);
       const results = designer.solve();
 
       setIsLoading(false);
@@ -55,6 +56,14 @@ function AppContent({ onOpenAnnouncement }) {
       setSolutions([]);
     }
   }, [params]);
+
+  // 随机生成目标功率并立即计算
+  const handleRandomCalculate = useCallback(() => {
+    const newPower = getRandomTargetPower();
+    const newParams = { ...params, targetPower: newPower };
+    setParams(newParams);
+    runCalculation(newParams);
+  }, [params, runCalculation]);
 
   // Run calculation on initial load
   useEffect(() => {
@@ -80,6 +89,7 @@ function AppContent({ onOpenAnnouncement }) {
             collapsed={sidebarCollapsed}
             onClose={() => setSidebarCollapsed(true)}
             onCalculate={runCalculation}
+            onRandomCalculate={handleRandomCalculate}
             onOpenAnnouncement={onOpenAnnouncement}
           />
 
