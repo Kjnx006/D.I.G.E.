@@ -20,6 +20,9 @@ importers:
       react-dom:
         specifier: ^19.2.4
         version: 19.2.4(react@19.2.4)
+      react-microsoft-clarity:
+        specifier: ^2.0.0
+        version: 2.0.0
     devDependencies:
       '@tailwindcss/vite':
         specifier: ^4.1.18
@@ -764,6 +767,9 @@ packages:
     peerDependencies:
       react: ^19.2.4
 
+  react-microsoft-clarity@2.0.0:
+    resolution: {integrity: sha512-Hnbmiv+/vHSekS+Diho7SzvigNLNm+wayZMhxS4otaxPBlN3ccpY7k+PJd2Ytg3F6umU3JZzFtLzvK1WmfdhpA==}
+
   react-refresh@0.18.0:
     resolution: {integrity: sha512-QgT5//D3jfjJb6Gsjxv0Slpj23ip+HtOpnNgnb2S5zU3CB26G/IDPGoy4RJB42wzFE46DRsstbW6tKHoKbhAxw==}
     engines: {node: '>=0.10.0'}
@@ -1427,6 +1433,8 @@ snapshots:
     dependencies:
       react: 19.2.4
       scheduler: 0.27.0
+
+  react-microsoft-clarity@2.0.0: {}
 
   react-refresh@0.18.0: {}
 
