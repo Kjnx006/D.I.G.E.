@@ -7,7 +7,7 @@ import './index.css'
 import '@fontsource/jetbrains-mono/400.css'
 import '@fontsource/jetbrains-mono/500.css'
 import '@fontsource/jetbrains-mono/700.css'
-import 'material-symbols'
+import 'material-symbols/outlined.css'
 import { clarity } from 'react-microsoft-clarity';
 
 const clarityId = import.meta.env.VITE_CLARITY_ID
