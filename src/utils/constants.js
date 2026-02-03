@@ -1,0 +1,116 @@
+// 燃料类型配置
+export const FUELS = {
+  ore: {
+    id: 'ore',
+    name: { en: 'Ore', zh: '源矿', ja: '鉱石', ko: '광석' },
+    power: 50,      // w
+    burnTime: 8,    // s
+  },
+  valleyLow: {
+    id: 'valleyLow',
+    name: { en: 'Valley Battery (Low)', zh: '低容谷地电池', ja: '谷地電池(低)', ko: '밸리 배터리(저)' },
+    power: 220,
+    burnTime: 40,
+  },
+  valleyMid: {
+    id: 'valleyMid',
+    name: { en: 'Valley Battery (Mid)', zh: '中容谷地电池', ja: '谷地電池(中)', ko: '밸리 배터리(중)' },
+    power: 420,
+    burnTime: 40,
+  },
+  valleyHigh: {
+    id: 'valleyHigh',
+    name: { en: 'Valley Battery (High)', zh: '高容谷地电池', ja: '谷地電池(高)', ko: '밸리 배터리(고)' },
+    power: 1100,
+    burnTime: 40,
+  },
+  wulingLow: {
+    id: 'wulingLow',
+    name: { en: 'Wuling Battery (Low)', zh: '低容武陵电池', ja: '武陵電池(低)', ko: '우링 배터리(저)' },
+    power: 1600,
+    burnTime: 40,
+  },
+};
+
+// 燃料选项列表（用于下拉菜单）
+export const FUEL_OPTIONS = Object.values(FUELS);
+
+// 副燃料选项（包含"无"）
+export const SECONDARY_FUEL_OPTIONS = [
+  { id: 'none', name: { en: 'None', zh: '无', ja: 'なし', ko: '없음' }, power: 0, burnTime: 0 },
+  ...FUEL_OPTIONS,
+];
+
+// 系统常量
+export const CONSTANTS = {
+  BASE_POWER: 200,           // 基地自带发电功率 (w)
+  BELT_SPEED: 0.5,           // 传送带速度 (个/s)
+  BELT_INTERVAL: 2,          // 传送带间隔 (s) = 1/BELT_SPEED
+  BATTERY_CAPACITY: 100000,  // 默认蓄电池容量 (J)
+};
+
+// 计算满带发电功率
+// 满带时，发电机持续工作，输出功率 = 燃料发电功率
+export function getFullBeltPower(fuel) {
+  return fuel.power;
+}
+
+// 计算分流后的平均发电功率
+// 分流后输入间隔 = 基础间隔 * 分母
+// 如果输入间隔 <= 燃烧时间，发电机满载
+// 如果输入间隔 > 燃烧时间，平均功率 = 燃料功率 * 燃烧时间 / 输入间隔
+export function getOscillatingPower(fuel, denominator) {
+  const inputInterval = CONSTANTS.BELT_INTERVAL * denominator;
+  if (inputInterval <= fuel.burnTime) {
+    return fuel.power;
+  }
+  return fuel.power * fuel.burnTime / inputInterval;
+}
+
+// 计算满带需要几个发电机来消耗一条传送带
+// 每个发电机消耗速率 = 1/燃烧时间
+// 传送带供应速率 = BELT_SPEED
+// 发电机数量 = 传送带速率 / 消耗速率 = BELT_SPEED * 燃烧时间
+export function getGeneratorsPerBelt(fuel) {
+  return CONSTANTS.BELT_SPEED * fuel.burnTime;
+}
+
+// 格式化时间为 HH:MM:SS
+export function formatTime(seconds) {
+  const hrs = Math.floor(seconds / 3600);
+  const mins = Math.floor((seconds % 3600) / 60);
+  const secs = Math.floor(seconds % 60);
+  
+  if (hrs > 0) {
+    return `${hrs.toString().padStart(2, '0')}:${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+  }
+  return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+}
+
+// 有效的分流分母（2和3的幂次组合）
+export function generateValidDenominators(maxValue = 512) {
+  const denoms = [];
+  for (let x = 0; x < 10; x++) {
+    for (let y = 0; y < 7; y++) {
+      const val = Math.pow(2, x) * Math.pow(3, y);
+      if (val > 1 && val <= maxValue) {
+        denoms.push(val);
+      }
+    }
+  }
+  return denoms.sort((a, b) => a - b);
+}
+
+// 分析分流器复杂度
+export function analyzeSplitterComplexity(denominator) {
+  let d = denominator;
+  let c2 = 0, c3 = 0;
+  while (d % 2 === 0) { c2++; d /= 2; }
+  while (d % 3 === 0) { c3++; d /= 3; }
+  
+  return {
+    total: c2 + c3,
+    twoWay: c2,
+    threeWay: c3,
+  };
+}

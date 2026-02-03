@@ -1,0 +1,135 @@
+@import "tailwindcss";
+
+/* 移动端优化 */
+html {
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+* {
+  -webkit-touch-callout: none;
+}
+
+/* Custom theme colors */
+@theme {
+  --color-endfield-yellow: #fffa00;
+  --color-endfield-yellow-dim: #ccc800;
+  --color-endfield-yellow-glow: #fffb4d;
+  --color-endfield-black: #0a0a0a;
+  --color-endfield-dark: #111111;
+  --color-endfield-gray: #1a1a1a;
+  --color-endfield-gray-light: #2a2a2a;
+  --color-endfield-text: #888888;
+  --color-endfield-text-light: #cccccc;
+}
+
+/* Endfield-style scrollbar */
+::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+
+::-webkit-scrollbar-track {
+  background: #111111;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #333333;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #fffa00;
+}
+
+/* Blueprint grid - darker, more subtle */
+.blueprint-grid {
+  background-color: #0a0a0a;
+  background-image: 
+    linear-gradient(rgba(255, 250, 0, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 250, 0, 0.03) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+/* Endfield accent line */
+.endfield-accent {
+  position: relative;
+}
+.endfield-accent::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: #fffa00;
+}
+
+/* Yellow glow effect */
+.glow-yellow {
+  box-shadow: 0 0 20px rgba(255, 250, 0, 0.3), 0 0 40px rgba(255, 250, 0, 0.1);
+}
+
+/* Input styling */
+input[type="range"] {
+  -webkit-appearance: none;
+  background: transparent;
+}
+input[type="range"]::-webkit-slider-track {
+  height: 2px;
+  background: #333333;
+}
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 12px;
+  height: 12px;
+  background: #fffa00;
+  border-radius: 0;
+  margin-top: -5px;
+  cursor: pointer;
+}
+input[type="range"]::-webkit-slider-thumb:hover {
+  background: #fffb4d;
+}
+
+/* Number input */
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+}
+
+/* Corner decoration */
+.corner-mark {
+  position: relative;
+}
+.corner-mark::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 8px;
+  height: 8px;
+  border-left: 2px solid #fffa00;
+  border-top: 2px solid #fffa00;
+}
+.corner-mark::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 8px;
+  height: 8px;
+  border-right: 2px solid #fffa00;
+  border-bottom: 2px solid #fffa00;
+}
+
+/* Hide scrollbar for draggable areas */
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
