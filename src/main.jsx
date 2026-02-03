@@ -2,6 +2,12 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import App from './App.jsx'
 import './index.css'
+
+// 本地字体
+import '@fontsource/jetbrains-mono/400.css'
+import '@fontsource/jetbrains-mono/500.css'
+import '@fontsource/jetbrains-mono/700.css'
+import 'material-symbols'
 import { clarity } from 'react-microsoft-clarity';
 
 const clarityId = import.meta.env.VITE_CLARITY_ID

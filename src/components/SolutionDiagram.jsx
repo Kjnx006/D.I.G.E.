@@ -64,29 +64,29 @@ function DraggableBranch({ branch, idx, t }) {
         <div className={`relative px-1.5 sm:px-2 py-1 sm:py-1.5 border text-center min-w-[40px] sm:min-w-[50px] ${
           isTwoWay 
             ? 'bg-endfield-gray border-endfield-yellow/30 text-endfield-yellow' 
-            : 'bg-endfield-gray border-white/20 text-white'
+            : 'bg-endfield-gray border-endfield-text-light/20 text-endfield-text-light'
         }`}>
-          <div className="text-[8px] sm:text-[9px] uppercase font-bold">
+          <div className="text-xs uppercase font-bold">
             {isTwoWay ? '2' : '3'}{t('waySplit')}
           </div>
           {/* 上方回收 */}
-          <div className="absolute -top-3 sm:-top-4 left-1/2 -translate-x-1/2 flex flex-col items-center">
-            <div className="w-px h-1.5 sm:h-2 bg-endfield-text/40"></div>
-            <div className="text-[6px] sm:text-[7px] text-endfield-text/60 whitespace-nowrap px-0.5 sm:px-1 bg-endfield-dark border border-endfield-gray-light">
+          <div className="absolute -top-5 left-1/2 -translate-x-1/2 flex flex-col items-center">
+            <div className="w-px h-2 bg-endfield-text/40"></div>
+            <div className="text-xs text-endfield-text/60 whitespace-nowrap px-1 bg-endfield-dark border border-endfield-gray-light">
               {t('storageShort')}
             </div>
           </div>
           {/* 三分器下方回收 */}
           {!isTwoWay && (
-            <div className="absolute -bottom-3 sm:-bottom-4 left-1/2 -translate-x-1/2 flex flex-col items-center">
-              <div className="text-[6px] sm:text-[7px] text-endfield-text/60 whitespace-nowrap px-0.5 sm:px-1 bg-endfield-dark border border-endfield-gray-light">
+            <div className="absolute -bottom-5 left-1/2 -translate-x-1/2 flex flex-col items-center">
+              <div className="text-xs text-endfield-text/60 whitespace-nowrap px-1 bg-endfield-dark border border-endfield-gray-light">
                 {t('storageShort')}
               </div>
-              <div className="w-px h-1.5 sm:h-2 bg-endfield-text/40"></div>
+              <div className="w-px h-2 bg-endfield-text/40"></div>
             </div>
           )}
         </div>
-        <span className="material-symbols-outlined text-endfield-text/50 text-xs sm:text-sm shrink-0">arrow_right_alt</span>
+        <span className="material-symbols-outlined text-endfield-text/50 text-sm shrink-0">arrow_right_alt</span>
       </div>
     );
   };
@@ -94,9 +94,9 @@ function DraggableBranch({ branch, idx, t }) {
   return (
     <div className="flex items-center gap-1 sm:gap-2 py-2 sm:py-3 px-1 sm:px-2">
       {/* 分支标签 - 固定 */}
-      <div className="shrink-0 w-12 sm:w-14 text-center">
-        <div className="text-[10px] sm:text-xs font-mono text-endfield-yellow font-bold">1/{denominator}</div>
-        <div className="text-[8px] sm:text-[9px] text-endfield-text">{power.toFixed(0)}w</div>
+      <div className="shrink-0 w-16 text-center">
+        <div className="text-sm text-endfield-yellow font-bold">1/{denominator}</div>
+        <div className="text-xs text-endfield-text">{power.toFixed(0)}w</div>
       </div>
 
       {/* 可拖拽的电路区域 */}
@@ -118,18 +118,18 @@ function DraggableBranch({ branch, idx, t }) {
       >
         <div className="flex items-center gap-1 w-max">
           {/* 输入 */}
-          <div className="w-6 h-6 sm:w-8 sm:h-8 bg-endfield-gray border border-endfield-gray-light flex items-center justify-center text-endfield-text shrink-0">
-            <span className="material-symbols-outlined text-[10px] sm:text-xs">input</span>
+          <div className="w-8 h-8 bg-endfield-gray border border-endfield-gray-light flex items-center justify-center text-endfield-text shrink-0">
+            <span className="material-symbols-outlined text-sm">input</span>
           </div>
-          <span className="material-symbols-outlined text-endfield-text/50 text-xs sm:text-sm shrink-0">arrow_right_alt</span>
+          <span className="material-symbols-outlined text-endfield-text/50 text-sm shrink-0">arrow_right_alt</span>
 
           {/* 分流器序列 */}
           {steps.map((type, stepIdx) => renderSplitter(type, stepIdx))}
 
           {/* 发电机 */}
-          <div className="h-6 sm:h-8 px-1.5 sm:px-2 bg-endfield-yellow/10 border border-endfield-yellow/50 flex items-center gap-1 text-endfield-yellow shrink-0">
-            <span className="material-symbols-outlined text-[10px] sm:text-xs">bolt</span>
-            <span className="font-mono text-[10px] sm:text-xs font-bold">{t('gen')}</span>
+          <div className="h-8 px-2.5 bg-endfield-yellow/10 border border-endfield-yellow/50 flex items-center gap-1 text-endfield-yellow shrink-0">
+            <span className="material-symbols-outlined text-sm">bolt</span>
+            <span className="text-sm font-bold">{t('gen')}</span>
           </div>
         </div>
       </div>
@@ -162,24 +162,30 @@ export default function SolutionDiagram({ solution }) {
 
   return (
     <div className="space-y-2 sm:space-y-3">
+      {/* 警告 */}
+      <div className="p-2.5 bg-red-900/20 border border-red-900/50 text-sm text-red-300 flex items-center gap-2">
+        <span className="material-symbols-outlined text-sm">warning</span>
+        <span>{t('storageBoxWarningShort')}</span>
+      </div>
+
       {/* 基础发电 - 静态显示 */}
-      <div className="flex flex-wrap items-center gap-1 sm:gap-2 p-2 sm:p-3 bg-endfield-gray border border-endfield-gray-light">
-        <span className="material-symbols-outlined text-xs sm:text-sm text-endfield-yellow">factory</span>
-        <span className="text-[9px] sm:text-[10px] text-endfield-text uppercase">{t('basePowerShort')}:</span>
+      <div className="flex flex-wrap items-center gap-2 p-3 bg-endfield-gray border border-endfield-gray-light">
+        <span className="material-symbols-outlined text-sm text-endfield-yellow">factory</span>
+        <span className="text-sm text-endfield-text uppercase">{t('basePowerShort')}:</span>
         {baseConfig.generators > 0 ? (
           <>
-            <span className="text-xs sm:text-sm font-mono font-bold text-white">{baseConfig.generators}</span>
-            <span className="text-[9px] sm:text-[10px] text-endfield-text">× {getFuelName(baseFuelData)}</span>
-            <span className="text-[9px] sm:text-[10px] text-endfield-text">=</span>
-            <span className="text-xs sm:text-sm font-mono font-bold text-endfield-yellow">{baseConfig.totalPower}w</span>
-            <span className="text-[8px] sm:text-[9px] text-endfield-text/70">
+            <span className="text-sm font-bold text-endfield-text-light">{baseConfig.generators}</span>
+            <span className="text-sm text-endfield-text">× {getFuelName(baseFuelData)}</span>
+            <span className="text-sm text-endfield-text">=</span>
+            <span className="text-sm font-bold text-endfield-yellow">{baseConfig.totalPower}w</span>
+            <span className="text-xs text-endfield-text/70">
               (200w + {baseConfig.generators * baseFuelData.power}w)
             </span>
           </>
         ) : (
           <>
-            <span className="text-xs sm:text-sm font-mono font-bold text-endfield-yellow">200w</span>
-            <span className="text-[8px] sm:text-[9px] text-endfield-text/70">
+            <span className="text-sm font-bold text-endfield-yellow">200w</span>
+            <span className="text-xs text-endfield-text/70">
               ({t('baseOnlyHint')})
             </span>
           </>
@@ -189,15 +195,19 @@ export default function SolutionDiagram({ solution }) {
       {/* 震荡发电 - 每个分支可独立拖拽 */}
       {oscillating && oscillating.length > 0 && (
         <div className="border border-endfield-gray-light bg-endfield-gray/30">
-          <div className="flex flex-wrap items-center gap-1 sm:gap-2 px-2 sm:px-3 py-1.5 sm:py-2 border-b border-endfield-gray-light bg-endfield-gray/50">
-            <span className="material-symbols-outlined text-[10px] sm:text-xs text-endfield-yellow">electric_bolt</span>
-            <span className="text-[9px] sm:text-[10px] text-endfield-text uppercase">
-              {t('oscillatingShort')} ({oscillating.length} {t('branchesShort')})
+          <div className="flex flex-wrap items-center gap-2 px-3 py-2 border-b border-endfield-gray-light bg-endfield-gray/50">
+            <span className="material-symbols-outlined text-sm text-endfield-yellow">electric_bolt</span>
+            <span className="text-sm text-endfield-text uppercase">{t('oscillatingShort')}:</span>
+            <span className="text-sm font-bold text-endfield-text-light">{oscillating.length}</span>
+            <span className="text-sm text-endfield-text">× {getFuelName(oscFuelData)}</span>
+            <span className="text-sm text-endfield-text">=</span>
+            <span className="text-sm font-bold text-endfield-yellow">
+              {oscillating.reduce((sum, b) => sum + b.power, 0).toFixed(0)}w
             </span>
-            <span className="text-[9px] sm:text-[10px] text-endfield-text/70">
-              - {getFuelName(oscFuelData)}
+            <span className="text-xs text-endfield-text/70">
+              ({oscillating.map(b => `${b.power.toFixed(0)}w`).join(' + ')})
             </span>
-            <span className="text-[8px] sm:text-[9px] text-endfield-text/50 ml-auto hidden sm:inline">
+            <span className="text-xs text-endfield-text/50 ml-auto">
               {t('dragHint')}
             </span>
           </div>
@@ -208,12 +218,6 @@ export default function SolutionDiagram({ solution }) {
           </div>
         </div>
       )}
-
-      {/* 警告 */}
-      <div className="p-1.5 sm:p-2 bg-red-900/20 border border-red-900/50 text-[9px] sm:text-[10px] text-red-300 flex items-center gap-1.5 sm:gap-2">
-        <span className="material-symbols-outlined text-xs sm:text-sm">warning</span>
-        <span>{t('storageBoxWarningShort')}</span>
-      </div>
     </div>
   );
 }

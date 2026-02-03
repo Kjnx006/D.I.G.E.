@@ -23,6 +23,9 @@ ChartJS.register(
   Filler
 );
 
+// 全局字体配置
+const fontFamily = "'JetBrains Mono', ui-monospace, monospace";
+
 export default function SolutionChart({ solution, targetPower, batteryCapacity }) {
   const { t } = useI18n();
 
@@ -45,7 +48,8 @@ export default function SolutionChart({ solution, targetPower, batteryCapacity }
   }
 
   const labels = batteryData.map((_, i) => i);
-  const batteryPercent = batteryData.map(v => (v / batteryCapacity) * 100);
+  // 限制电池百分比在 0-100 范围内
+  const batteryPercent = batteryData.map(v => Math.min(100, Math.max(0, (v / batteryCapacity) * 100)));
 
   const data = {
     labels,
@@ -100,20 +104,20 @@ export default function SolutionChart({ solution, targetPower, batteryCapacity }
         align: 'start',
         labels: {
           color: '#666666',
-          font: { size: 9 },
-          boxWidth: 10,
-          boxHeight: 10,
-          padding: 8,
+          font: { family: fontFamily, size: 12 },
+          boxWidth: 12,
+          boxHeight: 12,
+          padding: 10,
         }
       },
       tooltip: {
         backgroundColor: '#1a1a1a',
         titleColor: '#888888',
-        bodyColor: '#ffffff',
+        bodyColor: '#cccccc',
         borderColor: '#333333',
         borderWidth: 1,
-        titleFont: { size: 10 },
-        bodyFont: { size: 10 },
+        titleFont: { family: fontFamily, size: 12 },
+        bodyFont: { family: fontFamily, size: 12 },
         callbacks: {
           label: (context) => {
             const label = context.dataset.label || '';
@@ -135,8 +139,14 @@ export default function SolutionChart({ solution, targetPower, batteryCapacity }
         grid: { color: '#1a1a1a' },
         ticks: { 
           color: '#d4ff00', 
-          font: { family: 'monospace', size: 9 },
+          font: { family: fontFamily, size: 12 },
           maxTicksLimit: 5,
+        },
+        title: {
+          display: true,
+          text: t('powerAxis') + ' (w)',
+          color: '#d4ff00',
+          font: { family: fontFamily, size: 12 },
         },
         min: 0,
       },
@@ -147,28 +157,25 @@ export default function SolutionChart({ solution, targetPower, batteryCapacity }
         grid: { drawOnChartArea: false },
         ticks: { 
           color: '#4ecdc4', 
-          font: { family: 'monospace', size: 9 },
+          font: { family: fontFamily, size: 12 },
           callback: (value) => value + '%',
           maxTicksLimit: 5,
         },
+        title: {
+          display: true,
+          text: t('batteryAxis') + ' (%)',
+          color: '#4ecdc4',
+          font: { family: fontFamily, size: 12 },
+        },
         min: 0,
-        max: 110,
+        max: 100,
       },
     }
   };
 
   return (
-    <div className="space-y-2">
-      {/* 图表 */}
-      <div className="h-36 sm:h-48">
-        <Line data={data} options={options} />
-      </div>
-
-      {/* 图例说明 */}
-      <div className="flex flex-wrap gap-2 sm:gap-4 text-[8px] sm:text-[9px] text-endfield-text/70">
-        <span><span className="inline-block w-2 sm:w-3 h-0.5 bg-endfield-yellow mr-1"></span>{t('powerAxis')} (w) - {t('leftAxis')}</span>
-        <span><span className="inline-block w-2 sm:w-3 h-0.5 bg-[#4ecdc4] mr-1"></span>{t('batteryAxis')} (%) - {t('rightAxis')}</span>
-      </div>
+    <div className="h-36 sm:h-48">
+      <Line data={data} options={options} />
     </div>
   );
 }

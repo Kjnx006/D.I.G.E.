@@ -5,30 +5,35 @@ export const FUELS = {
     name: { en: 'Ore', zh: '源矿', ja: '鉱石', ko: '광석' },
     power: 50,      // w
     burnTime: 8,    // s
+    image: '/fuels/ore.png',
   },
   valleyLow: {
     id: 'valleyLow',
     name: { en: 'Valley Battery (Low)', zh: '低容谷地电池', ja: '谷地電池(低)', ko: '밸리 배터리(저)' },
     power: 220,
     burnTime: 40,
+    image: '/fuels/valleyLow.png',
   },
   valleyMid: {
     id: 'valleyMid',
     name: { en: 'Valley Battery (Mid)', zh: '中容谷地电池', ja: '谷地電池(中)', ko: '밸리 배터리(중)' },
     power: 420,
     burnTime: 40,
+    image: '/fuels/valleyMid.png',
   },
   valleyHigh: {
     id: 'valleyHigh',
     name: { en: 'Valley Battery (High)', zh: '高容谷地电池', ja: '谷地電池(高)', ko: '밸리 배터리(고)' },
     power: 1100,
     burnTime: 40,
+    image: '/fuels/valleyHigh.png',
   },
   wulingLow: {
     id: 'wulingLow',
     name: { en: 'Wuling Battery (Low)', zh: '低容武陵电池', ja: '武陵電池(低)', ko: '우링 배터리(저)' },
     power: 1600,
     burnTime: 40,
+    image: '/fuels/wulingLow.png',
   },
 };
 

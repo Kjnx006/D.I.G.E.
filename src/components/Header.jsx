@@ -1,16 +1,29 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useI18n } from '../i18n';
 
-export default function Header({ onCalculate, sidebarCollapsed, onToggleSidebar }) {
+export default function Header({ onCalculate, sidebarCollapsed, onToggleSidebar, onOpenAnnouncement }) {
   const { t, locale, changeLocale, languageOptions } = useI18n();
   const [showLangMenu, setShowLangMenu] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
+  const langMenuRef = useRef(null);
 
   const currentLang = languageOptions.find(l => l.code === locale);
 
+  // 点击外部关闭下拉菜单
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (langMenuRef.current && !langMenuRef.current.contains(event.target)) {
+        setShowLangMenu(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
   return (
     <header className="bg-endfield-dark border-b border-endfield-gray-light p-2 sm:p-4 flex items-center justify-between shrink-0">
-      <div className="flex items-center gap-2 sm:gap-3 h-8 sm:h-10">
+      <div className="flex items-center gap-2 sm:gap-3">
         {/* 移动端：汉堡菜单按钮 */}
         <button
           onClick={onToggleSidebar}
@@ -26,12 +39,12 @@ export default function Header({ onCalculate, sidebarCollapsed, onToggleSidebar 
         <div
           onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}
-          className="hidden md:flex w-4 h-full items-center justify-start cursor-pointer self-stretch"
+          className="hidden md:flex w-4 items-center justify-center cursor-pointer self-stretch"
           onClick={onToggleSidebar}
           title={sidebarCollapsed ? t('expandSidebar') : t('collapseSidebar')}
         >
           <div
-            className="h-full transition-all duration-200 bg-endfield-yellow"
+            className="h-full transition-all duration-200 bg-endfield-yellow animate-pulse-glow"
             style={{
               width: isHovered ? '12px' : '4px',
               clipPath: isHovered 
@@ -43,33 +56,52 @@ export default function Header({ onCalculate, sidebarCollapsed, onToggleSidebar 
           />
         </div>
         {/* 标题区域 */}
-        <div className="flex flex-col justify-center h-full">
-          <div className="flex items-baseline gap-2">
-            <h1 className="text-sm sm:text-base font-bold text-white tracking-widest uppercase">
+        <div className="flex flex-col justify-center">
+          <div className="flex items-center gap-2">
+            <h1 className="text-base sm:text-lg font-bold text-endfield-text-light tracking-widest uppercase">
               {t('appTitle')}
             </h1>
-            <span className="hidden sm:inline text-[9px] text-endfield-yellow border border-endfield-yellow/30 bg-endfield-yellow/5 px-1.5 py-px">
-              {t('appVersion')}
+            <span className="hidden sm:inline text-xs text-endfield-yellow border border-endfield-yellow/30 bg-endfield-yellow/5 px-1.5 py-px">
+              v{__APP_VERSION__}
             </span>
           </div>
-          <p className="hidden sm:block text-[10px] text-endfield-text font-mono tracking-wider mt-0.5">
+          <p className="hidden md:block text-sm text-endfield-text tracking-wider mt-0.5">
             {t('appSubtitle')}
           </p>
         </div>
       </div>
 
       <div className="flex items-center gap-2 sm:gap-3">
-        {/* Language Switcher */}
-        <div className="relative">
+        {/* Announcement Button - 桌面端显示 */}
+        <button
+          onClick={onOpenAnnouncement}
+          className="hidden md:flex h-10 w-10 bg-endfield-gray border border-endfield-gray-light hover:border-endfield-yellow transition-colors items-center justify-center text-endfield-text-light hover:text-endfield-yellow cursor-pointer"
+          title={t('announcement')}
+        >
+          <span className="material-symbols-outlined text-xl">campaign</span>
+        </button>
+
+        {/* GitHub Link - 桌面端显示 */}
+        <a
+          href="https://github.com/djkcyl/D.I.G.E."
+          target="_blank"
+          rel="noopener noreferrer"
+          className="hidden md:flex h-10 w-10 bg-endfield-gray border border-endfield-gray-light hover:border-endfield-yellow transition-colors items-center justify-center text-endfield-text-light hover:text-endfield-yellow"
+          title="GitHub"
+        >
+          <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
+          </svg>
+        </a>
+
+        {/* Language Switcher - 桌面端显示 */}
+        <div className="relative hidden md:block" ref={langMenuRef}>
           <button
             onClick={() => setShowLangMenu(!showLangMenu)}
-            className="h-8 sm:h-9 px-2 sm:px-3 bg-endfield-gray border border-endfield-gray-light hover:border-endfield-yellow transition-colors flex items-center gap-1 sm:gap-2 text-xs sm:text-sm text-endfield-text-light"
+            className="h-10 px-3 bg-endfield-gray border border-endfield-gray-light hover:border-endfield-yellow transition-colors flex items-center gap-2 text-sm text-endfield-text-light cursor-pointer"
           >
-            <span className="material-symbols-outlined text-sm sm:text-base">language</span>
-            <span className="hidden sm:inline">{currentLang?.name}</span>
-            <span className="material-symbols-outlined text-sm sm:text-base">
-              {showLangMenu ? 'expand_less' : 'expand_more'}
-            </span>
+            <span className="material-symbols-outlined text-base">language</span>
+            <span>{currentLang?.name}</span>
           </button>
 
           {showLangMenu && (
@@ -81,23 +113,22 @@ export default function Header({ onCalculate, sidebarCollapsed, onToggleSidebar 
                     changeLocale(lang.code);
                     setShowLangMenu(false);
                   }}
-                  className={`w-full px-3 py-2 text-left text-sm flex items-center gap-2 hover:bg-endfield-gray-light transition-colors
+                  className={`w-full px-3 py-2 text-left text-sm hover:bg-endfield-gray-light transition-colors cursor-pointer
                     ${locale === lang.code ? 'text-endfield-yellow' : 'text-endfield-text-light'}`}
                 >
-                  <span>{lang.flag}</span>
-                  <span>{lang.name}</span>
+                  {lang.name}
                 </button>
               ))}
             </div>
           )}
         </div>
 
+        {/* 移动端计算按钮 */}
         <button
           onClick={onCalculate}
-          className="h-8 sm:h-9 px-3 sm:px-4 bg-endfield-yellow hover:bg-endfield-yellow-glow text-endfield-black font-bold tracking-wider transition-all flex items-center gap-1 sm:gap-2 text-xs sm:text-sm glow-yellow"
+          className="md:hidden h-9 px-3 bg-endfield-yellow hover:bg-endfield-yellow-glow text-endfield-black font-bold tracking-wider transition-all flex items-center gap-1.5 text-sm glow-yellow"
         >
-          <span className="material-symbols-outlined text-sm sm:text-base">calculate</span>
-          <span className="hidden sm:inline">{t('calculate')}</span>
+          <span className="material-symbols-outlined text-base">calculate</span>
         </button>
       </div>
     </header>

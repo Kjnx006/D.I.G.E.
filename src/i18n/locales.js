@@ -2,13 +2,14 @@ export const locales = {
   en: {
     // Header
     appTitle: 'D.I.G.E.',
-    appVersion: 'v1.0',
+    appVersion: 'v1.1',
     appSubtitle: 'Dijiang Integrated Generator Efficiency',
     calculate: 'CALCULATE',
     
     // Sidebar - Target
     targetPower: 'TARGET POWER',
     power: 'Power',
+    random: 'Random',
     
     // Sidebar - Constraints
     constraints: 'CONSTRAINTS',
@@ -30,11 +31,12 @@ export const locales = {
     // Solution List
     solution: 'Solution',
     selectSolution: 'Select Solution',
-    branches: ' branches',
-    branchesShort: 'branches',
+    branches: ' Branches',
+    branchesShort: 'Branches',
     primaryOnly: 'Primary only',
     useSecondary: 'Using secondary',
     clickCalculate: 'Click CALCULATE to find optimal solutions',
+    adjustParamsHint: 'If no solution is found, try adjusting target power, constraints or fuel options',
     
     // Data Cards (compact)
     actualPower: 'Power',
@@ -94,6 +96,9 @@ export const locales = {
     perHour: 'Per Hour',
     perDay: 'Per Day',
     fuelType: 'Fuel Type',
+    fullBelt: 'Full Belt',
+    saved: 'Saved',
+    savedPerDay: 'Saved/Day',
     
     // Error State
     noSolutionFound: 'NO SOLUTION FOUND',
@@ -102,6 +107,11 @@ export const locales = {
     
     // Loading
     calculating: 'CALCULATING...',
+    
+    // Announcement
+    announcement: 'ANNOUNCEMENT',
+    dontShowAgain: "Don't show this announcement again",
+    understood: 'GOT IT',
     
     // Language names
     langEn: 'English',
@@ -113,13 +123,14 @@ export const locales = {
   zh: {
     // Header
     appTitle: 'D.I.G.E.',
-    appVersion: 'v1.0',
+    appVersion: 'v1.1',
     appSubtitle: '帝江号严选精细化集成工业系统能源生产及存储管理系统设计器',
     calculate: '计算',
     
     // Sidebar - Target
     targetPower: '目标发电量',
     power: '功率',
+    random: '随机',
     
     // Sidebar - Constraints
     constraints: '约束条件',
@@ -146,6 +157,7 @@ export const locales = {
     primaryOnly: '仅主燃料',
     useSecondary: '使用副燃料',
     clickCalculate: '点击"计算"按钮查找最优方案',
+    adjustParamsHint: '如未找到方案，可尝试调整目标发电量、约束条件或燃料选项',
     
     // Data Cards (compact)
     actualPower: '发电量',
@@ -205,6 +217,9 @@ export const locales = {
     perHour: '每小时',
     perDay: '每天',
     fuelType: '燃料类型',
+    fullBelt: '满带',
+    saved: '节省',
+    savedPerDay: '每天节省',
     
     // Error State
     noSolutionFound: '未找到解决方案',
@@ -213,6 +228,11 @@ export const locales = {
     
     // Loading
     calculating: '计算中...',
+    
+    // Announcement
+    announcement: '公告',
+    dontShowAgain: '不再显示该公告',
+    understood: '知道了',
     
     // Language names
     langEn: 'English',
@@ -224,13 +244,14 @@ export const locales = {
   ja: {
     // Header
     appTitle: 'D.I.G.E.',
-    appVersion: 'v1.0',
+    appVersion: 'v1.1',
     appSubtitle: '帝江号厳選精密統合工業システムエネルギー生産貯蔵管理システム設計器',
     calculate: '計算',
     
     // Sidebar - Target
     targetPower: '目標発電量',
     power: '電力',
+    random: 'ランダム',
     
     // Sidebar - Constraints
     constraints: '制約条件',
@@ -257,6 +278,7 @@ export const locales = {
     primaryOnly: 'メインのみ',
     useSecondary: 'サブ使用',
     clickCalculate: '「計算」をクリックして最適解を検索',
+    adjustParamsHint: '解決策が見つからない場合は、目標発電量、制約条件、燃料オプションを調整してください',
     
     // Data Cards (compact)
     actualPower: '発電量',
@@ -316,6 +338,9 @@ export const locales = {
     perHour: '毎時',
     perDay: '毎日',
     fuelType: '燃料タイプ',
+    fullBelt: 'フルベルト',
+    saved: '節約',
+    savedPerDay: '毎日節約',
     
     // Error State
     noSolutionFound: '解決策が見つかりません',
@@ -324,6 +349,11 @@ export const locales = {
     
     // Loading
     calculating: '計算中...',
+    
+    // Announcement
+    announcement: 'お知らせ',
+    dontShowAgain: 'このお知らせを今後表示しない',
+    understood: '了解',
     
     // Language names
     langEn: 'English',
@@ -335,13 +365,14 @@ export const locales = {
   ko: {
     // Header
     appTitle: 'D.I.G.E.',
-    appVersion: 'v1.0',
+    appVersion: 'v1.1',
     appSubtitle: '제강호엄선정밀통합산업시스템에너지생산저장관리시스템설계기',
     calculate: '계산',
     
     // Sidebar - Target
     targetPower: '목표 발전량',
     power: '전력',
+    random: '무작위',
     
     // Sidebar - Constraints
     constraints: '제약 조건',
@@ -368,6 +399,7 @@ export const locales = {
     primaryOnly: '주 연료만',
     useSecondary: '보조 사용',
     clickCalculate: '"계산" 버튼을 클릭하여 최적 방안 찾기',
+    adjustParamsHint: '방안을 찾을 수 없는 경우 목표 발전량, 제약 조건 또는 연료 옵션을 조정해 보세요',
     
     // Data Cards (compact)
     actualPower: '발전량',
@@ -427,6 +459,9 @@ export const locales = {
     perHour: '시간당',
     perDay: '일당',
     fuelType: '연료 유형',
+    fullBelt: '풀 벨트',
+    saved: '절약',
+    savedPerDay: '일당 절약',
     
     // Error State
     noSolutionFound: '해결책을 찾을 수 없습니다',
@@ -435,6 +470,11 @@ export const locales = {
     
     // Loading
     calculating: '계산 중...',
+    
+    // Announcement
+    announcement: '공지',
+    dontShowAgain: '이 공지를 다시 표시하지 않음',
+    understood: '확인',
     
     // Language names
     langEn: 'English',

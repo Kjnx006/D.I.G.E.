@@ -5,16 +5,20 @@ import Sidebar from './components/Sidebar';
 import SolutionList from './components/SolutionList';
 import LoadingOverlay from './components/LoadingOverlay';
 import ErrorState from './components/ErrorState';
+import Announcement, { shouldShowAnnouncement } from './components/Announcement';
 import { FactoryDesigner } from './utils/FactoryDesigner';
 
-function AppContent() {
-  const [params, setParams] = useState({
-    targetPower: 2321,
+// 生成随机目标发电量 (500 - 5000)
+const getRandomTargetPower = () => Math.floor(Math.random() * 4500) + 500;
+
+function AppContent({ onOpenAnnouncement }) {
+  const [params, setParams] = useState(() => ({
+    targetPower: getRandomTargetPower(),
     minBatteryPercent: 5,
     maxWaste: 30,
     primaryFuelId: 'wulingLow',
     secondaryFuelId: 'none',
-  });
+  }));
 
   const [solutions, setSolutions] = useState([]);
   const [selectedIndex, setSelectedIndex] = useState(0);
@@ -66,15 +70,18 @@ function AppContent() {
         onCalculate={runCalculation} 
         sidebarCollapsed={sidebarCollapsed}
         onToggleSidebar={() => setSidebarCollapsed(!sidebarCollapsed)}
+        onOpenAnnouncement={onOpenAnnouncement}
       />
 
       <div className="flex flex-1 overflow-hidden">
-        <Sidebar 
-          params={params} 
-          setParams={setParams} 
-          collapsed={sidebarCollapsed}
-          onClose={() => setSidebarCollapsed(true)}
-        />
+          <Sidebar 
+            params={params} 
+            setParams={setParams} 
+            collapsed={sidebarCollapsed}
+            onClose={() => setSidebarCollapsed(true)}
+            onCalculate={runCalculation}
+            onOpenAnnouncement={onOpenAnnouncement}
+          />
 
         <main className="flex-1 flex flex-col min-w-0 bg-endfield-black relative overflow-hidden">
           <SolutionList
@@ -93,9 +100,12 @@ function AppContent() {
 }
 
 function App() {
+  const [showAnnouncement, setShowAnnouncement] = useState(() => shouldShowAnnouncement());
+
   return (
     <I18nProvider>
-      <AppContent />
+      <AppContent onOpenAnnouncement={() => setShowAnnouncement(true)} />
+      <Announcement show={showAnnouncement} onClose={() => setShowAnnouncement(false)} />
     </I18nProvider>
   );
 }

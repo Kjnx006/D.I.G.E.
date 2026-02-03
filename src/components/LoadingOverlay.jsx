@@ -11,7 +11,7 @@ export default function LoadingOverlay({ isLoading }) {
         <span className="material-symbols-outlined text-endfield-yellow text-5xl animate-spin">
           settings
         </span>
-        <span className="text-endfield-yellow font-mono tracking-[0.3em] text-sm">
+        <span className="text-endfield-yellow tracking-[0.3em] text-sm">
           {t('calculating')}
         </span>
       </div>
