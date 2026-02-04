@@ -41,28 +41,28 @@ export default function Sidebar({ params, setParams, collapsed, onClose, onCalcu
   return (
     <>
       {/* 移动端背景遮罩 - 使用 CSS 控制显示 */}
-      {!collapsed && (
-        <div 
-          className="fixed inset-0 bg-black/50 z-20 md:hidden"
-          onClick={onClose}
-        />
-      )}
+      <div 
+        className={`fixed inset-0 z-20 md:hidden bg-black/50 transition-opacity duration-300 ${
+          collapsed ? 'opacity-0 pointer-events-none' : 'opacity-100 pointer-events-auto'
+        }`}
+        onClick={onClose}
+      />
       <aside 
         className={`
-          ${collapsed ? 'w-0' : 'w-72 sm:w-80'} 
+          w-72 sm:w-80
           bg-endfield-dark/95 md:bg-endfield-dark/80 
           border-r border-endfield-gray-light 
           overflow-hidden flex flex-col shrink-0 
           transition-all duration-300
           fixed md:relative inset-y-0 left-0 z-30 md:z-10
-          ${collapsed ? '-translate-x-full md:translate-x-0' : 'translate-x-0'}
+          ${collapsed ? '-translate-x-full md:-ml-80 pointer-events-none' : 'translate-x-0 md:ml-0 pointer-events-auto'}
         `}
         role="complementary"
         aria-label="参数配置面板"
         aria-hidden={collapsed}
       >
         {/* 移动端关闭按钮 */}
-        <div className={`md:hidden shrink-0 p-3 border-b border-endfield-gray-light flex items-center justify-between ${collapsed ? 'hidden' : ''}`}>
+        <div className="md:hidden shrink-0 p-3 border-b border-endfield-gray-light flex items-center justify-between">
           <span className="text-sm font-bold text-endfield-text-light">{t('constraints')}</span>
           <button 
             onClick={onClose}
@@ -74,7 +74,7 @@ export default function Sidebar({ params, setParams, collapsed, onClose, onCalcu
         </div>
         
         {/* Sidebar Content */}
-        <div className={`flex-1 overflow-y-auto p-4 sm:p-6 flex flex-col gap-4 sm:gap-6 ${collapsed ? 'hidden' : ''}`}>
+        <div className="flex-1 overflow-y-auto p-4 sm:p-6 flex flex-col gap-4 sm:gap-6">
       {/* 目标发电量 */}
       <fieldset className="space-y-4 border-none p-0 m-0">
         <legend className="text-sm font-bold text-endfield-text uppercase tracking-widest flex items-center gap-2 p-0">

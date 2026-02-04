@@ -66,9 +66,18 @@ export default function Header({ onCalculate, sidebarCollapsed, onToggleSidebar,
         {/* 标题区域 */}
         <div className="flex flex-col justify-center">
           <div className="flex items-center gap-2">
-            <h1 className="text-base sm:text-lg font-bold text-endfield-text-light tracking-widest uppercase">
-              {t('appTitle')}
-            </h1>
+            <a
+              href="https://github.com/djkcyl/D.I.G.E."
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group"
+              title="GitHub"
+              aria-label="Open project GitHub homepage"
+            >
+              <h1 className="text-base sm:text-lg font-bold text-endfield-text-light tracking-widest uppercase group-hover:text-endfield-yellow transition-colors">
+                {t('appTitle')}
+              </h1>
+            </a>
             <span className="hidden sm:inline text-xs text-endfield-yellow border border-endfield-yellow/30 bg-endfield-yellow/5 px-1.5 py-px">
               v{__APP_VERSION__}
             </span>
