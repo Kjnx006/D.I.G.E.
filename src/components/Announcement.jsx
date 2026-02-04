@@ -2,10 +2,11 @@ import { useState, useEffect } from 'react';
 import { useI18n } from '../i18n';
 
 // 公告配置 - 修改这里来更新公告
-const ANNOUNCEMENT_ID = '2026-02-03-v2'; // 更新公告时修改此 ID
+const ANNOUNCEMENT_ID = '2026-02-04-v3'; // 更新公告时修改此 ID
 
 const GITHUB_URL = 'https://github.com/djkcyl/D.I.G.E.';
 const ISSUES_URL = 'https://github.com/djkcyl/D.I.G.E./issues';
+const VIDEO_TUTORIAL_URL = 'https://www.bilibili.com/video/BV1VrfSByEBo';
 
 const LinkStyle = 'text-endfield-yellow hover:text-endfield-yellow-glow underline underline-offset-2 transition-colors';
 const HeadingStyle = 'text-endfield-yellow font-bold mt-4 mb-2';
@@ -37,6 +38,11 @@ const AnnouncementContent = {
       </ul>
       
       <p className="mt-4">
+        视频教程：{' '}
+        <a href={VIDEO_TUTORIAL_URL} target="_blank" rel="noopener noreferrer" className={LinkStyle}>Bilibili - D.I.G.E. 使用教程</a>
+      </p>
+
+      <p className="mt-4">
         如有问题或建议，欢迎在{' '}
         <a href={GITHUB_URL} target="_blank" rel="noopener noreferrer" className={LinkStyle}>GitHub</a>
         {' '}提交{' '}
@@ -67,6 +73,12 @@ const AnnouncementContent = {
         <li>View solution details and diagrams on the right</li>
       </ul>
       
+
+      <p className="mt-4">
+        Video tutorial:{' '}
+        <a href={VIDEO_TUTORIAL_URL} target="_blank" rel="noopener noreferrer" className={LinkStyle}>Bilibili - D.I.G.E. Tutorial</a>
+      </p>
+
       <p className="mt-4">
         Feel free to submit{' '}
         <a href={ISSUES_URL} target="_blank" rel="noopener noreferrer" className={LinkStyle}>issues</a>
@@ -99,6 +111,12 @@ const AnnouncementContent = {
         <li>右側で方案の詳細と構成図を確認</li>
       </ul>
       
+
+      <p className="mt-4">
+        動画チュートリアル：{' '}
+        <a href={VIDEO_TUTORIAL_URL} target="_blank" rel="noopener noreferrer" className={LinkStyle}>Bilibili - D.I.G.E. 使い方ガイド</a>
+      </p>
+
       <p className="mt-4">
         ご質問やご提案がありましたら、
         <a href={GITHUB_URL} target="_blank" rel="noopener noreferrer" className={LinkStyle}>GitHub</a>
@@ -131,6 +149,12 @@ const AnnouncementContent = {
         <li>오른쪽에서 방안 세부 정보와 구성도 확인</li>
       </ul>
       
+
+      <p className="mt-4">
+        동영상 튜토리얼:{' '}
+        <a href={VIDEO_TUTORIAL_URL} target="_blank" rel="noopener noreferrer" className={LinkStyle}>Bilibili - D.I.G.E. 사용 가이드</a>
+      </p>
+
       <p className="mt-4">
         질문이나 제안이 있으시면{' '}
         <a href={GITHUB_URL} target="_blank" rel="noopener noreferrer" className={LinkStyle}>GitHub</a>
