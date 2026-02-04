@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useI18n } from '../i18n';
 
 // 公告配置 - 修改这里来更新公告
-const ANNOUNCEMENT_ID = '2026-02-04-v3'; // 更新公告时修改此 ID
+const ANNOUNCEMENT_ID = '2026-02-04-v4'; // 更新公告时修改此 ID
 
 const GITHUB_URL = 'https://github.com/djkcyl/D.I.G.E.';
 const ISSUES_URL = 'https://github.com/djkcyl/D.I.G.E./issues';
@@ -35,6 +35,16 @@ const AnnouncementContent = {
         <li>调整最低电池电量和最大浪费限制</li>
         <li>点击"计算"按钮获取最优方案</li>
         <li>在右侧查看方案详情和配置图</li>
+      </ul>
+
+      <h3 className={HeadingStyle}>v1.3.0 更新内容</h3>
+      <ul className={ListStyle}>
+        <li>图表新增时间轴，支持按时间查看波动</li>
+        <li>图表支持滚轮缩放、鼠标拖拽、移动端双指缩放与单指平移</li>
+        <li>图表新增每个震荡分支（电池）的燃烧状态曲线</li>
+        <li>新增“关闭悬浮完整数据”开关，移动端默认开启</li>
+        <li>周期图表、燃料消耗、流程图支持折叠/展开（滑动动画）</li>
+        <li>优化图表区域和折叠区块的布局与交互细节</li>
       </ul>
       
       <p className="mt-4">
@@ -72,7 +82,17 @@ const AnnouncementContent = {
         <li>Click "CALCULATE" to get optimal solutions</li>
         <li>View solution details and diagrams on the right</li>
       </ul>
-      
+
+      <h3 className={HeadingStyle}>v1.3.0 Updates</h3>
+      <ul className={ListStyle}>
+        <li>Added a time axis to the chart for time-based reading</li>
+        <li>Chart now supports wheel zoom, mouse drag, pinch zoom, and mobile pan</li>
+        <li>Added per-branch battery burn-state lines</li>
+        <li>Added a "Hide hover details" switch (enabled by default on mobile)</li>
+        <li>Cycle chart, fuel consumption, and diagram sections are collapsible with slide animation</li>
+        <li>Refined chart area layout and fold/unfold interaction details</li>
+      </ul>
+
 
       <p className="mt-4">
         Video tutorial:{' '}
@@ -110,7 +130,17 @@ const AnnouncementContent = {
         <li>「計算」ボタンをクリックして最適方案を取得</li>
         <li>右側で方案の詳細と構成図を確認</li>
       </ul>
-      
+
+      <h3 className={HeadingStyle}>v1.3.0 更新内容</h3>
+      <ul className={ListStyle}>
+        <li>チャートに時間軸を追加</li>
+        <li>ホイール拡大縮小・ドラッグ移動・モバイルのピンチ/パンに対応</li>
+        <li>各分岐バッテリーの燃焼状態ラインを追加</li>
+        <li>「ホバー詳細を隠す」スイッチを追加（モバイルでは既定で ON）</li>
+        <li>周期チャート・燃料消費・構成図をスライドで折りたたみ可能に</li>
+        <li>チャート領域と折りたたみ時のレイアウト/操作感を調整</li>
+      </ul>
+
 
       <p className="mt-4">
         動画チュートリアル：{' '}
@@ -148,7 +178,17 @@ const AnnouncementContent = {
         <li>"계산" 버튼을 클릭하여 최적 방안 얻기</li>
         <li>오른쪽에서 방안 세부 정보와 구성도 확인</li>
       </ul>
-      
+
+      <h3 className={HeadingStyle}>v1.3.0 업데이트</h3>
+      <ul className={ListStyle}>
+        <li>차트에 시간축 추가</li>
+        <li>휠 확대/축소, 마우스 드래그, 모바일 핀치/팬 지원</li>
+        <li>각 분기 배터리의 연소 상태 라인 추가</li>
+        <li>"호버 상세 숨기기" 스위치 추가 (모바일 기본 ON)</li>
+        <li>주기 차트/연료 소모/구성도 섹션 접기·펼치기(슬라이드 애니메이션)</li>
+        <li>차트 영역 및 접기/펼치기 상호작용 디테일 개선</li>
+      </ul>
+
 
       <p className="mt-4">
         동영상 튜토리얼:{' '}

@@ -74,9 +74,11 @@ export class FactoryDesigner {
     
     // 记录每个时刻的发电功率
     const powerTimeline = new Array(Math.ceil(totalDuration)).fill(0);
+    // 记录每个分支（每个振荡电池）的燃烧状态：1=燃烧中，0=未燃烧
+    const branchBurnTimeline = oscillatingBranches.map(() => new Array(Math.ceil(totalDuration)).fill(0));
     
     // 模拟每个震荡分支
-    for (const branch of oscillatingBranches) {
+    for (const [branchIndex, branch] of oscillatingBranches.entries()) {
       const inputInterval = CONSTANTS.BELT_INTERVAL * branch.denominator;
       let lastBurnEnd = 0;
       
@@ -87,6 +89,7 @@ export class FactoryDesigner {
         
         for (let i = Math.floor(burnStart); i < Math.min(Math.ceil(burnEnd), totalDuration); i++) {
           powerTimeline[i] += fuel.power;
+          branchBurnTimeline[branchIndex][i] = 1;
         }
       }
     }
@@ -101,6 +104,7 @@ export class FactoryDesigner {
     let minBattery = battery;
     const batteryLog = [];
     const powerLog = [];
+    const burnStateLog = oscillatingBranches.map(() => []);
     
     // 预热
     for (let t = 0; t < checkStart; t++) {
@@ -123,6 +127,9 @@ export class FactoryDesigner {
       if (period < 2000 || ((t - checkStart) % Math.ceil(period / 500) === 0)) {
         batteryLog.push(battery);
         powerLog.push(supply);
+        for (let i = 0; i < burnStateLog.length; i++) {
+          burnStateLog[i].push(branchBurnTimeline[i][t] || 0);
+        }
       }
       
       if (battery < minBattRequired) {
@@ -145,6 +152,7 @@ export class FactoryDesigner {
       minBatteryPercent: (minBattery / this.batteryCapacity) * 100,
       batteryLog,
       powerLog,
+      burnStateLog,
     };
   }
 
@@ -234,6 +242,7 @@ export class FactoryDesigner {
           totalSplitters: 0,
           batteryLog: [this.batteryCapacity],
           powerLog: [baseConfig.totalPower],
+          burnStateLog: [],
           fuelConsumption: {
             base: {
               fuel: this.primaryFuel,
@@ -308,6 +317,7 @@ export class FactoryDesigner {
         totalSplitters: sol.totalSplitters,
         batteryLog: sol.batteryLog,
         powerLog: sol.powerLog,
+        burnStateLog: sol.burnStateLog,
         // 燃料消耗数据 - 分别记录
         fuelConsumption: {
           base: {
