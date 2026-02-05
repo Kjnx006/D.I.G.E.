@@ -1,15 +1,16 @@
 @import "tailwindcss";
+@import url("https://fontsapi.zeoseven.com/670/main/result.css");
 
-/* 全局字体 - 使用等宽字体 */
+/* 全局字体 */
 html {
-  font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace;
   -webkit-tap-highlight-color: transparent;
   touch-action: manipulation;
   font-variant-numeric: tabular-nums;
 }
 
 body {
-  font-family: inherit;
+  font-family: "Frex Sans GB VF";
+  font-weight: normal;
 }
 
 * {

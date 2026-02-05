@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useI18n } from '../i18n';
 
-export default function Header({ onCalculate, sidebarCollapsed, onToggleSidebar, onOpenAnnouncement }) {
+export default function Header({ onCalculate, sidebarCollapsed, onToggleSidebar, onOpenAnnouncement, onOpenPrivacyPolicy }) {
   const { t, locale, changeLocale, languageOptions } = useI18n();
   const [showLangMenu, setShowLangMenu] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
@@ -89,10 +89,19 @@ export default function Header({ onCalculate, sidebarCollapsed, onToggleSidebar,
       </div>
 
       <div className="flex items-center gap-2 sm:gap-3">
+        <button
+          onClick={onOpenPrivacyPolicy}
+          className="h-9 w-9 sm:h-10 sm:w-10 bg-endfield-gray border border-endfield-gray-light hover:border-endfield-yellow transition-colors flex items-center justify-center text-endfield-text-light hover:text-endfield-yellow"
+          title={t('privacyPolicyDetails')}
+          aria-label={t('privacyPolicyDetails')}
+        >
+          <span className="material-symbols-outlined text-xl" aria-hidden="true">policy</span>
+        </button>
+
         {/* Announcement Button - 桌面端显示 */}
         <button
           onClick={onOpenAnnouncement}
-          className="hidden md:flex h-10 w-10 bg-endfield-gray border border-endfield-gray-light hover:border-endfield-yellow transition-colors items-center justify-center text-endfield-text-light hover:text-endfield-yellow cursor-pointer"
+          className="hidden md:flex h-10 w-10 bg-endfield-gray border border-endfield-gray-light hover:border-endfield-yellow transition-colors items-center justify-center text-endfield-text-light hover:text-endfield-yellow cursor-default"
           title={t('announcement')}
           aria-label={t('announcement')}
         >
@@ -104,7 +113,7 @@ export default function Header({ onCalculate, sidebarCollapsed, onToggleSidebar,
           href="https://github.com/djkcyl/D.I.G.E."
           target="_blank"
           rel="noopener noreferrer"
-          className="hidden md:flex h-10 w-10 bg-endfield-gray border border-endfield-gray-light hover:border-endfield-yellow transition-colors items-center justify-center text-endfield-text-light hover:text-endfield-yellow"
+          className="hidden md:flex h-10 w-10 bg-endfield-gray border border-endfield-gray-light hover:border-endfield-yellow transition-colors items-center justify-center text-endfield-text-light hover:text-endfield-yellow cursor-default"
           title="GitHub"
           aria-label="GitHub 项目页面"
         >
@@ -117,7 +126,7 @@ export default function Header({ onCalculate, sidebarCollapsed, onToggleSidebar,
         <nav className="relative hidden md:block" ref={langMenuRef} aria-label="语言切换">
           <button
             onClick={() => setShowLangMenu(!showLangMenu)}
-            className="h-10 px-3 bg-endfield-gray border border-endfield-gray-light hover:border-endfield-yellow transition-colors flex items-center gap-2 text-sm text-endfield-text-light cursor-pointer"
+            className="h-10 px-3 bg-endfield-gray border border-endfield-gray-light hover:border-endfield-yellow transition-colors flex items-center gap-2 text-sm text-endfield-text-light"
             aria-expanded={showLangMenu}
             aria-haspopup="listbox"
             aria-label={`当前语言: ${currentLang?.name}, 点击切换语言`}
@@ -135,7 +144,7 @@ export default function Header({ onCalculate, sidebarCollapsed, onToggleSidebar,
                       changeLocale(lang.code);
                       setShowLangMenu(false);
                     }}
-                    className={`w-full px-3 py-2 text-left text-sm hover:bg-endfield-gray-light transition-colors cursor-pointer
+                    className={`w-full px-3 py-2 text-left text-sm hover:bg-endfield-gray-light transition-colors
                       ${locale === lang.code ? 'text-endfield-yellow' : 'text-endfield-text-light'}`}
                     lang={lang.code}
                   >

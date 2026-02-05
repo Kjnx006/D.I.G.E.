@@ -9,7 +9,7 @@ export default function CloseButton({
     <button
       type="button"
       onClick={onClick}
-      className={`shrink-0 cursor-pointer border border-endfield-gray-light hover:border-endfield-yellow text-endfield-text hover:text-endfield-yellow flex items-center justify-center transition-colors ${sizeClass} ${className}`}
+      className={`shrink-0 border border-endfield-gray-light hover:border-endfield-yellow text-endfield-text hover:text-endfield-yellow flex items-center justify-center transition-colors ${sizeClass} ${className}`}
       aria-label={label}
       title={label}
     >

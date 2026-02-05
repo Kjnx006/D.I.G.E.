@@ -91,6 +91,7 @@ function AppContent({ onOpenAnnouncement, onOpenPrivacyPolicy }) {
           sidebarCollapsed={sidebarCollapsed}
           onToggleSidebar={() => setSidebarCollapsed(!sidebarCollapsed)}
           onOpenAnnouncement={onOpenAnnouncement}
+          onOpenPrivacyPolicy={onOpenPrivacyPolicy}
         />
 
         <div className="flex-1 flex overflow-hidden">
@@ -127,7 +128,7 @@ function AppContent({ onOpenAnnouncement, onOpenPrivacyPolicy }) {
               <button
                 type="button"
                 onClick={onOpenPrivacyPolicy}
-                className="cursor-pointer text-endfield-yellow hover:text-endfield-yellow-glow underline underline-offset-2"
+                className="text-endfield-yellow hover:text-endfield-yellow-glow underline underline-offset-2"
               >
                 {t('privacyPolicyDetails')}
               </button>

@@ -24,7 +24,7 @@ ChartJS.register(
 );
 
 // 全局字体配置
-const fontFamily = "'JetBrains Mono', ui-monospace, monospace";
+const fontFamily = "Frex Sans GB VF";
 const TARGET_SECONDS_PER_POINT = 4;
 const MAX_CHART_POINTS = 1000;
 

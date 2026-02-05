@@ -22,6 +22,26 @@ export default function PrivacyPolicyModal({ show, onClose }) {
           <h3 className="text-endfield-yellow font-bold mt-2 mb-2">{t('privacyPolicyDisclosureTitle')}</h3>
           <p className="mb-4">{t('clarityPolicyDisclosure')}</p>
 
+          <p className="mb-4">
+            <a
+              href="https://clarity.microsoft.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-endfield-yellow hover:text-endfield-yellow-glow underline underline-offset-2"
+            >
+              Microsoft Clarity
+            </a>
+            {' '}|{' '}
+            <a
+              href="https://about.ads.microsoft.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-endfield-yellow hover:text-endfield-yellow-glow underline underline-offset-2"
+            >
+              Microsoft Advertising
+            </a>
+          </p>
+
           <p>
             <a
               href="https://privacy.microsoft.com/privacystatement"
@@ -36,7 +56,7 @@ export default function PrivacyPolicyModal({ show, onClose }) {
 
         <button
           onClick={onClose}
-          className="cursor-pointer w-full h-10 bg-endfield-yellow hover:bg-endfield-yellow-glow text-endfield-black font-bold tracking-wider transition-all flex items-center justify-center gap-2 text-sm"
+          className="w-full h-10 bg-endfield-yellow hover:bg-endfield-yellow-glow text-endfield-black font-bold tracking-wider transition-all flex items-center justify-center gap-2 text-sm"
         >
           {t('close')}
         </button>

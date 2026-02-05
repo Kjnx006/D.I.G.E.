@@ -98,7 +98,7 @@ export default function Sidebar({ params, setParams, collapsed, onClose, onCalcu
             />
             <button
               onClick={onRandomCalculate}
-              className="w-10 h-10 bg-endfield-gray border border-endfield-gray-light hover:border-endfield-yellow transition-colors flex items-center justify-center text-endfield-text-light hover:text-endfield-yellow cursor-pointer shrink-0"
+              className="w-10 h-10 bg-endfield-gray border border-endfield-gray-light hover:border-endfield-yellow transition-colors flex items-center justify-center text-endfield-text-light hover:text-endfield-yellow shrink-0"
               title={t('random')}
               aria-label={t('random')}
             >
@@ -188,7 +188,7 @@ export default function Sidebar({ params, setParams, collapsed, onClose, onCalcu
                 setShowPrimaryFuelMenu(!showPrimaryFuelMenu);
                 setShowSecondaryFuelMenu(false);
               }}
-              className="w-full h-10 bg-endfield-gray border border-endfield-gray-light hover:border-endfield-yellow transition-colors flex items-center justify-between px-3 text-sm text-endfield-text-light cursor-pointer"
+              className="w-full h-10 bg-endfield-gray border border-endfield-gray-light hover:border-endfield-yellow transition-colors flex items-center justify-between px-3 text-sm text-endfield-text-light"
               aria-expanded={showPrimaryFuelMenu}
               aria-haspopup="listbox"
               aria-labelledby="primary-fuel-label"
@@ -219,7 +219,7 @@ export default function Sidebar({ params, setParams, collapsed, onClose, onCalcu
                         handleChange('primaryFuelId', fuel.id);
                         setShowPrimaryFuelMenu(false);
                       }}
-                      className={`w-full px-3 py-2 text-left text-sm hover:bg-endfield-gray-light transition-colors cursor-pointer flex items-center gap-2
+                      className={`w-full px-3 py-2 text-left text-sm hover:bg-endfield-gray-light transition-colors flex items-center gap-2
                         ${params.primaryFuelId === fuel.id ? 'text-endfield-yellow' : 'text-endfield-text-light'}`}
                     >
                       {fuel.image && <img src={fuel.image} alt="" className="w-6 h-6 object-contain" aria-hidden="true" />}
@@ -250,7 +250,7 @@ export default function Sidebar({ params, setParams, collapsed, onClose, onCalcu
                 setShowSecondaryFuelMenu(!showSecondaryFuelMenu);
                 setShowPrimaryFuelMenu(false);
               }}
-              className="w-full h-10 bg-endfield-gray border border-endfield-gray-light hover:border-endfield-yellow transition-colors flex items-center justify-between px-3 text-sm text-endfield-text-light cursor-pointer"
+              className="w-full h-10 bg-endfield-gray border border-endfield-gray-light hover:border-endfield-yellow transition-colors flex items-center justify-between px-3 text-sm text-endfield-text-light"
               aria-expanded={showSecondaryFuelMenu}
               aria-haspopup="listbox"
               aria-labelledby="secondary-fuel-label"
@@ -281,7 +281,7 @@ export default function Sidebar({ params, setParams, collapsed, onClose, onCalcu
                         handleChange('secondaryFuelId', fuel.id);
                         setShowSecondaryFuelMenu(false);
                       }}
-                      className={`w-full px-3 py-2 text-left text-sm hover:bg-endfield-gray-light transition-colors cursor-pointer flex items-center gap-2
+                      className={`w-full px-3 py-2 text-left text-sm hover:bg-endfield-gray-light transition-colors flex items-center gap-2
                         ${params.secondaryFuelId === fuel.id ? 'text-endfield-yellow' : 'text-endfield-text-light'}`}
                     >
                       {fuel.image && <img src={fuel.image} alt="" className="w-6 h-6 object-contain" aria-hidden="true" />}
@@ -341,7 +341,7 @@ export default function Sidebar({ params, setParams, collapsed, onClose, onCalcu
               onOpenAnnouncement();
               onClose();
             }}
-            className="w-full h-10 bg-endfield-gray border border-endfield-gray-light hover:border-endfield-yellow transition-colors flex items-center justify-center gap-2 text-endfield-text-light hover:text-endfield-yellow cursor-pointer"
+            className="w-full h-10 bg-endfield-gray border border-endfield-gray-light hover:border-endfield-yellow transition-colors flex items-center justify-center gap-2 text-endfield-text-light hover:text-endfield-yellow cursor-default"
           >
             <span className="material-symbols-outlined text-xl">campaign</span>
             <span className="text-sm">{t('announcement')}</span>
@@ -364,7 +364,7 @@ export default function Sidebar({ params, setParams, collapsed, onClose, onCalcu
           <div className="relative" ref={langMenuRef}>
             <button
               onClick={() => setShowLangMenu(!showLangMenu)}
-              className="w-full h-10 bg-endfield-gray border border-endfield-gray-light hover:border-endfield-yellow transition-colors flex items-center justify-center gap-2 text-sm text-endfield-text-light cursor-pointer"
+              className="w-full h-10 bg-endfield-gray border border-endfield-gray-light hover:border-endfield-yellow transition-colors flex items-center justify-center gap-2 text-sm text-endfield-text-light"
             >
               <span className="material-symbols-outlined text-base">language</span>
               <span>{languageOptions.find(l => l.code === locale)?.name}</span>
@@ -379,7 +379,7 @@ export default function Sidebar({ params, setParams, collapsed, onClose, onCalcu
                       changeLocale(lang.code);
                       setShowLangMenu(false);
                     }}
-                    className={`w-full px-3 py-2 text-left text-sm hover:bg-endfield-gray-light transition-colors cursor-pointer
+                    className={`w-full px-3 py-2 text-left text-sm hover:bg-endfield-gray-light transition-colors
                       ${locale === lang.code ? 'text-endfield-yellow' : 'text-endfield-text-light'}`}
                   >
                     {lang.name}
