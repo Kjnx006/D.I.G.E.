@@ -129,7 +129,7 @@ function DraggableBranch({ branch, idx, t }) {
           {/* 发电机 */}
           <div className="h-8 px-2.5 bg-endfield-yellow/10 border border-endfield-yellow/50 flex items-center gap-1 text-endfield-yellow shrink-0">
             <span className="material-symbols-outlined text-sm">bolt</span>
-            <span className="text-sm font-bold">{t('gen')}</span>
+            <span className="text-sm font-bold uppercase">{t('gen')}</span>
           </div>
         </div>
       </div>

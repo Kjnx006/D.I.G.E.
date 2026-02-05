@@ -7,20 +7,34 @@ export const locales = {
     // Header
     appTitle: 'D.I.G.E.',
     appSubtitle: 'Dijiang Integrated Generator Efficiency',
-    calculate: 'CALCULATE',
+    calculate: 'Calculate',
+    share: 'Share',
+    shareLinkTitle: 'Share link',
+    shareLinkLabel: 'Share link',
+    copyLink: 'Copy link',
+    shareSystem: 'Share',
+    shareUnavailable: 'System sharing is not available on this device.',
+    shareCopied: 'Link copied',
+    shareCopyPrompt: 'Copy this link',
+    shareFailed: 'Share failed',
+    copyFailed: 'Copy failed',
+    copyFailedReasonPermission: 'Permission denied',
+    copyFailedReasonInsecure: 'HTTPS required',
+    copyFailedReasonUnavailable: 'Clipboard unavailable',
+    copyFailedReasonUnknown: 'Unknown error',
     
     // Sidebar - Target
-    targetPower: 'TARGET POWER',
+    targetPower: 'Target power',
     power: 'Power',
     random: 'Random',
     
     // Sidebar - Constraints
-    constraints: 'CONSTRAINTS',
+    constraints: 'Constraints',
     minBatteryPercent: 'Min Battery (%)',
     maxWaste: 'Max Waste / Redundancy',
     
     // Sidebar - Fuel Config
-    fuelConfig: 'FUEL CONFIG',
+    fuelConfig: 'Fuel config',
     primaryFuel: 'Primary Fuel',
     secondaryFuel: 'Secondary Fuel (Oscillating)',
     secondaryFuelHint: 'Optional fuel for oscillating generation',
@@ -38,7 +52,7 @@ export const locales = {
     branchesShort: 'Branches',
     primaryOnly: 'Primary only',
     useSecondary: 'Using secondary',
-    clickCalculate: 'Click CALCULATE to find optimal solutions',
+    clickCalculate: 'Click Calculate to find optimal solutions',
     adjustParamsHint: 'If no solution is found, try adjusting target power, constraints or fuel options',
     
     // Data Cards (compact)
@@ -52,7 +66,7 @@ export const locales = {
     lowerIsBetter: 'Lower is better',
     
     // Chart
-    cycleChart: 'CYCLE CHART',
+    cycleChart: 'Cycle chart',
     chartDataDesc: 'Data: power / target line / battery',
     preciseValues: 'Precise values',
     hideHoverDetails: 'Hide hover details',
@@ -66,14 +80,14 @@ export const locales = {
     powerAxis: 'Power',
     batteryAxis: 'Battery',
     burnStateShort: 'Burn',
-    stateOn: 'ON',
-    stateOff: 'OFF',
+    stateOn: 'On',
+    stateOff: 'Off',
     displayRange: 'Display Range',
     leftAxis: 'Left axis',
     rightAxis: 'Right axis',
     
     // Diagram
-    solutionDiagram: 'SOLUTION DIAGRAM',
+    solutionDiagram: 'Solution diagram',
     noSolutionData: 'No solution data',
     branch: 'Branch',
     basePowerSection: 'Base Power Generation',
@@ -81,12 +95,12 @@ export const locales = {
     oscillatingSection: 'Oscillating Generation',
     oscillatingShort: 'Oscillating',
     generators: 'Generators',
-    gen: 'GEN',
+    gen: 'Gen',
     fullBelt: 'Full Belt',
     basePlus: 'base +',
     waySplit: '-way',
-    twoWaySplitter: '2-WAY',
-    threeWaySplitter: '3-WAY',
+    twoWaySplitter: '2-way',
+    threeWaySplitter: '3-way',
     storageBox: 'Storage Box',
     storageShort: 'Storage',
     importantNote: 'Important',
@@ -95,15 +109,15 @@ export const locales = {
     baseOnlyHint: 'Base power only, no fuel needed',
     
     // Controls
-    fit: 'FIT',
-    reset: 'RESET',
+    fit: 'Fit',
+    reset: 'Reset',
     dragToPan: 'Drag to pan · Scroll to zoom',
     dragHint: '← Drag to scroll →',
     expandSidebar: 'Expand sidebar',
     collapseSidebar: 'Collapse sidebar',
     
     // Fuel Consumption
-    fuelConsumption: 'FUEL CONSUMPTION',
+    fuelConsumption: 'Fuel consumption',
     perMinute: 'Per Minute',
     perHour: 'Per Hour',
     perDay: 'Per Day',
@@ -113,17 +127,17 @@ export const locales = {
     savedPerDay: 'Saved/Day',
     
     // Error State
-    noSolutionFound: 'NO SOLUTION FOUND',
+    noSolutionFound: 'No solution found',
     errorSuggestion: 'Try increasing the waste limit, lowering the minimum battery level, or switching to a different secondary fuel.',
-    dismiss: 'DISMISS',
+    dismiss: 'Dismiss',
     
     // Loading
-    calculating: 'CALCULATING...',
+    calculating: 'Calculating...',
     
     // Announcement
-    announcement: 'ANNOUNCEMENT',
+    announcement: 'Announcement',
     dontShowAgain: "Don't show this announcement again",
-    understood: 'GOT IT',
+    understood: 'Got it',
     close: 'Close',
     claritySiteDisclosure: 'We use Microsoft Clarity to understand how you use our website and improve our products. By using our site, you agree that we and Microsoft can collect and use this data.',
     privacyPolicyDetails: 'Privacy policy details',
@@ -149,6 +163,20 @@ export const locales = {
     appTitle: 'D.I.G.E.',
     appSubtitle: '帝江号严选精细化集成工业系统能源生产及存储管理系统设计器',
     calculate: '计算',
+    share: '分享',
+    shareLinkTitle: '分享链接',
+    shareLinkLabel: '分享链接',
+    copyLink: '复制链接',
+    shareSystem: '系统分享',
+    shareUnavailable: '当前设备不支持系统分享。',
+    shareCopied: '链接已复制',
+    shareCopyPrompt: '请复制以下链接',
+    shareFailed: '分享失败',
+    copyFailed: '复制失败',
+    copyFailedReasonPermission: '权限不足',
+    copyFailedReasonInsecure: '需要 HTTPS 才能访问剪贴板',
+    copyFailedReasonUnavailable: '剪贴板不可用',
+    copyFailedReasonUnknown: '未知错误',
     
     // Sidebar - Target
     targetPower: '目标发电量',
@@ -290,6 +318,20 @@ export const locales = {
     appTitle: 'D.I.G.E.',
     appSubtitle: '帝江号厳選精密統合工業システムエネルギー生産貯蔵管理システム設計器',
     calculate: '計算',
+    share: '共有',
+    shareLinkTitle: '共有リンク',
+    shareLinkLabel: '共有リンク',
+    copyLink: 'リンクをコピー',
+    shareSystem: 'システム共有',
+    shareUnavailable: 'このデバイスではシステム共有は利用できません。',
+    shareCopied: 'リンクをコピーしました',
+    shareCopyPrompt: 'このリンクをコピーしてください',
+    shareFailed: '共有に失敗しました',
+    copyFailed: 'コピーに失敗しました',
+    copyFailedReasonPermission: '権限がありません',
+    copyFailedReasonInsecure: 'HTTPS が必要です',
+    copyFailedReasonUnavailable: 'クリップボードが利用できません',
+    copyFailedReasonUnknown: '不明なエラー',
     
     // Sidebar - Target
     targetPower: '目標発電量',
@@ -431,6 +473,20 @@ export const locales = {
     appTitle: 'D.I.G.E.',
     appSubtitle: '제강호엄선정밀통합산업시스템에너지생산저장관리시스템설계기',
     calculate: '계산',
+    share: '공유',
+    shareLinkTitle: '공유 링크',
+    shareLinkLabel: '공유 링크',
+    copyLink: '링크 복사',
+    shareSystem: '시스템 공유',
+    shareUnavailable: '이 기기에서는 시스템 공유를 사용할 수 없습니다.',
+    shareCopied: '링크가 복사되었습니다',
+    shareCopyPrompt: '이 링크를 복사해 주세요',
+    shareFailed: '공유에 실패했습니다',
+    copyFailed: '복사에 실패했습니다',
+    copyFailedReasonPermission: '권한이 없습니다',
+    copyFailedReasonInsecure: 'HTTPS가 필요합니다',
+    copyFailedReasonUnavailable: '클립보드 사용 불가',
+    copyFailedReasonUnknown: '알 수 없는 오류',
     
     // Sidebar - Target
     targetPower: '목표 발전량',

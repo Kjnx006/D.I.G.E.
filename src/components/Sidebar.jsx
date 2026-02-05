@@ -1,9 +1,10 @@
 import { useState, useEffect, useRef } from 'react';
 import { useI18n } from '../i18n';
 import { FUEL_OPTIONS, SECONDARY_FUEL_OPTIONS } from '../utils/constants';
+import { SHARE_LIMITS } from '../utils/shareParams';
 import CloseButton from './CloseButton';
 
-export default function Sidebar({ params, setParams, collapsed, onClose, onCalculate, onRandomCalculate, onOpenAnnouncement }) {
+export default function Sidebar({ params, setParams, collapsed, onClose, onCalculate, onRandomCalculate, onOpenAnnouncement, onOpenPrivacyPolicy }) {
   const { t, locale, changeLocale, languageOptions } = useI18n();
   const [showLangMenu, setShowLangMenu] = useState(false);
   const [showPrimaryFuelMenu, setShowPrimaryFuelMenu] = useState(false);
@@ -31,9 +32,30 @@ export default function Sidebar({ params, setParams, collapsed, onClose, onCalcu
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
   
+  const clampNumber = (value, min, max) => {
+    if (!Number.isFinite(value)) return min;
+    return Math.min(max, Math.max(min, value));
+  };
+
   const handleChange = (key, value) => {
+    if (key === 'targetPower') {
+      const clamped = clampNumber(value, 0, SHARE_LIMITS.MAX_TARGET_POWER);
+      setParams(prev => ({ ...prev, [key]: clamped }));
+      return;
+    }
+    if (key === 'maxWaste') {
+      const clamped = clampNumber(value, 0, SHARE_LIMITS.MAX_MAX_WASTE);
+      setParams(prev => ({ ...prev, [key]: clamped }));
+      return;
+    }
+    if (key === 'minBatteryPercent') {
+      const clamped = clampNumber(value, 0, 100);
+      setParams(prev => ({ ...prev, [key]: clamped }));
+      return;
+    }
     setParams(prev => ({ ...prev, [key]: value }));
   };
+
 
   const getFuelName = (fuel) => {
     return fuel.name[locale] || fuel.name.en;
@@ -90,8 +112,10 @@ export default function Sidebar({ params, setParams, collapsed, onClose, onCalcu
             <input
               id="target-power-input"
               type="number"
+              min="0"
+              max={SHARE_LIMITS.MAX_TARGET_POWER}
               value={params.targetPower}
-              onChange={(e) => handleChange('targetPower', parseInt(e.target.value) || 0)}
+              onChange={(e) => handleChange('targetPower', parseInt(e.target.value, 10) || 0)}
               onKeyDown={(e) => e.key === 'Enter' && onCalculate()}
               className="flex-1 bg-endfield-gray border border-endfield-gray-light px-3 py-2 text-sm text-endfield-text-light focus:border-endfield-yellow focus:outline-none"
               aria-describedby="target-power-desc"
@@ -162,8 +186,10 @@ export default function Sidebar({ params, setParams, collapsed, onClose, onCalcu
           <input
             id="max-waste-input"
             type="number"
+            min="0"
+            max={SHARE_LIMITS.MAX_MAX_WASTE}
             value={params.maxWaste}
-            onChange={(e) => handleChange('maxWaste', parseInt(e.target.value) || 0)}
+            onChange={(e) => handleChange('maxWaste', parseInt(e.target.value, 10) || 0)}
             onKeyDown={(e) => e.key === 'Enter' && onCalculate()}
             className="w-full bg-endfield-gray border border-endfield-gray-light px-3 py-2 text-sm text-endfield-text-light focus:border-endfield-yellow focus:outline-none"
           />
@@ -327,7 +353,7 @@ export default function Sidebar({ params, setParams, collapsed, onClose, onCalcu
         {/* 桌面端计算按钮 */}
         <button
           onClick={() => onCalculate()}
-          className="hidden md:flex w-full mt-4 h-10 bg-endfield-yellow hover:bg-endfield-yellow-glow text-endfield-black font-bold tracking-wider transition-all items-center justify-center gap-2 text-sm glow-yellow shrink-0"
+          className="hidden md:flex w-full mt-4 h-10 bg-endfield-yellow hover:bg-endfield-yellow-glow text-endfield-black font-bold tracking-wider uppercase transition-all items-center justify-center gap-2 text-sm glow-yellow shrink-0"
         >
           <span className="material-symbols-outlined text-base">calculate</span>
           {t('calculate')}
@@ -335,6 +361,16 @@ export default function Sidebar({ params, setParams, collapsed, onClose, onCalcu
 
         {/* 移动端：公告、GitHub、语言切换按钮 */}
         <div className="md:hidden mt-4 pt-4 border-t border-endfield-gray-light space-y-3">
+          <button
+            onClick={() => {
+              onOpenPrivacyPolicy();
+              onClose();
+            }}
+            className="w-full h-10 bg-endfield-gray border border-endfield-gray-light hover:border-endfield-yellow transition-colors flex items-center justify-center gap-2 text-endfield-text-light hover:text-endfield-yellow"
+          >
+            <span className="material-symbols-outlined text-xl">policy</span>
+            <span className="text-sm">{t('privacyPolicyDetails')}</span>
+          </button>
           {/* 公告按钮 */}
           <button
             onClick={() => {

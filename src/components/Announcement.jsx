@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useI18n } from '../i18n';
 
 // 公告配置 - 修改这里来更新公告
-const ANNOUNCEMENT_ID = '2026-02-05-v5'; // 更新公告时修改此 ID
+const ANNOUNCEMENT_ID = '2026-02-05-v6'; // 更新公告时修改此 ID
 
 const GITHUB_URL = 'https://github.com/djkcyl/D.I.G.E.';
 const ISSUES_URL = 'https://github.com/djkcyl/D.I.G.E./issues';
@@ -89,7 +89,7 @@ const AnnouncementContent = {
         <li>Set target power in the left control panel</li>
         <li>Select primary fuel (required) and secondary fuel (optional)</li>
         <li>Adjust minimum battery level and max waste limits</li>
-        <li>Click "CALCULATE" to get optimal solutions</li>
+        <li>Click "Calculate" to get optimal solutions</li>
         <li>View solution details and diagrams on the right</li>
       </ul>
 

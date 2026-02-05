@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useI18n } from '../i18n';
 
-export default function Header({ onCalculate, sidebarCollapsed, onToggleSidebar, onOpenAnnouncement, onOpenPrivacyPolicy }) {
+export default function Header({ onCalculate, onShare, sidebarCollapsed, onToggleSidebar, onOpenAnnouncement, onOpenPrivacyPolicy }) {
   const { t, locale, changeLocale, languageOptions } = useI18n();
   const [showLangMenu, setShowLangMenu] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
@@ -91,11 +91,20 @@ export default function Header({ onCalculate, sidebarCollapsed, onToggleSidebar,
       <div className="flex items-center gap-2 sm:gap-3">
         <button
           onClick={onOpenPrivacyPolicy}
-          className="h-9 w-9 sm:h-10 sm:w-10 bg-endfield-gray border border-endfield-gray-light hover:border-endfield-yellow transition-colors flex items-center justify-center text-endfield-text-light hover:text-endfield-yellow"
+          className="hidden md:flex h-9 w-9 sm:h-10 sm:w-10 bg-endfield-gray border border-endfield-gray-light hover:border-endfield-yellow transition-colors items-center justify-center text-endfield-text-light hover:text-endfield-yellow"
           title={t('privacyPolicyDetails')}
           aria-label={t('privacyPolicyDetails')}
         >
           <span className="material-symbols-outlined text-xl" aria-hidden="true">policy</span>
+        </button>
+
+        <button
+          onClick={onShare}
+          className="h-9 w-9 sm:h-10 sm:w-10 bg-endfield-gray border border-endfield-gray-light hover:border-endfield-yellow transition-colors flex items-center justify-center text-endfield-text-light hover:text-endfield-yellow"
+          title={t('share')}
+          aria-label={t('share')}
+        >
+          <span className="material-symbols-outlined text-xl" aria-hidden="true">share</span>
         </button>
 
         {/* Announcement Button - 桌面端显示 */}
@@ -159,7 +168,7 @@ export default function Header({ onCalculate, sidebarCollapsed, onToggleSidebar,
         {/* 移动端计算按钮 */}
         <button
           onClick={() => onCalculate()}
-          className="md:hidden h-9 px-3 bg-endfield-yellow hover:bg-endfield-yellow-glow text-endfield-black font-bold tracking-wider transition-all flex items-center gap-1.5 text-sm glow-yellow"
+          className="md:hidden h-9 px-3 bg-endfield-yellow hover:bg-endfield-yellow-glow text-endfield-black font-bold tracking-wider uppercase transition-all flex items-center gap-1.5 text-sm glow-yellow"
           aria-label={t('calculate')}
         >
           <span className="material-symbols-outlined text-base" aria-hidden="true">calculate</span>

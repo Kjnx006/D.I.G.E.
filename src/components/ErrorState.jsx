@@ -11,7 +11,7 @@ export default function ErrorState({ show, onDismiss }) {
         <span className="material-symbols-outlined text-red-500 text-5xl mb-4">
           error_outline
         </span>
-        <h2 className="text-xl font-bold text-endfield-text-light mb-2 tracking-wider">
+        <h2 className="text-xl font-bold text-endfield-text-light mb-2 tracking-wider uppercase">
           {t('noSolutionFound')}
         </h2>
         <p className="text-endfield-text text-sm mb-6">

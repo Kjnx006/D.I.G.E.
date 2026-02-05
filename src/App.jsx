@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { I18nProvider, useI18n } from './i18n';
 import Header from './components/Header';
 import Sidebar from './components/Sidebar';
@@ -8,21 +8,34 @@ import ErrorState from './components/ErrorState';
 import Announcement, { shouldShowAnnouncement } from './components/Announcement';
 import PrivacyPolicyModal from './components/PrivacyPolicyModal';
 import CloseButton from './components/CloseButton';
+import ShareModal from './components/ShareModal';
 import { FactoryDesigner } from './utils/FactoryDesigner';
+import { buildShareUrl, getShareParamsFromUrl } from './utils/shareParams';
 
 // 生成随机目标发电量 (500 - 5000)
 const getRandomTargetPower = () => Math.floor(Math.random() * 4500) + 500;
 const PRIVACY_FOOTER_DISMISSED_KEY = 'dige-privacy-footer-dismissed';
+const DEFAULT_PARAMS = {
+  targetPower: 2656,
+  minBatteryPercent: 5,
+  maxWaste: 30,
+  primaryFuelId: 'wulingLow',
+  secondaryFuelId: 'none',
+};
+
+const getInitialParams = () => {
+  if (typeof window === 'undefined') return DEFAULT_PARAMS;
+  const sharedParams = getShareParamsFromUrl();
+  return sharedParams ? { ...DEFAULT_PARAMS, ...sharedParams } : DEFAULT_PARAMS;
+};
 
 function AppContent({ onOpenAnnouncement, onOpenPrivacyPolicy }) {
   const { t } = useI18n();
-  const [params, setParams] = useState(() => ({
-    targetPower: 2656,
-    minBatteryPercent: 5,
-    maxWaste: 30,
-    primaryFuelId: 'wulingLow',
-    secondaryFuelId: 'none',
-  }));
+  const [params, setParams] = useState(getInitialParams);
+  const [shareStatus, setShareStatus] = useState('');
+  const shareStatusTimer = useRef(null);
+  const [shareModalOpen, setShareModalOpen] = useState(false);
+  const [shareUrl, setShareUrl] = useState('');
 
   const [solutions, setSolutions] = useState([]);
   const [selectedIndex, setSelectedIndex] = useState(0);
@@ -65,6 +78,79 @@ function AppContent({ onOpenAnnouncement, onOpenPrivacyPolicy }) {
     }
   }, [params]);
 
+  useEffect(() => {
+    return () => {
+      if (shareStatusTimer.current) {
+        clearTimeout(shareStatusTimer.current);
+      }
+    };
+  }, []);
+
+  const showShareStatus = useCallback((message) => {
+    if (!message) return;
+    setShareStatus(message);
+    if (shareStatusTimer.current) {
+      clearTimeout(shareStatusTimer.current);
+    }
+    shareStatusTimer.current = setTimeout(() => setShareStatus(''), 2000);
+  }, []);
+
+  const getCopyErrorReason = useCallback((error) => {
+    const name = error?.name || '';
+    if (name === 'NotAllowedError') return t('copyFailedReasonPermission');
+    if (name === 'SecurityError') return t('copyFailedReasonInsecure');
+    if (name === 'NotFoundError') return t('copyFailedReasonUnavailable');
+    return t('copyFailedReasonUnknown');
+  }, [t]);
+
+  const handleOpenShareModal = useCallback(() => {
+    const nextUrl = buildShareUrl(params);
+    if (!nextUrl) {
+      showShareStatus(t('shareFailed'));
+      return;
+    }
+
+    window.history.replaceState({}, '', nextUrl);
+    setShareUrl(nextUrl);
+    setShareModalOpen(true);
+  }, [params, showShareStatus, t]);
+
+  const handleCloseShareModal = useCallback(() => {
+    setShareModalOpen(false);
+  }, []);
+
+  const handleCopyShareUrl = useCallback(async () => {
+    if (!shareUrl) {
+      showShareStatus(t('shareFailed'));
+      return;
+    }
+
+    try {
+      if (navigator.clipboard?.writeText) {
+        await navigator.clipboard.writeText(shareUrl);
+        showShareStatus(t('shareCopied'));
+      } else {
+        window.prompt(t('shareCopyPrompt'), shareUrl);
+        showShareStatus(t('shareCopied'));
+      }
+    } catch (error) {
+      console.error('Share error:', error);
+      const reason = getCopyErrorReason(error);
+      showShareStatus(`${t('copyFailed')}: ${reason}`);
+    }
+  }, [shareUrl, showShareStatus, t, getCopyErrorReason]);
+
+  const handleNativeShare = useCallback(async () => {
+    if (!shareUrl || !navigator.share) return;
+    try {
+      await navigator.share({ title: document.title, url: shareUrl });
+    } catch (error) {
+      if (error?.name === 'AbortError') return;
+      console.error('Share error:', error);
+      showShareStatus(t('shareFailed'));
+    }
+  }, [shareUrl, showShareStatus, t]);
+
   // 随机生成目标功率并立即计算
   const handleRandomCalculate = useCallback(() => {
     const newPower = getRandomTargetPower();
@@ -88,11 +174,24 @@ function AppContent({ onOpenAnnouncement, onOpenPrivacyPolicy }) {
     <div className="bg-endfield-black text-endfield-text-light font-sans h-screen flex flex-col overflow-hidden">
         <Header
           onCalculate={runCalculation}
+          onShare={handleOpenShareModal}
           sidebarCollapsed={sidebarCollapsed}
           onToggleSidebar={() => setSidebarCollapsed(!sidebarCollapsed)}
           onOpenAnnouncement={onOpenAnnouncement}
           onOpenPrivacyPolicy={onOpenPrivacyPolicy}
         />
+
+        {shareStatus && (
+          <div className="fixed top-3 left-1/2 -translate-x-1/2 z-[60] pointer-events-none">
+            <div
+              className="bg-endfield-gray border border-endfield-yellow/50 text-endfield-yellow text-xs sm:text-sm px-3 py-2 shadow-[0_10px_30px_rgba(0,0,0,0.35)]"
+              role="status"
+              aria-live="polite"
+            >
+              {shareStatus}
+            </div>
+          </div>
+        )}
 
         <div className="flex-1 flex overflow-hidden">
           <Sidebar
@@ -103,6 +202,7 @@ function AppContent({ onOpenAnnouncement, onOpenPrivacyPolicy }) {
             onCalculate={runCalculation}
             onRandomCalculate={handleRandomCalculate}
             onOpenAnnouncement={onOpenAnnouncement}
+            onOpenPrivacyPolicy={onOpenPrivacyPolicy}
           />
 
           <div className="flex-1 overflow-hidden bg-[radial-gradient(circle_at_85%_20%,rgba(255,250,0,0.08),transparent_40%),repeating-linear-gradient(135deg,rgba(255,250,0,0.04)_0_1px,transparent_1px_14px),linear-gradient(180deg,rgba(255,250,0,0.02),transparent_35%,rgba(255,250,0,0.015))]">
@@ -152,6 +252,14 @@ function AppContent({ onOpenAnnouncement, onOpenPrivacyPolicy }) {
             />
           </footer>
         )}
+
+        <ShareModal
+          show={shareModalOpen}
+          shareUrl={shareUrl}
+          onClose={handleCloseShareModal}
+          onCopy={handleCopyShareUrl}
+          onShare={handleNativeShare}
+        />
     </div>
   );
 }
