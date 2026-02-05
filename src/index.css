@@ -1,5 +1,5 @@
-@import "tailwindcss";
 @import url("https://fontsapi.zeoseven.com/670/main/result.css");
+@import "tailwindcss";
 
 /* 全局字体 */
 html {
