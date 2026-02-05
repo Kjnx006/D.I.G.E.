@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useI18n } from '../i18n';
 
 // 公告配置 - 修改这里来更新公告
-const ANNOUNCEMENT_ID = '2026-02-04-v4'; // 更新公告时修改此 ID
+const ANNOUNCEMENT_ID = '2026-02-05-v5'; // 更新公告时修改此 ID
 
 const GITHUB_URL = 'https://github.com/djkcyl/D.I.G.E.';
 const ISSUES_URL = 'https://github.com/djkcyl/D.I.G.E./issues';
@@ -35,6 +35,16 @@ const AnnouncementContent = {
         <li>调整最低电池电量和最大浪费限制</li>
         <li>点击"计算"按钮获取最优方案</li>
         <li>在右侧查看方案详情和配置图</li>
+      </ul>
+
+      <h3 className={HeadingStyle}>v1.4.0 更新内容</h3>
+      <ul className={ListStyle}>
+        <li>周期图表默认按 4 秒粒度采样，与 8 秒/40 秒燃烧周期对齐</li>
+        <li>超过 1000 点时自动压缩，新增“精确数值”开关可查看完整点位</li>
+        <li>悬浮数据改为显示时间而非点位索引，便于对齐燃烧过程</li>
+        <li>“悬浮完整数据”开关文案与行为已反转并简化</li>
+        <li>左侧“数据：功率 / 目标线 / 电量”在空间不足时自动隐藏</li>
+        <li>版本号固定显示在标题右侧</li>
       </ul>
 
       <h3 className={HeadingStyle}>v1.3.0 更新内容</h3>
@@ -81,6 +91,16 @@ const AnnouncementContent = {
         <li>Adjust minimum battery level and max waste limits</li>
         <li>Click "CALCULATE" to get optimal solutions</li>
         <li>View solution details and diagrams on the right</li>
+      </ul>
+
+      <h3 className={HeadingStyle}>v1.4.0 Updates</h3>
+      <ul className={ListStyle}>
+        <li>Cycle chart now uses strict 4-second points to align with 8s/40s burn durations</li>
+        <li>Data is compressed only above 1000 points; new "Precise Values" toggle shows full points</li>
+        <li>Hover panel now shows time instead of point index for easier timeline matching</li>
+        <li>The hover-details toggle wording and behavior are inverted and simplified</li>
+        <li>Left legend text ("Power / Target / Battery") auto-hides only when space is insufficient</li>
+        <li>Version label is now always shown to the right of the title</li>
       </ul>
 
       <h3 className={HeadingStyle}>v1.3.0 Updates</h3>
@@ -131,6 +151,16 @@ const AnnouncementContent = {
         <li>右側で方案の詳細と構成図を確認</li>
       </ul>
 
+      <h3 className={HeadingStyle}>v1.4.0 更新内容</h3>
+      <ul className={ListStyle}>
+        <li>周期チャートの点を 4 秒刻みに統一し、8 秒/40 秒燃焼周期に整合</li>
+        <li>1000 点超過時のみ圧縮し、「精確値」スイッチで全点表示が可能</li>
+        <li>ホバー情報は点番号ではなく時間表示に変更</li>
+        <li>ホバー詳細スイッチの文言と動作を反転して簡潔化</li>
+        <li>左側の「Power / Target / Battery」表示は幅不足時のみ自動非表示</li>
+        <li>バージョン表示をタイトル右側に常時固定</li>
+      </ul>
+
       <h3 className={HeadingStyle}>v1.3.0 更新内容</h3>
       <ul className={ListStyle}>
         <li>チャートに時間軸を追加</li>
@@ -177,6 +207,16 @@ const AnnouncementContent = {
         <li>최소 배터리 잔량과 최대 낭비 제한 조정</li>
         <li>"계산" 버튼을 클릭하여 최적 방안 얻기</li>
         <li>오른쪽에서 방안 세부 정보와 구성도 확인</li>
+      </ul>
+
+      <h3 className={HeadingStyle}>v1.4.0 업데이트</h3>
+      <ul className={ListStyle}>
+        <li>주기 차트를 4초 고정 포인트로 변경해 8초/40초 연소 주기와 정렬</li>
+        <li>1000포인트 초과 시에만 압축하고, "정밀 수치" 토글로 전체 포인트 표시</li>
+        <li>호버 데이터는 포인트 인덱스 대신 시간 기준으로 표시</li>
+        <li>호버 상세 토글의 문구와 동작을 반대로 바꾸고 더 간결화</li>
+        <li>좌측 "Power / Target / Battery" 라벨은 공간이 부족할 때만 자동 숨김</li>
+        <li>버전 표시는 제목 오른쪽에 항상 고정 표시</li>
       </ul>
 
       <h3 className={HeadingStyle}>v1.3.0 업데이트</h3>

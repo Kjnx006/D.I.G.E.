@@ -54,7 +54,9 @@ export const locales = {
     // Chart
     cycleChart: 'CYCLE CHART',
     chartDataDesc: 'Data: power / target line / battery',
+    preciseValues: 'Precise values',
     hideHoverDetails: 'Hide hover details',
+    hoverDetails: 'Hover details',
     expandSection: 'Expand',
     collapseSection: 'Collapse',
     noChartData: 'No chart data available',
@@ -193,7 +195,9 @@ export const locales = {
     // Chart
     cycleChart: '周期图表',
     chartDataDesc: '数据：功率 / 目标线 / 电量',
+    preciseValues: '精确数值',
     hideHoverDetails: '关闭悬浮完整数据',
+    hoverDetails: '悬浮详情',
     expandSection: '展开',
     collapseSection: '折叠',
     noChartData: '暂无图表数据',
@@ -332,6 +336,8 @@ export const locales = {
     // Chart
     cycleChart: 'サイクルチャート',
     chartDataDesc: 'データ: 電力 / 目標線 / バッテリー',
+    preciseValues: '精密値',
+    hoverDetails: 'ホバー詳細',
     hideHoverDetails: 'ホバー詳細を隠す',
     expandSection: '展開',
     collapseSection: '折りたたむ',
@@ -471,6 +477,8 @@ export const locales = {
     // Chart
     cycleChart: '주기 차트',
     chartDataDesc: '데이터: 전력 / 목표선 / 배터리',
+    hoverDetails: '호버 상세',
+    preciseValues: '정밀값',
     hideHoverDetails: '호버 상세 숨기기',
     expandSection: '펼치기',
     collapseSection: '접기',

@@ -78,7 +78,7 @@ export default function Header({ onCalculate, sidebarCollapsed, onToggleSidebar,
                 {t('appTitle')}
               </h1>
             </a>
-            <span className="hidden sm:inline text-xs text-endfield-yellow border border-endfield-yellow/30 bg-endfield-yellow/5 px-1.5 py-px">
+            <span className="inline text-xs text-endfield-yellow border border-endfield-yellow/30 bg-endfield-yellow/5 px-1.5 py-px">
               v{__APP_VERSION__}
             </span>
           </div>

@@ -25,8 +25,10 @@ ChartJS.register(
 
 // 全局字体配置
 const fontFamily = "'JetBrains Mono', ui-monospace, monospace";
+const TARGET_SECONDS_PER_POINT = 4;
+const MAX_CHART_POINTS = 1000;
 
-export default function SolutionChart({ solution, targetPower, batteryCapacity, hideHoverDetails = false }) {
+export default function SolutionChart({ solution, targetPower, batteryCapacity, hideHoverDetails = false, preciseValues = false }) {
   const { t } = useI18n();
   const chartRef = useRef(null);
   const interactionRef = useRef({
@@ -35,7 +37,11 @@ export default function SolutionChart({ solution, targetPower, batteryCapacity, 
     pinchDistance: 0,
   });
 
-  if (!solution || !solution.batteryLog || solution.batteryLog.length === 0) {
+  const sourceBatteryLog = preciseValues ? (solution?.preciseBatteryLog || solution?.batteryLog) : solution?.batteryLog;
+  const sourcePowerLog = preciseValues ? (solution?.precisePowerLog || solution?.powerLog) : solution?.powerLog;
+  const sourceBurnStateLog = preciseValues ? (solution?.preciseBurnStateLog || solution?.burnStateLog) : solution?.burnStateLog;
+
+  if (!solution || !sourceBatteryLog || sourceBatteryLog.length === 0) {
     return (
       <div className="h-48 flex items-center justify-center text-endfield-text text-sm">
         {t('noChartData')}
@@ -44,23 +50,79 @@ export default function SolutionChart({ solution, targetPower, batteryCapacity, 
   }
 
   // 采样数据以提高性能
-  let batteryData = solution.batteryLog;
-  let powerData = solution.powerLog || [];
-  let burnStateData = solution.burnStateLog || [];
+  let batteryData = sourceBatteryLog || [];
+  let powerData = sourcePowerLog || [];
+  let burnStateData = sourceBurnStateLog || [];
 
-  if (batteryData.length > 500) {
-    const step = Math.ceil(batteryData.length / 500);
-    batteryData = batteryData.filter((_, i) => i % step === 0);
-    powerData = powerData.filter((_, i) => i % step === 0);
-    burnStateData = burnStateData.map(series => series.filter((_, i) => i % step === 0));
+  // Strict granularity: one point every 4 seconds.
+  const rawBatteryData = batteryData;
+  const rawPowerData = powerData;
+  const rawBurnStateData = burnStateData;
+  const rawPointCount = rawBatteryData.length;
+  const rawPeriod = Math.max(0, solution?.period || 0);
+  const usingPreciseSource = preciseValues && Array.isArray(solution?.preciseBatteryLog);
+  const rawSecondsPerPoint = usingPreciseSource
+    ? 1
+    : (rawPeriod > 0 && rawPointCount > 1
+    ? rawPeriod / (rawPointCount - 1)
+    : 1);
+
+  let secondsPerPoint = rawSecondsPerPoint;
+
+  if (!preciseValues && rawPeriod > 0 && rawPointCount > 1) {
+    const sampleCount = Math.floor(rawPeriod / TARGET_SECONDS_PER_POINT) + 1;
+    const lastRawIndex = rawPointCount - 1;
+    const getNearestRawIndex = (tSec) => {
+      const rawPos = tSec / rawSecondsPerPoint;
+      return Math.max(0, Math.min(lastRawIndex, Math.round(rawPos)));
+    };
+    const sampleLinear = (arr, tSec) => {
+      const rawPos = tSec / rawSecondsPerPoint;
+      const i0 = Math.max(0, Math.min(lastRawIndex, Math.floor(rawPos)));
+      const i1 = Math.max(0, Math.min(lastRawIndex, i0 + 1));
+      const ratio = Math.max(0, Math.min(1, rawPos - i0));
+      const v0 = arr[i0] ?? 0;
+      const v1 = arr[i1] ?? v0;
+      return v0 + (v1 - v0) * ratio;
+    };
+
+    batteryData = Array.from({ length: sampleCount }, (_, sampleIdx) => {
+      const tSec = sampleIdx * TARGET_SECONDS_PER_POINT;
+      return sampleLinear(rawBatteryData, tSec);
+    });
+
+    powerData = Array.from({ length: sampleCount }, (_, sampleIdx) => {
+      const tSec = sampleIdx * TARGET_SECONDS_PER_POINT;
+      const i = getNearestRawIndex(tSec);
+      return rawPowerData[i] ?? 0;
+    });
+
+    burnStateData = rawBurnStateData.map((series) => (
+      Array.from({ length: sampleCount }, (_, sampleIdx) => {
+        const tSec = sampleIdx * TARGET_SECONDS_PER_POINT;
+        const i = getNearestRawIndex(tSec);
+        return series[i] ?? 0;
+      })
+    ));
+
+    secondsPerPoint = TARGET_SECONDS_PER_POINT;
+  }
+
+  if (!preciseValues && batteryData.length > MAX_CHART_POINTS) {
+    const compactStep = Math.ceil(batteryData.length / MAX_CHART_POINTS);
+    const lastIndex = batteryData.length - 1;
+    const keepCompact = (_, i) => i % compactStep === 0 || i === lastIndex;
+    batteryData = batteryData.filter(keepCompact);
+    powerData = powerData.filter(keepCompact);
+    burnStateData = burnStateData.map(series => series.filter(keepCompact));
+    secondsPerPoint *= compactStep;
   }
 
   const pointCount = batteryData.length;
   const maxX = Math.max(0, pointCount - 1);
   const minVisibleSpan = Math.min(20, maxX + 1);
-  const secondsPerPoint = solution?.period > 0 && pointCount > 1 ? solution.period / (pointCount - 1) : 1;
   const xValues = batteryData.map((_, i) => i);
-  // 限制电池百分比在 0-100 范围内
+  // Clamp battery percentage to [0, 100].
   const batteryPercent = batteryData.map(v => Math.min(100, Math.max(0, (v / batteryCapacity) * 100)));
   const powerPoints = xValues.map((x, i) => ({ x, y: powerData[i] ?? null }));
   const targetPoints = xValues.map((x) => ({ x, y: targetPower }));
@@ -147,6 +209,11 @@ export default function SolutionChart({ solution, targetPower, batteryCapacity, 
         titleFont: { family: fontFamily, size: 12 },
         bodyFont: { family: fontFamily, size: 12 },
         callbacks: {
+          title: (items) => {
+            if (!items || items.length === 0) return '';
+            const x = Number(items[0]?.parsed?.x ?? 0);
+            return formatTime(Math.max(0, x * secondsPerPoint));
+          },
           label: (context) => {
             const label = context.dataset.label || '';
             const value = context.parsed.y;

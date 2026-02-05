@@ -86,69 +86,71 @@ function AppContent({ onOpenAnnouncement, onOpenPrivacyPolicy }) {
 
   return (
     <div className="bg-endfield-black text-endfield-text-light font-sans h-screen flex flex-col overflow-hidden">
-      <Header
-        onCalculate={runCalculation}
-        sidebarCollapsed={sidebarCollapsed}
-        onToggleSidebar={() => setSidebarCollapsed(!sidebarCollapsed)}
-        onOpenAnnouncement={onOpenAnnouncement}
-      />
-
-      <div className="flex flex-1 overflow-hidden">
-        <Sidebar
-          params={params}
-          setParams={setParams}
-          collapsed={sidebarCollapsed}
-          onClose={() => setSidebarCollapsed(true)}
+        <Header
           onCalculate={runCalculation}
-          onRandomCalculate={handleRandomCalculate}
+          sidebarCollapsed={sidebarCollapsed}
+          onToggleSidebar={() => setSidebarCollapsed(!sidebarCollapsed)}
           onOpenAnnouncement={onOpenAnnouncement}
         />
 
-        <main className="flex-1 flex flex-col min-w-0 bg-endfield-black relative overflow-hidden">
-          <SolutionList
-            solutions={solutions}
-            selectedIndex={selectedIndex}
-            onSelectSolution={setSelectedIndex}
+        <div className="flex-1 flex overflow-hidden">
+          <Sidebar
             params={params}
+            setParams={setParams}
+            collapsed={sidebarCollapsed}
+            onClose={() => setSidebarCollapsed(true)}
+            onCalculate={runCalculation}
+            onRandomCalculate={handleRandomCalculate}
+            onOpenAnnouncement={onOpenAnnouncement}
           />
 
-          <LoadingOverlay isLoading={isLoading} />
-          <ErrorState show={showError} onDismiss={() => setShowError(false)} />
-        </main>
-      </div>
+          <div className="flex-1 overflow-hidden bg-[radial-gradient(circle_at_85%_20%,rgba(255,250,0,0.08),transparent_40%),repeating-linear-gradient(135deg,rgba(255,250,0,0.04)_0_1px,transparent_1px_14px),linear-gradient(180deg,rgba(255,250,0,0.02),transparent_35%,rgba(255,250,0,0.015))]">
+            <main className="mx-auto w-full max-w-[1800px] h-full flex flex-col min-w-0 bg-endfield-black/92 backdrop-blur-[1px] relative overflow-hidden">
+              <SolutionList
+                solutions={solutions}
+                selectedIndex={selectedIndex}
+                onSelectSolution={setSelectedIndex}
+                params={params}
+              />
 
-      {showPrivacyFooter && (
-        <footer className="shrink-0 relative border-t border-endfield-gray-light bg-endfield-dark px-3 py-2 text-[11px] sm:text-xs text-endfield-text leading-relaxed">
-          <div className="pr-8 text-center">
-            {t('claritySiteDisclosure')}
-            {' '}
-            <button
-              type="button"
-              onClick={onOpenPrivacyPolicy}
-              className="cursor-pointer text-endfield-yellow hover:text-endfield-yellow-glow underline underline-offset-2"
-            >
-              {t('privacyPolicyDetails')}
-            </button>
-            {' '}|{' '}
-            <a
-              href="https://privacy.microsoft.com/privacystatement"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-endfield-yellow hover:text-endfield-yellow-glow underline underline-offset-2"
-            >
-              {t('microsoftPrivacyStatement')}
-            </a>
+              <LoadingOverlay isLoading={isLoading} />
+              <ErrorState show={showError} onDismiss={() => setShowError(false)} />
+            </main>
           </div>
+        </div>
 
-          <CloseButton
-            onClick={handleDismissPrivacyFooter}
-            label={t('close')}
-            sizeClass="w-5 h-5"
-            iconClass="text-xs"
-            className="absolute right-3 top-1/2 -translate-y-1/2"
-          />
-        </footer>
-      )}
+        {showPrivacyFooter && (
+          <footer className="shrink-0 relative border-t border-endfield-gray-light bg-endfield-dark px-3 py-2 text-[11px] sm:text-xs text-endfield-text leading-relaxed">
+            <div className="pr-8 text-center">
+              {t('claritySiteDisclosure')}
+              {' '}
+              <button
+                type="button"
+                onClick={onOpenPrivacyPolicy}
+                className="cursor-pointer text-endfield-yellow hover:text-endfield-yellow-glow underline underline-offset-2"
+              >
+                {t('privacyPolicyDetails')}
+              </button>
+              {' '}|{' '}
+              <a
+                href="https://privacy.microsoft.com/privacystatement"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-endfield-yellow hover:text-endfield-yellow-glow underline underline-offset-2"
+              >
+                {t('microsoftPrivacyStatement')}
+              </a>
+            </div>
+
+            <CloseButton
+              onClick={handleDismissPrivacyFooter}
+              label={t('close')}
+              sizeClass="w-5 h-5"
+              iconClass="text-xs"
+              className="absolute right-3 top-1/2 -translate-y-1/2"
+            />
+          </footer>
+        )}
     </div>
   );
 }

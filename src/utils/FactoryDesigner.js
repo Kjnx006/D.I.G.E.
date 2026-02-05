@@ -105,6 +105,9 @@ export class FactoryDesigner {
     const batteryLog = [];
     const powerLog = [];
     const burnStateLog = oscillatingBranches.map(() => []);
+    const preciseBatteryLog = [];
+    const precisePowerLog = [];
+    const preciseBurnStateLog = oscillatingBranches.map(() => []);
     
     // 预热
     for (let t = 0; t < checkStart; t++) {
@@ -131,6 +134,13 @@ export class FactoryDesigner {
           burnStateLog[i].push(branchBurnTimeline[i][t] || 0);
         }
       }
+
+      // Always keep 1-second logs for precise chart mode.
+      preciseBatteryLog.push(battery);
+      precisePowerLog.push(supply);
+      for (let i = 0; i < preciseBurnStateLog.length; i++) {
+        preciseBurnStateLog[i].push(branchBurnTimeline[i][t] || 0);
+      }
       
       if (battery < minBattRequired) {
         return { success: false, reason: 'battery_below_min', minBattery };
@@ -153,6 +163,9 @@ export class FactoryDesigner {
       batteryLog,
       powerLog,
       burnStateLog,
+      preciseBatteryLog,
+      precisePowerLog,
+      preciseBurnStateLog,
     };
   }
 
@@ -243,6 +256,9 @@ export class FactoryDesigner {
           batteryLog: [this.batteryCapacity],
           powerLog: [baseConfig.totalPower],
           burnStateLog: [],
+          preciseBatteryLog: [this.batteryCapacity],
+          precisePowerLog: [baseConfig.totalPower],
+          preciseBurnStateLog: [],
           fuelConsumption: {
             base: {
               fuel: this.primaryFuel,
@@ -318,6 +334,9 @@ export class FactoryDesigner {
         batteryLog: sol.batteryLog,
         powerLog: sol.powerLog,
         burnStateLog: sol.burnStateLog,
+        preciseBatteryLog: sol.preciseBatteryLog,
+        precisePowerLog: sol.precisePowerLog,
+        preciseBurnStateLog: sol.preciseBurnStateLog,
         // 燃料消耗数据 - 分别记录
         fuelConsumption: {
           base: {

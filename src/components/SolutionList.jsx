@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useI18n } from '../i18n';
 import { formatTime, CONSTANTS, FUELS } from '../utils/constants';
 import SolutionChart from './SolutionChart';
@@ -7,6 +7,11 @@ import SolutionDiagram from './SolutionDiagram';
 export default function SolutionList({ solutions, selectedIndex, onSelectSolution, params }) {
   const { t, locale } = useI18n();
   const [hideHoverDetails, setHideHoverDetails] = useState(false);
+  const [preciseValues, setPreciseValues] = useState(false);
+  const [showChartDataDesc, setShowChartDataDesc] = useState(true);
+  const chartHeaderRef = useRef(null);
+  const chartControlsRef = useRef(null);
+  const chartDescRef = useRef(null);
   const [collapsedSections, setCollapsedSections] = useState({
     chart: false,
     fuel: false,
@@ -17,6 +22,25 @@ export default function SolutionList({ solutions, selectedIndex, onSelectSolutio
     if (typeof window === 'undefined') return;
     setHideHoverDetails(window.matchMedia('(max-width: 768px)').matches);
   }, []);
+
+  useEffect(() => {
+    const headerEl = chartHeaderRef.current;
+    if (!headerEl) return;
+
+    const updateChartHeaderLayout = () => {
+      const rowWidth = headerEl.clientWidth;
+      const controlsWidth = chartControlsRef.current?.offsetWidth || 0;
+      const descWidth = chartDescRef.current?.scrollWidth || 0;
+      setShowChartDataDesc(rowWidth >= controlsWidth + descWidth + 24);
+    };
+
+    updateChartHeaderLayout();
+    const observer = new ResizeObserver(updateChartHeaderLayout);
+    observer.observe(headerEl);
+    if (chartControlsRef.current) observer.observe(chartControlsRef.current);
+
+    return () => observer.disconnect();
+  }, [t, preciseValues, hideHoverDetails]);
 
   if (!solutions || solutions.length === 0) {
     return (
@@ -144,38 +168,67 @@ export default function SolutionList({ solutions, selectedIndex, onSelectSolutio
           >
             <div className="min-h-0 overflow-hidden">
               <div className="bg-endfield-gray border border-endfield-gray-light p-2 sm:p-4">
-              <div className="flex items-center justify-between mb-2 gap-2">
-                <div className="text-[11px] text-endfield-text/70">
+              <div ref={chartHeaderRef} className="flex items-center justify-between mb-2 gap-2 relative">
+                <div
+                  ref={chartDescRef}
+                  className={`text-[11px] text-endfield-text/70 whitespace-nowrap ${showChartDataDesc ? 'block' : 'invisible absolute pointer-events-none'}`}
+                >
                   {t('chartDataDesc')}
                 </div>
-                <label className="inline-flex items-center gap-2 px-2 py-1.5 bg-endfield-dark/60 border border-endfield-gray-light hover:border-endfield-yellow/60 transition-colors text-xs text-endfield-text cursor-pointer select-none">
-                  <input
-                    type="checkbox"
-                    checked={hideHoverDetails}
-                    onChange={(e) => setHideHoverDetails(e.target.checked)}
-                    className="sr-only"
-                  />
-                  <span
-                    className={`relative inline-flex w-8 h-4 items-center border transition-colors ${
-                      hideHoverDetails
-                        ? 'bg-endfield-yellow/25 border-endfield-yellow/70'
-                        : 'bg-endfield-gray border-endfield-gray-light'
-                    }`}
-                  >
-                    <span
-                      className={`absolute left-px top-1/2 w-3 h-3 -translate-y-1/2 bg-endfield-yellow transition-transform duration-200 ${
-                        hideHoverDetails ? 'translate-x-[15px]' : 'translate-x-0'
-                      }`}
+                <div ref={chartControlsRef} className="flex items-center gap-2 ml-auto">
+                  <label className="inline-flex items-center gap-2 px-2 py-1.5 bg-endfield-dark/60 border border-endfield-gray-light hover:border-endfield-yellow/60 transition-colors text-xs text-endfield-text cursor-pointer select-none">
+                    <input
+                      type="checkbox"
+                      checked={preciseValues}
+                      onChange={(e) => setPreciseValues(e.target.checked)}
+                      className="sr-only"
                     />
-                  </span>
-                  <span>{t('hideHoverDetails')}</span>
-                </label>
+                    <span
+                      className={`relative inline-flex w-8 h-4 items-center border transition-colors ${
+                        preciseValues
+                          ? 'bg-endfield-yellow/25 border-endfield-yellow/70'
+                          : 'bg-endfield-gray border-endfield-gray-light'
+                      }`}
+                    >
+                      <span
+                        className={`absolute left-px top-1/2 w-3 h-3 -translate-y-1/2 bg-endfield-yellow transition-transform duration-200 ${
+                          preciseValues ? 'translate-x-[15px]' : 'translate-x-0'
+                        }`}
+                      />
+                    </span>
+                    <span>{t('preciseValues')}</span>
+                  </label>
+
+                  <label className="inline-flex items-center gap-2 px-2 py-1.5 bg-endfield-dark/60 border border-endfield-gray-light hover:border-endfield-yellow/60 transition-colors text-xs text-endfield-text cursor-pointer select-none">
+                    <input
+                      type="checkbox"
+                      checked={!hideHoverDetails}
+                      onChange={(e) => setHideHoverDetails(!e.target.checked)}
+                      className="sr-only"
+                    />
+                    <span
+                      className={`relative inline-flex w-8 h-4 items-center border transition-colors ${
+                        !hideHoverDetails
+                          ? 'bg-endfield-yellow/25 border-endfield-yellow/70'
+                          : 'bg-endfield-gray border-endfield-gray-light'
+                      }`}
+                    >
+                      <span
+                        className={`absolute left-px top-1/2 w-3 h-3 -translate-y-1/2 bg-endfield-yellow transition-transform duration-200 ${
+                          !hideHoverDetails ? 'translate-x-[15px]' : 'translate-x-0'
+                        }`}
+                      />
+                    </span>
+                    <span>{t('hoverDetails')}</span>
+                  </label>
+                </div>
               </div>
               <SolutionChart
                 solution={selectedSolution}
                 targetPower={params.targetPower}
                 batteryCapacity={CONSTANTS.BATTERY_CAPACITY}
                 hideHoverDetails={hideHoverDetails}
+                preciseValues={preciseValues}
               />
               </div>
             </div>
