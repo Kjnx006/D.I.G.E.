@@ -128,7 +128,7 @@ function AppContent({ onOpenAnnouncement, onOpenPrivacyPolicy }) {
               <button
                 type="button"
                 onClick={onOpenPrivacyPolicy}
-                className="text-endfield-yellow hover:text-endfield-yellow-glow underline underline-offset-2"
+                className="text-endfield-yellow hover:text-endfield-yellow-glow underline underline-offset-2 cursor-pointer"
               >
                 {t('privacyPolicyDetails')}
               </button>
