@@ -31,15 +31,6 @@ export default function PrivacyPolicyModal({ show, onClose }) {
             >
               Microsoft Clarity
             </a>
-            {' '}|{' '}
-            <a
-              href="https://about.ads.microsoft.com/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-endfield-yellow hover:text-endfield-yellow-glow underline underline-offset-2"
-            >
-              Microsoft Advertising
-            </a>
           </p>
 
           <p>

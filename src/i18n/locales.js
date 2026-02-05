@@ -125,12 +125,12 @@ export const locales = {
     dontShowAgain: "Don't show this announcement again",
     understood: 'GOT IT',
     close: 'Close',
-    claritySiteDisclosure: 'We improve our products and advertising by using Microsoft Clarity to see how you use our website. By using our site, you agree that we and Microsoft can collect and use this data.',
+    claritySiteDisclosure: 'We use Microsoft Clarity to understand how you use our website and improve our products. By using our site, you agree that we and Microsoft can collect and use this data.',
     privacyPolicyDetails: 'Privacy policy details',
     privacyPolicyTitle: 'Privacy Policy Disclosure',
     siteDisclosureTitle: 'Site Disclosure',
     privacyPolicyDisclosureTitle: 'Privacy Policy Disclosure',
-    clarityPolicyDisclosure: 'We partner with Microsoft Clarity and Microsoft Advertising to capture how you use and interact with our website through behavioral metrics, heatmaps, and session replay to improve and market our products/services. Website usage data is captured using first and third-party cookies and other tracking technologies to determine the popularity of products/services and online activity. Additionally, we use this information for site optimization, fraud/security purposes, and advertising.',
+    clarityPolicyDisclosure: 'We use Microsoft Clarity to capture how you use and interact with our website through behavioral metrics, heatmaps, and session replay to improve our products/services. Website usage data is captured using first and third-party cookies and other tracking technologies to understand online activity. Additionally, we use this information for site optimization and fraud/security purposes.',
     microsoftPrivacyStatement: 'Microsoft Privacy Statement',
     
     // Language names
@@ -266,12 +266,12 @@ export const locales = {
     dontShowAgain: '不再显示该公告',
     understood: '知道了',
     close: '关闭',
-    claritySiteDisclosure: '我们使用 Microsoft Clarity 来了解你如何使用我们的网站，以改进产品和广告。使用本网站即表示你同意我们和 Microsoft 收集并使用这些数据。',
+    claritySiteDisclosure: '我们使用 Microsoft Clarity 来了解你如何使用我们的网站，以改进产品。使用本网站即表示你同意我们和 Microsoft 收集并使用这些数据。',
     privacyPolicyDetails: '隐私政策详情',
     privacyPolicyTitle: '隐私政策披露',
     siteDisclosureTitle: '站点披露',
     privacyPolicyDisclosureTitle: '隐私政策披露',
-    clarityPolicyDisclosure: '我们与 Microsoft Clarity 和 Microsoft Advertising 合作，通过行为指标、热图和会话回放来记录你与网站的交互方式，用于改进并推广我们的产品/服务。网站使用数据会通过第一方和第三方 Cookie 及其他跟踪技术进行采集，用于判断产品/服务受欢迎程度和线上活动。此外，我们还会将这些信息用于站点优化、防欺诈/安全和广告目的。',
+    clarityPolicyDisclosure: '我们使用 Microsoft Clarity，通过行为指标、热图和会话回放来记录你与网站的交互方式，用于改进我们的产品/服务。网站使用数据会通过第一方和第三方 Cookie 及其他跟踪技术进行采集，用于了解线上活动。此外，我们还会将这些信息用于站点优化和防欺诈/安全目的。',
     microsoftPrivacyStatement: 'Microsoft 隐私声明',
     
     // Language names
@@ -407,12 +407,12 @@ export const locales = {
     dontShowAgain: 'このお知らせを今後表示しない',
     understood: '了解',
     close: '閉じる',
-    claritySiteDisclosure: '当サイトでは Microsoft Clarity を利用して、サイトの利用状況を把握し、製品と広告の改善に役立てています。本サイトを利用することで、当社および Microsoft がこのデータを収集・利用することに同意したものとみなされます。',
+    claritySiteDisclosure: '当サイトでは Microsoft Clarity を利用して、サイトの利用状況を把握し、製品の改善に役立てています。本サイトを利用することで、当社および Microsoft がこのデータを収集・利用することに同意したものとみなされます。',
     privacyPolicyDetails: 'プライバシーポリシー詳細',
     privacyPolicyTitle: 'プライバシーポリシー開示',
     siteDisclosureTitle: 'サイト開示',
     privacyPolicyDisclosureTitle: 'プライバシーポリシー開示',
-    clarityPolicyDisclosure: '当社は Microsoft Clarity および Microsoft Advertising と提携し、行動指標、ヒートマップ、セッションリプレイを通じて、ウェブサイトでの利用状況や操作を把握し、製品/サービスの改善とマーケティングに活用します。サイト利用データは、製品/サービスの人気度やオンライン活動を把握するため、ファーストパーティ Cookie、サードパーティ Cookie、その他の追跡技術によって収集されます。さらに、この情報はサイト最適化、不正防止/セキュリティ、広告目的にも使用されます。',
+    clarityPolicyDisclosure: '当社は Microsoft Clarity を利用し、行動指標、ヒートマップ、セッションリプレイを通じて、ウェブサイトでの利用状況や操作を把握し、製品/サービスの改善に活用します。サイト利用データは、オンライン活動を把握するため、ファーストパーティ Cookie、サードパーティ Cookie、その他の追跡技術によって収集されます。さらに、この情報はサイト最適化や不正防止/セキュリティ目的にも使用されます。',
     microsoftPrivacyStatement: 'Microsoft プライバシー ステートメント',
     
     // Language names
@@ -548,12 +548,12 @@ export const locales = {
     dontShowAgain: '이 공지를 다시 표시하지 않음',
     understood: '확인',
     close: '닫기',
-    claritySiteDisclosure: '당사는 Microsoft Clarity를 사용해 웹사이트 이용 방식을 파악하고 제품 및 광고를 개선합니다. 이 사이트를 사용하면 당사와 Microsoft가 이 데이터를 수집하고 이용하는 데 동의한 것으로 간주됩니다.',
+    claritySiteDisclosure: '당사는 Microsoft Clarity를 사용해 웹사이트 이용 방식을 파악하고 제품을 개선합니다. 이 사이트를 사용하면 당사와 Microsoft가 이 데이터를 수집하고 이용하는 데 동의한 것으로 간주됩니다.',
     privacyPolicyDetails: '개인정보처리방침 상세',
     privacyPolicyTitle: '개인정보처리방침 고지',
     siteDisclosureTitle: '사이트 고지',
     privacyPolicyDisclosureTitle: '개인정보처리방침 고지',
-    clarityPolicyDisclosure: '당사는 Microsoft Clarity 및 Microsoft Advertising과 협력하여 행동 지표, 히트맵, 세션 리플레이를 통해 웹사이트 이용 및 상호작용 데이터를 수집하고 제품/서비스 개선과 마케팅에 활용합니다. 웹사이트 이용 데이터는 제품/서비스의 인기도와 온라인 활동을 파악하기 위해 퍼스트 파티 및 서드 파티 쿠키와 기타 추적 기술을 통해 수집됩니다. 또한 이 정보는 사이트 최적화, 사기 방지/보안, 광고 목적으로도 사용됩니다.',
+    clarityPolicyDisclosure: '당사는 Microsoft Clarity를 사용하여 행동 지표, 히트맵, 세션 리플레이를 통해 웹사이트 이용 및 상호작용 데이터를 수집하고 제품/서비스 개선에 활용합니다. 웹사이트 이용 데이터는 온라인 활동을 파악하기 위해 퍼스트 파티 및 서드 파티 쿠키와 기타 추적 기술을 통해 수집됩니다. 또한 이 정보는 사이트 최적화와 사기 방지/보안 목적으로도 사용됩니다.',
     microsoftPrivacyStatement: 'Microsoft 개인정보처리방침',
     
     // Language names
