@@ -177,6 +177,11 @@ select:focus {
   scrollbar-width: none;
 }
 
+/* Reserve scrollbar space to avoid layout shift when content height changes */
+.scrollbar-gutter-stable {
+  scrollbar-gutter: stable;
+}
+
 /* 黄色发光闪烁动画 */
 @keyframes pulse-glow {
   0%, 100% {

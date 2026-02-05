@@ -122,7 +122,7 @@ export default function SolutionList({ solutions, selectedIndex, onSelectSolutio
       </div>
 
       {/* 主内容区 - 纵向布局，可滚动 */}
-      <div className="flex-1 overflow-auto">
+      <div className="flex-1 overflow-auto scrollbar-gutter-stable">
         {/* 图表区 */}
         <div className={`${collapsedSections.chart ? 'px-2 sm:px-4 pt-2 sm:pt-4 pb-2 sm:pb-3' : 'p-2 sm:p-4'} border-b border-endfield-gray-light`}>
           <button
@@ -140,7 +140,7 @@ export default function SolutionList({ solutions, selectedIndex, onSelectSolutio
             </span>
           </button>
           <div
-            className={`grid transition-[grid-template-rows,margin] duration-300 ease-out ${collapsedSections.chart ? 'grid-rows-[0fr] mt-0' : 'grid-rows-[1fr] mt-3'}`}
+            className={`grid overflow-hidden transition-[grid-template-rows,margin,opacity] duration-300 ease-out ${collapsedSections.chart ? 'grid-rows-[0fr] mt-0 opacity-0' : 'grid-rows-[1fr] mt-3 opacity-100'}`}
           >
             <div className="min-h-0 overflow-hidden">
               <div className="bg-endfield-gray border border-endfield-gray-light p-2 sm:p-4">
@@ -200,7 +200,7 @@ export default function SolutionList({ solutions, selectedIndex, onSelectSolutio
               </span>
             </button>
             <div
-              className={`grid transition-[grid-template-rows,margin] duration-300 ease-out ${collapsedSections.fuel ? 'grid-rows-[0fr] mt-0' : 'grid-rows-[1fr] mt-3'}`}
+              className={`grid overflow-hidden transition-[grid-template-rows,margin,opacity] duration-300 ease-out ${collapsedSections.fuel ? 'grid-rows-[0fr] mt-0 opacity-0' : 'grid-rows-[1fr] mt-3 opacity-100'}`}
             >
               <div className="min-h-0 overflow-hidden">
                 <div className="bg-endfield-gray border border-endfield-gray-light overflow-hidden">
@@ -284,7 +284,7 @@ export default function SolutionList({ solutions, selectedIndex, onSelectSolutio
             </span>
           </button>
           <div
-            className={`grid transition-[grid-template-rows,margin] duration-300 ease-out ${collapsedSections.diagram ? 'grid-rows-[0fr] mt-0' : 'grid-rows-[1fr] mt-3'}`}
+            className={`grid overflow-hidden transition-[grid-template-rows,margin,opacity] duration-300 ease-out ${collapsedSections.diagram ? 'grid-rows-[0fr] mt-0 opacity-0' : 'grid-rows-[1fr] mt-3 opacity-100'}`}
           >
             <div className="min-h-0 overflow-hidden">
               <SolutionDiagram solution={selectedSolution} />

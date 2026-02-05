@@ -242,7 +242,7 @@ export default function Announcement({ show, onClose }) {
         </div>
 
         {/* 内容 */}
-        <div className="text-sm text-endfield-text-light leading-relaxed mb-6 overflow-y-auto flex-1 pr-2">
+        <div className="text-sm text-endfield-text-light leading-relaxed mb-6 overflow-y-auto scrollbar-gutter-stable flex-1 pr-2">
           <ContentComponent />
         </div>
 

@@ -74,7 +74,7 @@ export default function Sidebar({ params, setParams, collapsed, onClose, onCalcu
         </div>
         
         {/* Sidebar Content */}
-        <div className="flex-1 overflow-y-auto p-4 sm:p-6 flex flex-col gap-4 sm:gap-6">
+        <div className="flex-1 overflow-y-auto scrollbar-gutter-stable p-4 sm:p-6 flex flex-col gap-4 sm:gap-6">
       {/* 目标发电量 */}
       <fieldset className="space-y-4 border-none p-0 m-0">
         <legend className="text-sm font-bold text-endfield-text uppercase tracking-widest flex items-center gap-2 p-0">
@@ -108,7 +108,7 @@ export default function Sidebar({ params, setParams, collapsed, onClose, onCalcu
         </div>
       </fieldset>
 
-      <div className="h-px bg-endfield-gray-light"></div>
+      <div className="w-full shrink-0 border-t border-endfield-gray-light/90"></div>
 
       {/* 约束条件 */}
       <fieldset className="space-y-4 border-none p-0 m-0">
@@ -170,7 +170,7 @@ export default function Sidebar({ params, setParams, collapsed, onClose, onCalcu
         </div>
       </fieldset>
 
-      <div className="h-px bg-endfield-gray-light"></div>
+      <div className="w-full shrink-0 border-t border-endfield-gray-light/90"></div>
 
       {/* 燃料选择 */}
       <fieldset className="space-y-4 border-none p-0 m-0">
@@ -306,7 +306,7 @@ export default function Sidebar({ params, setParams, collapsed, onClose, onCalcu
         </div>
       </fieldset>
 
-      <div className="h-px bg-endfield-gray-light"></div>
+      <div className="w-full shrink-0 border-t border-endfield-gray-light/90"></div>
 
         {/* 系统信息 */}
         <div className="space-y-2 text-sm text-endfield-text/70">
