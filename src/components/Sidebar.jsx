@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useI18n } from '../i18n';
 import { FUEL_OPTIONS, SECONDARY_FUEL_OPTIONS } from '../utils/constants';
+import CloseButton from './CloseButton';
 
 export default function Sidebar({ params, setParams, collapsed, onClose, onCalculate, onRandomCalculate, onOpenAnnouncement }) {
   const { t, locale, changeLocale, languageOptions } = useI18n();
@@ -64,13 +65,12 @@ export default function Sidebar({ params, setParams, collapsed, onClose, onCalcu
         {/* 移动端关闭按钮 */}
         <div className="md:hidden shrink-0 p-3 border-b border-endfield-gray-light flex items-center justify-between">
           <span className="text-sm font-bold text-endfield-text-light">{t('constraints')}</span>
-          <button 
+          <CloseButton
             onClick={onClose}
-            className="w-8 h-8 flex items-center justify-center text-endfield-text hover:text-endfield-text-light"
-            aria-label="关闭侧边栏"
-          >
-            <span className="material-symbols-outlined" aria-hidden="true">close</span>
-          </button>
+            label={t('close')}
+            sizeClass="w-8 h-8"
+            iconClass="text-base"
+          />
         </div>
         
         {/* Sidebar Content */}

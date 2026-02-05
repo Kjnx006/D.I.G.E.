@@ -265,7 +265,7 @@ export default function Announcement({ show, onClose }) {
         {/* 关闭按钮 */}
         <button
           onClick={handleClose}
-          className="w-full h-10 bg-endfield-yellow hover:bg-endfield-yellow-glow text-endfield-black font-bold tracking-wider transition-all flex items-center justify-center gap-2 text-sm"
+          className="shrink-0 w-full h-10 min-h-10 bg-endfield-yellow hover:bg-endfield-yellow-glow text-endfield-black font-bold tracking-wider transition-all flex items-center justify-center gap-2 text-sm"
         >
           {t('understood')}
         </button>
