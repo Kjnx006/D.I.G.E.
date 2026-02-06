@@ -64,8 +64,8 @@ export function getFullBeltPower(fuel) {
 // 分流后输入间隔 = 基础间隔 * 分母
 // 如果输入间隔 <= 燃烧时间，发电机满载
 // 如果输入间隔 > 燃烧时间，平均功率 = 燃料功率 * 燃烧时间 / 输入间隔
-export function getOscillatingPower(fuel, denominator) {
-  const inputInterval = CONSTANTS.BELT_INTERVAL * denominator;
+export function getOscillatingPower(fuel, denominator, baseInterval = CONSTANTS.BELT_INTERVAL) {
+  const inputInterval = baseInterval * denominator;
   if (inputInterval <= fuel.burnTime) {
     return fuel.power;
   }
@@ -76,8 +76,8 @@ export function getOscillatingPower(fuel, denominator) {
 // 每个发电机消耗速率 = 1/燃烧时间
 // 传送带供应速率 = BELT_SPEED
 // 发电机数量 = 传送带速率 / 消耗速率 = BELT_SPEED * 燃烧时间
-export function getGeneratorsPerBelt(fuel) {
-  return CONSTANTS.BELT_SPEED * fuel.burnTime;
+export function getGeneratorsPerBelt(fuel, inputSpeed = CONSTANTS.BELT_SPEED) {
+  return inputSpeed * fuel.burnTime;
 }
 
 // 格式化时间为 HH:MM:SS
@@ -119,3 +119,20 @@ export function analyzeSplitterComplexity(denominator) {
     threeWay: c3,
   };
 }
+
+export const DEFAULT_INPUT_SOURCE_ID = 'warehouse';
+export const INPUT_SOURCES = {
+  warehouse: {
+    id: 'warehouse',
+    name: { en: 'Warehouse', zh: '仓库', ja: '倉庫', ko: '창고' },
+    speed: CONSTANTS.BELT_SPEED,
+    interval: CONSTANTS.BELT_INTERVAL,
+  },
+  packer: {
+    id: 'packer',
+    name: { en: 'Packaging Machine', zh: '封装机', ja: '包装機', ko: '포장기' },
+    speed: 0.1,
+    interval: 10,
+  },
+};
+export const INPUT_SOURCE_OPTIONS = Object.values(INPUT_SOURCES);

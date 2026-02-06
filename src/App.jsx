@@ -23,6 +23,7 @@ const DEFAULT_PARAMS = {
   maxWaste: 30,
   primaryFuelId: 'wulingLow',
   secondaryFuelId: 'none',
+  inputSourceId: 'warehouse',
 };
 
 const getInitialParams = () => {
@@ -236,7 +237,6 @@ function AppContent({ onOpenAnnouncement, onOpenPrivacyPolicy }) {
               />
 
               <LoadingOverlay isLoading={isLoading} />
-              <ErrorState show={showError} onDismiss={() => setShowError(false)} />
             </main>
           </div>
         </div>
@@ -281,6 +281,7 @@ function AppContent({ onOpenAnnouncement, onOpenPrivacyPolicy }) {
           onCopy={handleCopyShareUrl}
           onShare={handleNativeShare}
         />
+        <ErrorState show={showError} onDismiss={() => setShowError(false)} />
     </div>
   );
 }

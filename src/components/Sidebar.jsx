@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { useI18n } from '../i18n';
-import { FUEL_OPTIONS, SECONDARY_FUEL_OPTIONS } from '../utils/constants';
+import { FUEL_OPTIONS, SECONDARY_FUEL_OPTIONS, INPUT_SOURCES, INPUT_SOURCE_OPTIONS, DEFAULT_INPUT_SOURCE_ID } from '../utils/constants';
 import { SHARE_LIMITS } from '../utils/shareParams';
 import CloseButton from './CloseButton';
 
@@ -9,6 +9,7 @@ export default function Sidebar({ params, setParams, collapsed, onClose, onCalcu
   const [showLangMenu, setShowLangMenu] = useState(false);
   const [showPrimaryFuelMenu, setShowPrimaryFuelMenu] = useState(false);
   const [showSecondaryFuelMenu, setShowSecondaryFuelMenu] = useState(false);
+  const [showInputWarning, setShowInputWarning] = useState(false);
 
   const primaryFuelRef = useRef(null);
   const secondaryFuelRef = useRef(null);
@@ -60,6 +61,19 @@ export default function Sidebar({ params, setParams, collapsed, onClose, onCalcu
   const getFuelName = (fuel) => {
     return fuel.name[locale] || fuel.name.en;
   };
+
+  const selectedInputSourceId = params.inputSourceId || DEFAULT_INPUT_SOURCE_ID;
+  const inputSource = INPUT_SOURCES[selectedInputSourceId] || INPUT_SOURCES[DEFAULT_INPUT_SOURCE_ID];
+  const getInputSourceName = (source) => {
+    if (!source) return '';
+    return source.name[locale] || source.name.en;
+  };
+
+  useEffect(() => {
+    if (selectedInputSourceId !== 'packer' && showInputWarning) {
+      setShowInputWarning(false);
+    }
+  }, [selectedInputSourceId, showInputWarning]);
 
   return (
     <>
@@ -334,6 +348,50 @@ export default function Sidebar({ params, setParams, collapsed, onClose, onCalcu
 
       <div className="w-full shrink-0 border-t border-endfield-gray-light/90"></div>
 
+      {/* 输入来源 */}
+      <fieldset className="space-y-2 border-none p-0 m-0">
+        <legend className="text-sm font-bold text-endfield-text uppercase tracking-widest flex items-center gap-2 p-0">
+          <span className="material-symbols-outlined text-base text-endfield-yellow" aria-hidden="true">input</span>
+          {t('inputSource')}
+        </legend>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+          {INPUT_SOURCE_OPTIONS.map((source) => (
+            <button
+              key={source.id}
+              type="button"
+              onClick={() => handleChange('inputSourceId', source.id)}
+              className={`h-10 px-2 border text-xs sm:text-sm transition-colors ${
+                selectedInputSourceId === source.id
+                  ? 'text-endfield-yellow border-endfield-yellow bg-endfield-yellow/10'
+                  : 'text-endfield-text-light border-endfield-gray-light hover:border-endfield-text'
+              }`}
+            >
+              {getInputSourceName(source)}
+            </button>
+          ))}
+        </div>
+        <div className="flex items-center justify-between text-sm text-endfield-text/50">
+          <span className="leading-normal">
+            {t('inputSpeed')}: {inputSource?.speed} {t('itemPerSec')}
+            {selectedInputSourceId === 'packer' ? ` (${t('inputHintPacker')})` : ''}
+          </span>
+          {selectedInputSourceId === 'packer' && (
+            <button
+              type="button"
+              onClick={() => setShowInputWarning(true)}
+              className="w-5 h-5 inline-flex items-center justify-center leading-none text-endfield-text/50 hover:text-endfield-yellow transition-colors"
+              title={t('inputWarningPacker')}
+              aria-label={t('inputWarningPacker')}
+              aria-haspopup="dialog"
+            >
+              <span className="material-symbols-outlined text-sm leading-none" aria-hidden="true">info</span>
+            </button>
+          )}
+        </div>
+      </fieldset>
+
+      <div className="w-full shrink-0 border-t border-endfield-gray-light/90"></div>
+
         {/* 系统信息 */}
         <div className="space-y-2 text-sm text-endfield-text/70">
           <div className="flex justify-between">
@@ -341,8 +399,12 @@ export default function Sidebar({ params, setParams, collapsed, onClose, onCalcu
             <span className="text-endfield-text-light">200 w</span>
           </div>
           <div className="flex justify-between">
-            <span>{t('beltSpeed')}:</span>
-            <span className="text-endfield-text-light">0.5 {t('itemPerSec')}</span>
+            <span>{t('inputSource')}:</span>
+            <span className="text-endfield-text-light">{getInputSourceName(inputSource)}</span>
+          </div>
+          <div className="flex justify-between">
+            <span>{t('inputSpeed')}:</span>
+            <span className="text-endfield-text-light">{inputSource?.speed} {t('itemPerSec')}</span>
           </div>
           <div className="flex justify-between">
             <span>{t('batteryCapacity')}:</span>
@@ -427,6 +489,36 @@ export default function Sidebar({ params, setParams, collapsed, onClose, onCalcu
         </div>
       </div>
     </aside>
+
+    {showInputWarning && (
+      <div
+        className="fixed inset-0 bg-endfield-black/95 backdrop-blur z-50 flex items-center justify-center p-4"
+        role="dialog"
+        aria-modal="true"
+        onClick={() => setShowInputWarning(false)}
+      >
+        <div
+          className="bg-endfield-gray border border-red-900/50 p-6 max-w-lg w-full relative flex flex-col gap-4 corner-mark"
+          onClick={(e) => e.stopPropagation()}
+        >
+          <div className="flex items-center gap-2 pb-3 border-b border-red-900/50">
+            <span className="material-symbols-outlined text-red-300">warning</span>
+            <h2 className="text-base font-bold text-endfield-text-light uppercase tracking-wider">
+              {t('importantNote')}
+            </h2>
+          </div>
+          <p className="text-sm text-red-200 leading-relaxed">
+            {t('inputWarningPacker')}
+          </p>
+          <button
+            onClick={() => setShowInputWarning(false)}
+            className="w-full h-10 bg-red-600/90 hover:bg-red-500 text-white font-bold tracking-wider transition-all flex items-center justify-center gap-2 text-sm"
+          >
+            {t('close')}
+          </button>
+        </div>
+      </div>
+    )}
     </>
   );
 }

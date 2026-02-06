@@ -153,7 +153,8 @@ export default function SolutionDiagram({ solution }) {
     return fuel.name[locale] || fuel.name.en;
   };
 
-  const { baseConfig, baseFuel, oscillating, oscillatingFuel } = solution;
+  const { baseConfig, baseFuel, oscillating, oscillatingFuel, inputSourceId } = solution;
+  const showPackerWarning = inputSourceId === 'packer';
   
   // 基础发电使用主燃料
   const baseFuelData = baseFuel || solution.fuel;
@@ -167,6 +168,12 @@ export default function SolutionDiagram({ solution }) {
         <span className="material-symbols-outlined text-sm">warning</span>
         <span>{t('storageBoxWarningShort')}</span>
       </div>
+      {showPackerWarning && (
+        <div className="p-2.5 bg-red-900/20 border border-red-900/50 text-sm text-red-300 flex items-center gap-2">
+          <span className="material-symbols-outlined text-sm">warning</span>
+          <span>{t('inputWarningPacker')}</span>
+        </div>
+      )}
 
       {/* 基础发电 - 静态显示 */}
       <div className="flex flex-wrap items-center gap-2 p-3 bg-endfield-gray border border-endfield-gray-light">

@@ -42,6 +42,10 @@ export const locales = {
     // Sidebar - System Info
     basePower: 'Base Power',
     beltSpeed: 'Belt Speed',
+    inputSource: 'Input Source',
+    inputSpeed: 'Input Rate',
+    inputHintPacker: '10s/item',
+    inputWarningPacker: 'When using Packaging Machine output mode, each oscillating branch requires a full single-line output (0.1/s). Otherwise the simulation will not match actual behavior. If this is not satisfied, use Warehouse output instead.',
     itemPerSec: 'items/s',
     batteryCapacity: 'Battery Capacity',
     
@@ -136,6 +140,7 @@ export const locales = {
     
     // Announcement
     announcement: 'Announcement',
+    changelog: 'Changelog',
     dontShowAgain: "Don't show this announcement again",
     understood: 'Got it',
     close: 'Close',
@@ -197,6 +202,10 @@ export const locales = {
     // Sidebar - System Info
     basePower: '基础发电',
     beltSpeed: '传送带速度',
+    inputSource: '输入来源',
+    inputSpeed: '输入速度',
+    inputHintPacker: '10秒/个',
+    inputWarningPacker: '若使用封装机直接输出模式，每个震荡分支的燃料输入速率均需要满速封装机的完整单路输出（0.1/s），否则将会导致模拟结果与实际不符。如不满足此条件请务必使用仓库直接输出。',
     itemPerSec: '个/秒',
     batteryCapacity: '蓄电池容量',
     
@@ -291,6 +300,7 @@ export const locales = {
     
     // Announcement
     announcement: '公告',
+    changelog: '更新日志',
     dontShowAgain: '不再显示该公告',
     understood: '知道了',
     close: '关闭',
@@ -352,6 +362,10 @@ export const locales = {
     // Sidebar - System Info
     basePower: '基本発電',
     beltSpeed: 'ベルト速度',
+    inputSource: '入力元',
+    inputSpeed: '入力速度',
+    inputHintPacker: '10秒/個',
+    inputWarningPacker: '包装機の直接出力モードでは、各振動分岐に対して満速の単独ライン出力（0.1/s）が必要です。満たさない場合はシミュレーション結果が実際と一致しません。条件を満たせない場合は倉庫出力を使用してください。',
     itemPerSec: '個/秒',
     batteryCapacity: 'バッテリー容量',
     
@@ -446,6 +460,7 @@ export const locales = {
     
     // Announcement
     announcement: 'お知らせ',
+    changelog: '更新ログ',
     dontShowAgain: 'このお知らせを今後表示しない',
     understood: '了解',
     close: '閉じる',
@@ -507,6 +522,10 @@ export const locales = {
     // Sidebar - System Info
     basePower: '기본 발전',
     beltSpeed: '벨트 속도',
+    inputSource: '입력 소스',
+    inputSpeed: '입력 속도',
+    inputHintPacker: '10초/개',
+    inputWarningPacker: '포장기 직접 출력 모드에서는 각 진동 분기마다 만속 단일 라인 출력(0.1/s)이 필요합니다. 충족하지 않으면 시뮬레이션이 실제와 일치하지 않습니다. 조건을 만족할 수 없다면 창고 출력을 사용하세요.',
     itemPerSec: '개/초',
     batteryCapacity: '배터리 용량',
     
@@ -601,6 +620,7 @@ export const locales = {
     
     // Announcement
     announcement: '공지',
+    changelog: '업데이트 로그',
     dontShowAgain: '이 공지를 다시 표시하지 않음',
     understood: '확인',
     close: '닫기',

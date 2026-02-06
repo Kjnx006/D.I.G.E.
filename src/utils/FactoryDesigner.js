@@ -1,6 +1,8 @@
 import { 
   FUELS, 
   CONSTANTS, 
+  INPUT_SOURCES,
+  DEFAULT_INPUT_SOURCE_ID,
   getFullBeltPower, 
   getOscillatingPower,
   getGeneratorsPerBelt,
@@ -18,6 +20,10 @@ export class FactoryDesigner {
     this.maxWaste = params.maxWaste;                 // 功率浪费上限 (w)
     this.primaryFuel = FUELS[params.primaryFuelId];  // 主燃料
     this.secondaryFuel = params.secondaryFuelId !== 'none' ? FUELS[params.secondaryFuelId] : null; // 副燃料
+    const inputSourceId = params.inputSourceId || DEFAULT_INPUT_SOURCE_ID;
+    this.inputSource = INPUT_SOURCES[inputSourceId] || INPUT_SOURCES[DEFAULT_INPUT_SOURCE_ID];
+    this.inputSpeed = this.inputSource.speed;
+    this.inputInterval = this.inputSource.interval;
     this.batteryCapacity = CONSTANTS.BATTERY_CAPACITY;
     
     this.validDenominators = generateValidDenominators();
@@ -36,17 +42,17 @@ export class FactoryDesigner {
 
   // 计算周期（秒）
   _getCyclePeriod(denominators, fuel) {
-    if (denominators.length === 0) return CONSTANTS.BELT_INTERVAL;
+    if (denominators.length === 0) return this.inputInterval;
     // 所有分支的输入间隔的最小公倍数
-    const intervals = denominators.map(d => CONSTANTS.BELT_INTERVAL * d);
-    return intervals.reduce((acc, val) => this._lcm(acc, val), CONSTANTS.BELT_INTERVAL);
+    const intervals = denominators.map(d => this.inputInterval * d);
+    return intervals.reduce((acc, val) => this._lcm(acc, val), this.inputInterval);
   }
 
   // 计算基础发电配置
   calculateBasePower() {
     const basePower = CONSTANTS.BASE_POWER;
     const fuelPower = getFullBeltPower(this.primaryFuel);
-    const gensPerBelt = getGeneratorsPerBelt(this.primaryFuel);
+    const gensPerBelt = getGeneratorsPerBelt(this.primaryFuel, this.inputSpeed);
     
     // 需要补充的功率
     const needed = this.targetPower - basePower;
@@ -79,7 +85,7 @@ export class FactoryDesigner {
     
     // 模拟每个震荡分支
     for (const [branchIndex, branch] of oscillatingBranches.entries()) {
-      const inputInterval = CONSTANTS.BELT_INTERVAL * branch.denominator;
+      const inputInterval = this.inputInterval * branch.denominator;
       let lastBurnEnd = 0;
       
       for (let t = 0; t < totalDuration; t += inputInterval) {
@@ -193,7 +199,7 @@ export class FactoryDesigner {
       
       for (const combo of combos) {
         // 计算理论平均功率
-        const theoryPower = combo.reduce((acc, d) => acc + getOscillatingPower(fuel, d), 0);
+        const theoryPower = combo.reduce((acc, d) => acc + getOscillatingPower(fuel, d, this.inputInterval), 0);
         const theoryTotal = baseConfig.totalPower + theoryPower;
         const theoryWaste = theoryTotal - this.targetPower;
         
@@ -212,7 +218,7 @@ export class FactoryDesigner {
             isPrimary,
             branches: combo.map((d, i) => ({
               denominator: d,
-              power: getOscillatingPower(fuel, d),
+              power: getOscillatingPower(fuel, d, this.inputInterval),
               complexity: complexity[i],
             })),
             branchCount: combo.length,
@@ -237,7 +243,7 @@ export class FactoryDesigner {
       if (waste <= this.maxWaste) {
         // 计算基础发电的燃料消耗
         const baseFuelPerSec = baseConfig.generators > 0 ? 
-          (baseConfig.generators / getGeneratorsPerBelt(this.primaryFuel)) * CONSTANTS.BELT_SPEED : 0;
+          (baseConfig.generators / getGeneratorsPerBelt(this.primaryFuel, this.inputSpeed)) * this.inputSpeed : 0;
         
         return [{
           baseConfig,
@@ -246,6 +252,7 @@ export class FactoryDesigner {
           oscillatingFuel: null,       // 震荡发电燃料
           fuel: this.primaryFuel,      // 保持兼容
           isPrimary: true,
+          inputSourceId: this.inputSource.id,
           avgPower: baseConfig.totalPower,
           waste,
           variance: 0,
@@ -310,11 +317,11 @@ export class FactoryDesigner {
       // 计算燃料消耗
       // 基础发电消耗（主燃料）：每条带消耗 = BELT_SPEED 个/秒
       const baseFuelPerSec = baseConfig.generators > 0 ? 
-        (baseConfig.generators / getGeneratorsPerBelt(this.primaryFuel)) * CONSTANTS.BELT_SPEED : 0;
+        (baseConfig.generators / getGeneratorsPerBelt(this.primaryFuel, this.inputSpeed)) * this.inputSpeed : 0;
       
       // 震荡发电消耗（可能是主燃料或副燃料）
       const oscillatingFuelPerSec = sol.branches ? 
-        sol.branches.reduce((sum, b) => sum + 1 / (CONSTANTS.BELT_INTERVAL * b.denominator), 0) : 0;
+        sol.branches.reduce((sum, b) => sum + 1 / (this.inputInterval * b.denominator), 0) : 0;
       
       return {
         baseConfig,
@@ -323,6 +330,7 @@ export class FactoryDesigner {
         oscillatingFuel: sol.fuel,      // 震荡发电燃料
         fuel: sol.fuel,                 // 保持兼容
         isPrimary: sol.isPrimary,
+        inputSourceId: this.inputSource.id,
         avgPower: sol.avgPower,
         waste: sol.waste,
         variance: sol.variance,

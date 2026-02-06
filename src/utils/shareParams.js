@@ -1,4 +1,4 @@
-import { FUEL_OPTIONS, SECONDARY_FUEL_OPTIONS } from './constants';
+import { FUEL_OPTIONS, SECONDARY_FUEL_OPTIONS, INPUT_SOURCE_OPTIONS, DEFAULT_INPUT_SOURCE_ID } from './constants';
 
 const SHARE_PARAM_KEY = 'p';
 const BASE52_ALPHABET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
@@ -9,11 +9,13 @@ const MAX_WASTE_BITS = 12;    // 0 - 4095
 const MIN_BATTERY_BITS = 7;   // 0 - 127
 const PRIMARY_FUEL_BITS = 5;  // 0 - 31
 const SECONDARY_FUEL_BITS = 5; // 0 - 31
+const INPUT_SOURCE_BITS = 2;  // 0 - 3
 
 const MAX_TARGET_POWER = Math.pow(2, TARGET_POWER_BITS) - 1;
 const MAX_MAX_WASTE = Math.pow(2, MAX_WASTE_BITS) - 1;
 const MAX_PRIMARY_INDEX = Math.pow(2, PRIMARY_FUEL_BITS) - 1;
 const MAX_SECONDARY_INDEX = Math.pow(2, SECONDARY_FUEL_BITS) - 1;
+const MAX_INPUT_SOURCE_INDEX = Math.pow(2, INPUT_SOURCE_BITS) - 1;
 
 const toBase52 = (value) => {
   let num = BigInt(value);
@@ -57,7 +59,14 @@ export function encodeShareParams(params) {
   if (primaryIndex < 0 || secondaryIndex < 0) return null;
   if (primaryIndex > MAX_PRIMARY_INDEX || secondaryIndex > MAX_SECONDARY_INDEX) return null;
 
-  const packed = (BigInt(targetPower) << BigInt(MIN_BATTERY_BITS + MAX_WASTE_BITS + SECONDARY_FUEL_BITS + PRIMARY_FUEL_BITS))
+  const requestedInputSourceId = params.inputSourceId || DEFAULT_INPUT_SOURCE_ID;
+  const defaultInputIndex = INPUT_SOURCE_OPTIONS.findIndex(source => source.id === DEFAULT_INPUT_SOURCE_ID);
+  const inputSourceIndex = INPUT_SOURCE_OPTIONS.findIndex(source => source.id === requestedInputSourceId);
+  const resolvedInputIndex = inputSourceIndex >= 0 ? inputSourceIndex : defaultInputIndex;
+  if (resolvedInputIndex < 0 || resolvedInputIndex > MAX_INPUT_SOURCE_INDEX) return null;
+
+  const packed = (BigInt(resolvedInputIndex) << BigInt(TARGET_POWER_BITS + MIN_BATTERY_BITS + MAX_WASTE_BITS + SECONDARY_FUEL_BITS + PRIMARY_FUEL_BITS))
+    | (BigInt(targetPower) << BigInt(MIN_BATTERY_BITS + MAX_WASTE_BITS + SECONDARY_FUEL_BITS + PRIMARY_FUEL_BITS))
     | (BigInt(minBatteryPercent) << BigInt(MAX_WASTE_BITS + SECONDARY_FUEL_BITS + PRIMARY_FUEL_BITS))
     | (BigInt(maxWaste) << BigInt(SECONDARY_FUEL_BITS + PRIMARY_FUEL_BITS))
     | (BigInt(secondaryIndex) << BigInt(PRIMARY_FUEL_BITS))
@@ -75,6 +84,7 @@ export function decodeShareParams(value) {
   const secondaryMask = (1n << BigInt(SECONDARY_FUEL_BITS)) - 1n;
   const maxWasteMask = (1n << BigInt(MAX_WASTE_BITS)) - 1n;
   const minBatteryMask = (1n << BigInt(MIN_BATTERY_BITS)) - 1n;
+  const targetPowerMask = (1n << BigInt(TARGET_POWER_BITS)) - 1n;
 
   let cursor = packed;
   const primaryIndex = Number(cursor & primaryMask);
@@ -85,21 +95,26 @@ export function decodeShareParams(value) {
   cursor >>= BigInt(MAX_WASTE_BITS);
   const minBatteryPercent = Number(cursor & minBatteryMask);
   cursor >>= BigInt(MIN_BATTERY_BITS);
-  const targetPower = Number(cursor);
+  const targetPower = Number(cursor & targetPowerMask);
+  cursor >>= BigInt(TARGET_POWER_BITS);
+  const inputSourceIndex = Number(cursor);
 
   if (!isValidNonNegativeInt(targetPower) || targetPower > MAX_TARGET_POWER) return null;
   if (!isValidNonNegativeInt(maxWaste) || maxWaste > MAX_MAX_WASTE) return null;
   if (!isValidNonNegativeInt(minBatteryPercent) || minBatteryPercent > 100) return null;
   if (!isValidNonNegativeInt(primaryIndex) || primaryIndex > MAX_PRIMARY_INDEX) return null;
   if (!isValidNonNegativeInt(secondaryIndex) || secondaryIndex > MAX_SECONDARY_INDEX) return null;
+  if (!isValidNonNegativeInt(inputSourceIndex) || inputSourceIndex > MAX_INPUT_SOURCE_INDEX) return null;
 
   const primaryCount = FUEL_OPTIONS.length;
   const secondaryCount = SECONDARY_FUEL_OPTIONS.length;
-  if (primaryIndex >= primaryCount || secondaryIndex >= secondaryCount) return null;
+  const inputSourceCount = INPUT_SOURCE_OPTIONS.length;
+  if (primaryIndex >= primaryCount || secondaryIndex >= secondaryCount || inputSourceIndex >= inputSourceCount) return null;
   const primaryFuelId = FUEL_OPTIONS[primaryIndex]?.id;
   const secondaryFuelId = SECONDARY_FUEL_OPTIONS[secondaryIndex]?.id;
+  const inputSourceId = INPUT_SOURCE_OPTIONS[inputSourceIndex]?.id;
 
-  if (!primaryFuelId || !secondaryFuelId) return null;
+  if (!primaryFuelId || !secondaryFuelId || !inputSourceId) return null;
 
   return {
     targetPower,
@@ -107,6 +122,7 @@ export function decodeShareParams(value) {
     maxWaste,
     primaryFuelId,
     secondaryFuelId,
+    inputSourceId,
   };
 }
 
@@ -131,6 +147,7 @@ export const SHARE_LIMITS = {
   MAX_MAX_WASTE,
   MAX_PRIMARY_INDEX,
   MAX_SECONDARY_INDEX,
+  MAX_INPUT_SOURCE_INDEX,
 };
 
 export { SHARE_PARAM_KEY };

@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useI18n } from '../i18n';
 
 // 公告配置 - 修改这里来更新公告
-const ANNOUNCEMENT_ID = '2026-02-05-v6'; // 更新公告时修改此 ID
+const ANNOUNCEMENT_ID = '2026-02-06-v7'; // 更新公告时修改此 ID
 
 const GITHUB_URL = 'https://github.com/djkcyl/D.I.G.E.';
 const ISSUES_URL = 'https://github.com/djkcyl/D.I.G.E./issues';
@@ -11,6 +11,163 @@ const VIDEO_TUTORIAL_URL = 'https://www.bilibili.com/video/BV1VrfSByEBo';
 const LinkStyle = 'text-endfield-yellow hover:text-endfield-yellow-glow underline underline-offset-2 transition-colors';
 const HeadingStyle = 'text-endfield-yellow font-bold mt-4 mb-2';
 const ListStyle = 'list-disc list-inside space-y-1 text-endfield-text';
+
+function ChangelogSection({ version, title, defaultOpen = false, children }) {
+  const [open, setOpen] = useState(defaultOpen);
+  const { t } = useI18n();
+  return (
+    <div
+      className={`border transition-colors ${
+        open
+          ? 'border-endfield-yellow/40 bg-endfield-gray/60'
+          : 'border-endfield-gray-light/60 bg-endfield-dark/30 hover:border-endfield-text/60'
+      }`}
+    >
+      <button
+        type="button"
+        onClick={() => setOpen(!open)}
+        className="w-full px-3 py-2 flex items-center gap-2 text-left"
+        aria-expanded={open}
+        aria-label={`${open ? t('collapseSection') : t('expandSection')}: ${title || version}`}
+      >
+        <span
+          className={`material-symbols-outlined text-sm leading-none transition-transform ${
+            open ? 'rotate-90 text-endfield-yellow' : 'text-endfield-text/50'
+          }`}
+        >
+          chevron_right
+        </span>
+        <span className={`text-sm font-semibold leading-none py-0 ${open ? 'text-endfield-text-light' : 'text-endfield-text/80'}`}>
+          {title || version}
+        </span>
+      </button>
+      <div
+        className={`grid overflow-hidden transition-[grid-template-rows] duration-250 ease-out ${
+          open ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'
+        }`}
+      >
+        <div
+          className={`min-h-0 px-3 transition-opacity duration-150 ease-out ${
+            open ? 'pt-1 pb-3 opacity-100' : 'pt-0 pb-0 opacity-0'
+          }`}
+        >
+          {children}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+const ChangelogContent = {
+  zh: () => (
+    <>
+      <div className="space-y-2">
+        <ChangelogSection version="v1.5.0" title="v1.5.0 更新内容" defaultOpen>
+          <ul className={ListStyle}>
+            <li>新增“输入来源”选项：仓库 / 封装机（10秒/个）</li>
+            <li>封装机模式新增输入告警提示</li>
+          </ul>
+        </ChangelogSection>
+        <ChangelogSection version="v1.4.0" title="v1.4.0 更新内容">
+          <ul className={ListStyle}>
+            <li>周期图表按 4 秒粒度采样，对齐 8 秒/40 秒燃烧周期</li>
+            <li>超过 1000 点自动压缩，并提供“精确数值”查看完整点位</li>
+            <li>悬浮信息改为显示时间</li>
+          </ul>
+        </ChangelogSection>
+        <ChangelogSection version="v1.3.0" title="v1.3.0 更新内容">
+          <ul className={ListStyle}>
+            <li>图表新增时间轴</li>
+            <li>图表支持滚轮缩放、拖拽、移动端双指缩放与单指平移</li>
+            <li>新增各震荡分支的燃烧状态曲线</li>
+            <li>周期图表、燃料消耗、流程图支持折叠/展开</li>
+          </ul>
+        </ChangelogSection>
+      </div>
+    </>
+  ),
+  en: () => (
+    <>
+      <div className="space-y-2">
+        <ChangelogSection version="v1.5.0" title="v1.5.0 Updates" defaultOpen>
+          <ul className={ListStyle}>
+            <li>Added input source selection: Warehouse / Packaging Machine (10s/item)</li>
+            <li>Packer mode now shows an input warning</li>
+          </ul>
+        </ChangelogSection>
+        <ChangelogSection version="v1.4.0" title="v1.4.0 Updates">
+          <ul className={ListStyle}>
+            <li>Cycle chart samples at 4-second intervals to align with 8s/40s burn durations</li>
+            <li>Auto-compresses above 1000 points and adds a "Precise Values" toggle for full points</li>
+            <li>Hover panel now shows time instead of point index</li>
+          </ul>
+        </ChangelogSection>
+        <ChangelogSection version="v1.3.0" title="v1.3.0 Updates">
+          <ul className={ListStyle}>
+            <li>Added a time axis to the chart</li>
+            <li>Chart supports wheel zoom, drag, pinch zoom, and mobile pan</li>
+            <li>Added per-branch battery burn-state lines</li>
+            <li>Cycle chart, fuel consumption, and diagram sections are collapsible</li>
+          </ul>
+        </ChangelogSection>
+      </div>
+    </>
+  ),
+  ja: () => (
+    <>
+      <div className="space-y-2">
+        <ChangelogSection version="v1.5.0" title="v1.5.0 更新" defaultOpen>
+          <ul className={ListStyle}>
+            <li>入力元の選択を追加：倉庫 / 包装機（10秒/個）</li>
+            <li>包装機モードの入力警告を追加</li>
+          </ul>
+        </ChangelogSection>
+        <ChangelogSection version="v1.4.0" title="v1.4.0 更新内容">
+          <ul className={ListStyle}>
+            <li>周期チャートを 4 秒刻みに統一し、8 秒/40 秒燃焼周期に整合</li>
+            <li>1000 点超過時は自動圧縮し、「精密値」トグルで全点表示</li>
+            <li>ホバー情報を時間表示に変更</li>
+          </ul>
+        </ChangelogSection>
+        <ChangelogSection version="v1.3.0" title="v1.3.0 更新内容">
+          <ul className={ListStyle}>
+            <li>チャートに時間軸を追加</li>
+            <li>ホイール拡大縮小・ドラッグ移動・ピンチ/パンに対応</li>
+            <li>各分岐バッテリーの燃焼状態ラインを追加</li>
+            <li>周期チャート・燃料消費・構成図を折りたたみ可能</li>
+          </ul>
+        </ChangelogSection>
+      </div>
+    </>
+  ),
+  ko: () => (
+    <>
+      <div className="space-y-2">
+        <ChangelogSection version="v1.5.0" title="v1.5.0 업데이트" defaultOpen>
+          <ul className={ListStyle}>
+            <li>입력 소스 선택 추가: 창고 / 포장기(10초/개)</li>
+            <li>포장기 모드 입력 경고 추가</li>
+          </ul>
+        </ChangelogSection>
+        <ChangelogSection version="v1.4.0" title="v1.4.0 업데이트">
+          <ul className={ListStyle}>
+            <li>주기 차트를 4초 간격으로 고정해 8초/40초 연소 주기와 정렬</li>
+            <li>1000점 초과 시 자동 압축되고, "정밀 값" 토글로 전체 점 표시</li>
+            <li>호버 패널을 시간 표시로 변경</li>
+          </ul>
+        </ChangelogSection>
+        <ChangelogSection version="v1.3.0" title="v1.3.0 업데이트">
+          <ul className={ListStyle}>
+            <li>차트에 시간 축 추가</li>
+            <li>차트에서 휠 줌, 드래그, 핀치 줌, 모바일 팬 지원</li>
+            <li>각 분기 배터리 연소 상태 라인 추가</li>
+            <li>주기 차트/연료 소모/다이어그램 섹션 접기/펼치기 지원</li>
+          </ul>
+        </ChangelogSection>
+      </div>
+    </>
+  ),
+};
 
 // 公告内容组件（支持超链接）
 const AnnouncementContent = {
@@ -36,28 +193,7 @@ const AnnouncementContent = {
         <li>点击"计算"按钮获取最优方案</li>
         <li>在右侧查看方案详情和配置图</li>
       </ul>
-
-      <h3 className={HeadingStyle}>v1.4.0 更新内容</h3>
-      <ul className={ListStyle}>
-        <li>周期图表默认按 4 秒粒度采样，与 8 秒/40 秒燃烧周期对齐</li>
-        <li>超过 1000 点时自动压缩，新增“精确数值”开关可查看完整点位</li>
-        <li>悬浮数据改为显示时间而非点位索引，便于对齐燃烧过程</li>
-        <li>“悬浮完整数据”开关文案与行为已反转并简化</li>
-        <li>左侧“数据：功率 / 目标线 / 电量”在空间不足时自动隐藏</li>
-        <li>版本号固定显示在标题右侧</li>
-      </ul>
-
-      <h3 className={HeadingStyle}>v1.3.0 更新内容</h3>
-      <ul className={ListStyle}>
-        <li>图表新增时间轴，支持按时间查看波动</li>
-        <li>图表支持滚轮缩放、鼠标拖拽、移动端双指缩放与单指平移</li>
-        <li>图表新增每个震荡分支（电池）的燃烧状态曲线</li>
-        <li>新增“关闭悬浮完整数据”开关，移动端默认开启</li>
-        <li>周期图表、燃料消耗、流程图支持折叠/展开（滑动动画）</li>
-        <li>优化图表区域和折叠区块的布局与交互细节</li>
-      </ul>
-      
-      <p className="mt-4">
+<p className="mt-4">
         视频教程：{' '}
         <a href={VIDEO_TUTORIAL_URL} target="_blank" rel="noopener noreferrer" className={LinkStyle}>Bilibili - D.I.G.E. 使用教程</a>
       </p>
@@ -92,29 +228,7 @@ const AnnouncementContent = {
         <li>Click "Calculate" to get optimal solutions</li>
         <li>View solution details and diagrams on the right</li>
       </ul>
-
-      <h3 className={HeadingStyle}>v1.4.0 Updates</h3>
-      <ul className={ListStyle}>
-        <li>Cycle chart now uses strict 4-second points to align with 8s/40s burn durations</li>
-        <li>Data is compressed only above 1000 points; new "Precise Values" toggle shows full points</li>
-        <li>Hover panel now shows time instead of point index for easier timeline matching</li>
-        <li>The hover-details toggle wording and behavior are inverted and simplified</li>
-        <li>Left legend text ("Power / Target / Battery") auto-hides only when space is insufficient</li>
-        <li>Version label is now always shown to the right of the title</li>
-      </ul>
-
-      <h3 className={HeadingStyle}>v1.3.0 Updates</h3>
-      <ul className={ListStyle}>
-        <li>Added a time axis to the chart for time-based reading</li>
-        <li>Chart now supports wheel zoom, mouse drag, pinch zoom, and mobile pan</li>
-        <li>Added per-branch battery burn-state lines</li>
-        <li>Added a "Hide hover details" switch (enabled by default on mobile)</li>
-        <li>Cycle chart, fuel consumption, and diagram sections are collapsible with slide animation</li>
-        <li>Refined chart area layout and fold/unfold interaction details</li>
-      </ul>
-
-
-      <p className="mt-4">
+<p className="mt-4">
         Video tutorial:{' '}
         <a href={VIDEO_TUTORIAL_URL} target="_blank" rel="noopener noreferrer" className={LinkStyle}>Bilibili - D.I.G.E. Tutorial</a>
       </p>
@@ -150,29 +264,7 @@ const AnnouncementContent = {
         <li>「計算」ボタンをクリックして最適方案を取得</li>
         <li>右側で方案の詳細と構成図を確認</li>
       </ul>
-
-      <h3 className={HeadingStyle}>v1.4.0 更新内容</h3>
-      <ul className={ListStyle}>
-        <li>周期チャートの点を 4 秒刻みに統一し、8 秒/40 秒燃焼周期に整合</li>
-        <li>1000 点超過時のみ圧縮し、「精確値」スイッチで全点表示が可能</li>
-        <li>ホバー情報は点番号ではなく時間表示に変更</li>
-        <li>ホバー詳細スイッチの文言と動作を反転して簡潔化</li>
-        <li>左側の「Power / Target / Battery」表示は幅不足時のみ自動非表示</li>
-        <li>バージョン表示をタイトル右側に常時固定</li>
-      </ul>
-
-      <h3 className={HeadingStyle}>v1.3.0 更新内容</h3>
-      <ul className={ListStyle}>
-        <li>チャートに時間軸を追加</li>
-        <li>ホイール拡大縮小・ドラッグ移動・モバイルのピンチ/パンに対応</li>
-        <li>各分岐バッテリーの燃焼状態ラインを追加</li>
-        <li>「ホバー詳細を隠す」スイッチを追加（モバイルでは既定で ON）</li>
-        <li>周期チャート・燃料消費・構成図をスライドで折りたたみ可能に</li>
-        <li>チャート領域と折りたたみ時のレイアウト/操作感を調整</li>
-      </ul>
-
-
-      <p className="mt-4">
+<p className="mt-4">
         動画チュートリアル：{' '}
         <a href={VIDEO_TUTORIAL_URL} target="_blank" rel="noopener noreferrer" className={LinkStyle}>Bilibili - D.I.G.E. 使い方ガイド</a>
       </p>
@@ -208,29 +300,7 @@ const AnnouncementContent = {
         <li>"계산" 버튼을 클릭하여 최적 방안 얻기</li>
         <li>오른쪽에서 방안 세부 정보와 구성도 확인</li>
       </ul>
-
-      <h3 className={HeadingStyle}>v1.4.0 업데이트</h3>
-      <ul className={ListStyle}>
-        <li>주기 차트를 4초 고정 포인트로 변경해 8초/40초 연소 주기와 정렬</li>
-        <li>1000포인트 초과 시에만 압축하고, "정밀 수치" 토글로 전체 포인트 표시</li>
-        <li>호버 데이터는 포인트 인덱스 대신 시간 기준으로 표시</li>
-        <li>호버 상세 토글의 문구와 동작을 반대로 바꾸고 더 간결화</li>
-        <li>좌측 "Power / Target / Battery" 라벨은 공간이 부족할 때만 자동 숨김</li>
-        <li>버전 표시는 제목 오른쪽에 항상 고정 표시</li>
-      </ul>
-
-      <h3 className={HeadingStyle}>v1.3.0 업데이트</h3>
-      <ul className={ListStyle}>
-        <li>차트에 시간축 추가</li>
-        <li>휠 확대/축소, 마우스 드래그, 모바일 핀치/팬 지원</li>
-        <li>각 분기 배터리의 연소 상태 라인 추가</li>
-        <li>"호버 상세 숨기기" 스위치 추가 (모바일 기본 ON)</li>
-        <li>주기 차트/연료 소모/구성도 섹션 접기·펼치기(슬라이드 애니메이션)</li>
-        <li>차트 영역 및 접기/펼치기 상호작용 디테일 개선</li>
-      </ul>
-
-
-      <p className="mt-4">
+<p className="mt-4">
         동영상 튜토리얼:{' '}
         <a href={VIDEO_TUTORIAL_URL} target="_blank" rel="noopener noreferrer" className={LinkStyle}>Bilibili - D.I.G.E. 사용 가이드</a>
       </p>
@@ -257,6 +327,13 @@ export function shouldShowAnnouncement() {
 export default function Announcement({ show, onClose }) {
   const { t, locale } = useI18n();
   const [dontShowAgain, setDontShowAgain] = useState(false);
+  const [activeTab, setActiveTab] = useState('announcement');
+
+  useEffect(() => {
+    if (show) {
+      setActiveTab('announcement');
+    }
+  }, [show]);
 
   const handleClose = () => {
     if (dontShowAgain) {
@@ -268,22 +345,52 @@ export default function Announcement({ show, onClose }) {
 
   if (!show) return null;
 
-  const ContentComponent = AnnouncementContent[locale] || AnnouncementContent.en;
+  const AnnouncementComponent = AnnouncementContent[locale] || AnnouncementContent.en;
+  const ChangelogComponent = ChangelogContent[locale] || ChangelogContent.en;
+  const isAnnouncement = activeTab === 'announcement';
 
   return (
     <div className="fixed inset-0 bg-endfield-black/95 backdrop-blur z-50 flex items-center justify-center p-4">
-      <div className="bg-endfield-gray border border-endfield-yellow/30 p-6 max-w-xl w-full relative max-h-[90vh] flex flex-col">
+      <div className="bg-endfield-gray border border-endfield-yellow/30 p-6 max-w-xl w-full relative h-[90vh] flex flex-col">
         {/* 标题 */}
         <div className="flex items-center gap-2 mb-4 pb-3 border-b border-endfield-gray-light">
-          <span className="material-symbols-outlined text-endfield-yellow">campaign</span>
+          <span className="material-symbols-outlined text-endfield-yellow">
+            {isAnnouncement ? 'campaign' : 'history'}
+          </span>
           <h2 className="text-base font-bold text-endfield-text-light uppercase tracking-wider">
-            {t('announcement')}
+            {isAnnouncement ? t('announcement') : t('changelog')}
           </h2>
+        </div>
+
+        {/* Tabs */}
+        <div className="grid grid-cols-2 gap-2 mb-4">
+          <button
+            type="button"
+            onClick={() => setActiveTab('announcement')}
+            className={`h-9 border text-sm tracking-wider transition-colors ${
+              isAnnouncement
+                ? 'text-endfield-yellow border-endfield-yellow bg-endfield-yellow/10'
+                : 'text-endfield-text-light border-endfield-gray-light hover:border-endfield-text'
+            }`}
+          >
+            {t('announcement')}
+          </button>
+          <button
+            type="button"
+            onClick={() => setActiveTab('changelog')}
+            className={`h-9 border text-sm tracking-wider transition-colors ${
+              !isAnnouncement
+                ? 'text-endfield-yellow border-endfield-yellow bg-endfield-yellow/10'
+                : 'text-endfield-text-light border-endfield-gray-light hover:border-endfield-text'
+            }`}
+          >
+            {t('changelog')}
+          </button>
         </div>
 
         {/* 内容 */}
         <div className="text-sm text-endfield-text-light leading-relaxed mb-6 overflow-y-auto scrollbar-gutter-stable flex-1 pr-2">
-          <ContentComponent />
+          {isAnnouncement ? <AnnouncementComponent /> : <ChangelogComponent />}
         </div>
 
         {/* 不再显示复选框 */}
