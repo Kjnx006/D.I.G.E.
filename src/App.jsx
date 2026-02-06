@@ -15,6 +15,8 @@ import { buildShareUrl, getShareParamsFromUrl } from './utils/shareParams';
 // 生成随机目标发电量 (500 - 5000)
 const getRandomTargetPower = () => Math.floor(Math.random() * 4500) + 500;
 const PRIVACY_FOOTER_DISMISSED_KEY = 'dige-privacy-footer-dismissed';
+const SHARE_STATUS_VISIBLE_MS = 1800;
+const SHARE_STATUS_FADE_MS = 220;
 const DEFAULT_PARAMS = {
   targetPower: 2656,
   minBatteryPercent: 5,
@@ -32,8 +34,9 @@ const getInitialParams = () => {
 function AppContent({ onOpenAnnouncement, onOpenPrivacyPolicy }) {
   const { t } = useI18n();
   const [params, setParams] = useState(getInitialParams);
-  const [shareStatus, setShareStatus] = useState('');
-  const shareStatusTimer = useRef(null);
+  const [shareStatusMessage, setShareStatusMessage] = useState('');
+  const [shareStatusVisible, setShareStatusVisible] = useState(false);
+  const shareStatusTimer = useRef({ hide: null, clear: null, frame: null });
   const [shareModalOpen, setShareModalOpen] = useState(false);
   const [shareUrl, setShareUrl] = useState('');
 
@@ -80,19 +83,35 @@ function AppContent({ onOpenAnnouncement, onOpenPrivacyPolicy }) {
 
   useEffect(() => {
     return () => {
-      if (shareStatusTimer.current) {
-        clearTimeout(shareStatusTimer.current);
+      if (shareStatusTimer.current.hide) clearTimeout(shareStatusTimer.current.hide);
+      if (shareStatusTimer.current.clear) clearTimeout(shareStatusTimer.current.clear);
+      if (shareStatusTimer.current.frame && typeof cancelAnimationFrame === 'function') {
+        cancelAnimationFrame(shareStatusTimer.current.frame);
       }
     };
   }, []);
 
   const showShareStatus = useCallback((message) => {
     if (!message) return;
-    setShareStatus(message);
-    if (shareStatusTimer.current) {
-      clearTimeout(shareStatusTimer.current);
+    if (shareStatusTimer.current.hide) clearTimeout(shareStatusTimer.current.hide);
+    if (shareStatusTimer.current.clear) clearTimeout(shareStatusTimer.current.clear);
+    if (shareStatusTimer.current.frame && typeof cancelAnimationFrame === 'function') {
+      cancelAnimationFrame(shareStatusTimer.current.frame);
     }
-    shareStatusTimer.current = setTimeout(() => setShareStatus(''), 2000);
+
+    setShareStatusMessage(message);
+    setShareStatusVisible(false);
+    if (typeof window !== 'undefined' && typeof window.requestAnimationFrame === 'function') {
+      shareStatusTimer.current.frame = window.requestAnimationFrame(() => setShareStatusVisible(true));
+    } else {
+      setShareStatusVisible(true);
+    }
+
+    shareStatusTimer.current.hide = setTimeout(() => setShareStatusVisible(false), SHARE_STATUS_VISIBLE_MS);
+    shareStatusTimer.current.clear = setTimeout(
+      () => setShareStatusMessage(''),
+      SHARE_STATUS_VISIBLE_MS + SHARE_STATUS_FADE_MS
+    );
   }, []);
 
   const getCopyErrorReason = useCallback((error) => {
@@ -181,14 +200,16 @@ function AppContent({ onOpenAnnouncement, onOpenPrivacyPolicy }) {
           onOpenPrivacyPolicy={onOpenPrivacyPolicy}
         />
 
-        {shareStatus && (
+        {shareStatusMessage && (
           <div className="fixed top-3 left-1/2 -translate-x-1/2 z-[60] pointer-events-none">
             <div
-              className="bg-endfield-gray border border-endfield-yellow/50 text-endfield-yellow text-xs sm:text-sm px-3 py-2 shadow-[0_10px_30px_rgba(0,0,0,0.35)]"
+              className={`bg-endfield-gray border border-endfield-yellow/50 text-endfield-yellow text-xs sm:text-sm px-3 py-2 shadow-[0_10px_30px_rgba(0,0,0,0.35)] transition-opacity duration-200 ease-out ${
+                shareStatusVisible ? 'opacity-100' : 'opacity-0'
+              }`}
               role="status"
               aria-live="polite"
             >
-              {shareStatus}
+              {shareStatusMessage}
             </div>
           </div>
         )}

@@ -27,6 +27,7 @@ ChartJS.register(
 const fontFamily = "Frex Sans GB VF";
 const TARGET_SECONDS_PER_POINT = 4;
 const MAX_CHART_POINTS = 1000;
+const MIN_VISIBLE_SECONDS = TARGET_SECONDS_PER_POINT * 20;
 
 export default function SolutionChart({ solution, targetPower, batteryCapacity, hideHoverDetails = false, preciseValues = false }) {
   const { t } = useI18n();
@@ -35,6 +36,11 @@ export default function SolutionChart({ solution, targetPower, batteryCapacity, 
     dragging: false,
     lastClientX: 0,
     pinchDistance: 0,
+  });
+  const zoomRangeRef = useRef({
+    min: 0,
+    max: 0,
+    isCustom: false,
   });
 
   const sourceBatteryLog = preciseValues ? (solution?.preciseBatteryLog || solution?.batteryLog) : solution?.batteryLog;
@@ -120,8 +126,58 @@ export default function SolutionChart({ solution, targetPower, batteryCapacity, 
 
   const pointCount = batteryData.length;
   const maxX = Math.max(0, pointCount - 1);
-  const minVisibleSpan = Math.min(20, maxX + 1);
+  const maxVisibleSeconds = Math.max(0, maxX * secondsPerPoint);
+  const minVisibleSeconds = Math.min(MIN_VISIBLE_SECONDS, maxVisibleSeconds || MIN_VISIBLE_SECONDS);
+  const minVisibleSpanPoints = secondsPerPoint > 0
+    ? Math.min(maxX + 1, minVisibleSeconds / secondsPerPoint)
+    : Math.min(20, maxX + 1);
   const xValues = batteryData.map((_, i) => i);
+  const toSeconds = (value) => value * secondsPerPoint;
+  const toIndex = (value) => (secondsPerPoint > 0 ? value / secondsPerPoint : 0);
+  const clampRange = (min, max, minSpanOverride = null) => {
+    const fullMin = 0;
+    const fullMax = maxX;
+    const fullSpan = fullMax - fullMin;
+    let nextMin = min;
+    let nextMax = max;
+    let span = nextMax - nextMin;
+
+    const minSpan = Number.isFinite(minSpanOverride)
+      ? Math.max(0, minSpanOverride)
+      : Math.min(minVisibleSpanPoints, fullSpan || 1);
+
+    if (span < minSpan) {
+      span = minSpan;
+      const center = (nextMin + nextMax) / 2;
+      nextMin = center - span / 2;
+      nextMax = center + span / 2;
+    }
+
+    if (nextMin < fullMin) {
+      nextMax += fullMin - nextMin;
+      nextMin = fullMin;
+    }
+    if (nextMax > fullMax) {
+      nextMin -= nextMax - fullMax;
+      nextMax = fullMax;
+    }
+
+    if (fullSpan <= 0) return { min: fullMin, max: fullMax };
+    return { min: Math.max(fullMin, nextMin), max: Math.min(fullMax, nextMax) };
+  };
+  const isFullRange = (range) => (
+    Math.abs(range.min) < 1e-3 && Math.abs(range.max - maxX) < 1e-3
+  );
+  const storedSpanPoints = zoomRangeRef.current.isCustom
+    ? Math.max(0, toIndex(zoomRangeRef.current.max) - toIndex(zoomRangeRef.current.min))
+    : null;
+  const renderRange = zoomRangeRef.current.isCustom
+    ? clampRange(
+      toIndex(zoomRangeRef.current.min),
+      toIndex(zoomRangeRef.current.max),
+      storedSpanPoints
+    )
+    : { min: 0, max: maxX };
   // Clamp battery percentage to [0, 100].
   const batteryPercent = batteryData.map(v => Math.min(100, Math.max(0, (v / batteryCapacity) * 100)));
   const powerPoints = xValues.map((x, i) => ({ x, y: powerData[i] ?? null }));
@@ -232,8 +288,8 @@ export default function SolutionChart({ solution, targetPower, batteryCapacity, 
       x: {
         type: 'linear',
         display: true,
-        min: 0,
-        max: maxX,
+        min: renderRange.min,
+        max: renderRange.max,
         grid: { color: '#1a1a1a' },
         ticks: {
           color: '#888888',
@@ -301,10 +357,23 @@ export default function SolutionChart({ solution, targetPower, batteryCapacity, 
     const xOptions = chart.options?.scales?.x;
     if (!xOptions) return;
 
-    xOptions.min = 0;
-    xOptions.max = maxX;
+    const stored = zoomRangeRef.current;
+    const storedSpan = stored.isCustom
+      ? Math.max(0, toIndex(stored.max) - toIndex(stored.min))
+      : null;
+    const next = stored.isCustom
+      ? clampRange(toIndex(stored.min), toIndex(stored.max), storedSpan)
+      : clampRange(0, maxX);
+    const full = isFullRange(next);
+    zoomRangeRef.current = {
+      min: toSeconds(next.min),
+      max: toSeconds(next.max),
+      isCustom: stored.isCustom ? !full : false,
+    };
+    xOptions.min = next.min;
+    xOptions.max = next.max;
     chart.update('none');
-  }, [pointCount, maxX]);
+  }, [pointCount, maxX, minVisibleSpanPoints, secondsPerPoint]);
 
   useEffect(() => {
     const chart = chartRef.current;
@@ -312,34 +381,6 @@ export default function SolutionChart({ solution, targetPower, batteryCapacity, 
 
     const canvas = chart.canvas;
     canvas.style.touchAction = 'none';
-
-    const clampRange = (min, max) => {
-      const fullMin = 0;
-      const fullMax = maxX;
-      const fullSpan = fullMax - fullMin;
-      let nextMin = min;
-      let nextMax = max;
-      let span = nextMax - nextMin;
-
-      if (span < Math.min(minVisibleSpan, fullSpan || 1)) {
-        span = Math.min(minVisibleSpan, fullSpan || 1);
-        const center = (nextMin + nextMax) / 2;
-        nextMin = center - span / 2;
-        nextMax = center + span / 2;
-      }
-
-      if (nextMin < fullMin) {
-        nextMax += fullMin - nextMin;
-        nextMin = fullMin;
-      }
-      if (nextMax > fullMax) {
-        nextMin -= nextMax - fullMax;
-        nextMax = fullMax;
-      }
-
-      if (fullSpan <= 0) return { min: fullMin, max: fullMax };
-      return { min: Math.max(fullMin, nextMin), max: Math.min(fullMax, nextMax) };
-    };
 
     const getCurrentRange = () => {
       const xScale = chart.scales.x;
@@ -354,6 +395,12 @@ export default function SolutionChart({ solution, targetPower, batteryCapacity, 
       if (!xOptions) return;
       xOptions.min = next.min;
       xOptions.max = next.max;
+      const full = isFullRange(next);
+      zoomRangeRef.current = {
+        min: toSeconds(next.min),
+        max: toSeconds(next.max),
+        isCustom: !full,
+      };
       chart.update('none');
     };
 
@@ -367,7 +414,7 @@ export default function SolutionChart({ solution, targetPower, batteryCapacity, 
 
       const { min, max } = getCurrentRange();
       const span = Math.max(1, max - min);
-      const nextSpan = Math.max(Math.min(minVisibleSpan, maxX || 1), span * factor);
+      const nextSpan = Math.max(Math.min(minVisibleSpanPoints, maxX || 1), span * factor);
       const ratio = (centerValue - min) / span;
       const nextMin = centerValue - ratio * nextSpan;
       const nextMax = nextMin + nextSpan;
@@ -475,7 +522,7 @@ export default function SolutionChart({ solution, targetPower, batteryCapacity, 
       canvas.removeEventListener('touchend', onTouchEnd);
       canvas.removeEventListener('touchcancel', onTouchEnd);
     };
-  }, [maxX, minVisibleSpan]);
+  }, [maxX, minVisibleSpanPoints]);
 
   return (
     <div className="h-44 sm:h-56">
