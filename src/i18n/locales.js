@@ -108,8 +108,8 @@ export const locales = {
     storageBox: 'Storage Box',
     storageShort: 'Storage',
     importantNote: 'Important',
-    storageBoxWarning: 'All return lines must connect to Protocol Storage Boxes (Storage Mode) as buffers. Do NOT connect directly to belts to prevent overflow!',
-    storageBoxWarningShort: 'Return lines must use Storage Boxes (set to Storage Mode or unpowered) as buffers!',
+    storageBoxWarning: 'Splitters need at least one belt tile as a buffer. Leave at least one belt tile between a splitter and a merger; do not place a merger directly adjacent to a splitter!',
+    storageBoxWarningShort: 'Splitters need at least one belt tile as a buffer. Do not place a merger directly adjacent to a splitter!',
     baseOnlyHint: 'Base power only, no fuel needed',
     
     // Controls
@@ -268,8 +268,8 @@ export const locales = {
     storageBox: '协议存储箱',
     storageShort: '存储箱',
     importantNote: '重要提示',
-    storageBoxWarning: '所有分流回收线路必须接入"协议存储箱（存储模式）"作为缓存。切勿直接接入传送带，否则会导致传送带溢出！',
-    storageBoxWarningShort: '分流回收必须使用存储箱缓存！存储箱需设为存储模式或不通电。',
+    storageBoxWarning: '分流器需要至少一格传送带作为缓存。请在分流器与汇流器之间留出至少一格传送带，切勿将汇流器直接紧贴分流器！',
+    storageBoxWarningShort: '分流器需要至少一格传送带作为缓存，请勿将汇流器直接紧贴分流器！',
     baseOnlyHint: '仅基地发电，无需燃料',
     
     // Controls
@@ -428,8 +428,8 @@ export const locales = {
     storageBox: 'ストレージボックス',
     storageShort: 'ストレージ',
     importantNote: '重要',
-    storageBoxWarning: 'すべての回収ラインは「プロトコルストレージボックス（ストレージモード）」をバッファとして接続する必要があります。ベルトに直接接続しないでください！',
-    storageBoxWarningShort: '回収ラインはストレージボックス（ストレージモードまたは無電力）を使用！',
+    storageBoxWarning: 'スプリッターには最低1マス分のベルトをバッファとして挟んでください。スプリッターとマージャーの間に最低1マスのベルトを置き、マージャーをスプリッターに直結しないでください！',
+    storageBoxWarningShort: 'スプリッターには最低1マス分のベルトをバッファとして挟んでください。マージャーをスプリッターに直結しないでください！',
     baseOnlyHint: '基地発電のみ、燃料不要',
     
     // Controls
@@ -588,8 +588,8 @@ export const locales = {
     storageBox: '저장 박스',
     storageShort: '저장',
     importantNote: '중요',
-    storageBoxWarning: '모든 회수 라인은 "프로토콜 저장 박스(저장 모드)"를 버퍼로 연결해야 합니다. 벨트에 직접 연결하지 마세요!',
-    storageBoxWarningShort: '회수 라인은 저장 박스(저장 모드 또는 무전원) 사용 필수!',
+    storageBoxWarning: '분배기는 최소 1칸의 벨트가 버퍼로 필요합니다. 분배기와 합류기 사이에 최소 1칸의 벨트를 두고, 합류기를 분배기에 바로 붙이지 마세요!',
+    storageBoxWarningShort: '분배기는 최소 1칸의 벨트가 버퍼로 필요합니다. 합류기를 분배기에 바로 붙이지 마세요!',
     baseOnlyHint: '기지 발전만, 연료 불필요',
     
     // Controls
