@@ -244,7 +244,7 @@ function AppContent({ onOpenAnnouncement, onOpenPrivacyPolicy }) {
         {showPrivacyFooter && (
           <footer className="shrink-0 relative border-t border-endfield-gray-light bg-endfield-dark px-3 py-2 text-[11px] sm:text-xs text-endfield-text leading-relaxed">
             <div className="pr-8 text-center">
-              {t('claritySiteDisclosure')}
+              {t('privacyFooterNotice')}
               {' '}
               <button
                 type="button"
@@ -261,6 +261,15 @@ function AppContent({ onOpenAnnouncement, onOpenPrivacyPolicy }) {
                 className="text-endfield-yellow hover:text-endfield-yellow-glow underline underline-offset-2"
               >
                 {t('microsoftPrivacyStatement')}
+              </a>
+              {' '}|{' '}
+              <a
+                href="https://sentry.io/privacy/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-endfield-yellow hover:text-endfield-yellow-glow underline underline-offset-2"
+              >
+                {t('sentryPrivacyStatement')}
               </a>
             </div>
 

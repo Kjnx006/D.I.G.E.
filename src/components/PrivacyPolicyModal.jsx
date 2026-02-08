@@ -16,24 +16,9 @@ export default function PrivacyPolicyModal({ show, onClose }) {
         </div>
 
         <div className="text-sm text-endfield-text-light leading-relaxed mb-6 overflow-y-auto scrollbar-gutter-stable flex-1 pr-2">
-          <h3 className="text-endfield-yellow font-bold mt-1 mb-2">{t('siteDisclosureTitle')}</h3>
-          <p className="mb-4">{t('claritySiteDisclosure')}</p>
-
-          <h3 className="text-endfield-yellow font-bold mt-2 mb-2">{t('privacyPolicyDisclosureTitle')}</h3>
-          <p className="mb-4">{t('clarityPolicyDisclosure')}</p>
-
-          <p className="mb-4">
-            <a
-              href="https://clarity.microsoft.com/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-endfield-yellow hover:text-endfield-yellow-glow underline underline-offset-2"
-            >
-              Microsoft Clarity
-            </a>
-          </p>
-
+          <p className="mb-4">{t('privacyNoticeBody')}</p>
           <p>
+            {t('privacyThirdPartyLabel')}{' '}
             <a
               href="https://privacy.microsoft.com/privacystatement"
               target="_blank"
@@ -41,6 +26,15 @@ export default function PrivacyPolicyModal({ show, onClose }) {
               className="text-endfield-yellow hover:text-endfield-yellow-glow underline underline-offset-2"
             >
               {t('microsoftPrivacyStatement')}
+            </a>
+            {' '}·{' '}
+            <a
+              href="https://sentry.io/privacy/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-endfield-yellow hover:text-endfield-yellow-glow underline underline-offset-2"
+            >
+              {t('sentryPrivacyStatement')}
             </a>
           </p>
         </div>
