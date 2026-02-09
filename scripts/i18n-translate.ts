@@ -18,7 +18,7 @@ import path from 'node:path';
 
 const LOCALES_DIR = path.join(process.cwd(), 'src', 'i18n');
 const SOURCE_LOCALE = 'zh';
-const TARGET_LOCALES = ['en', 'ja', 'ko', 'ru', 'fr'];
+const TARGET_LOCALES = ['en', 'ja', 'ko', 'ru', 'fr', 'de'];
 const ALL_LOCALES = [SOURCE_LOCALE, ...TARGET_LOCALES];
 
 // ─── 文件读写 ─────────────────────────────────────────────────────────────────

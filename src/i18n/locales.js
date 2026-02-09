@@ -4,6 +4,7 @@ import ja from './locales.ja.json';
 import ko from './locales.ko.json';
 import ru from './locales.ru.json';
 import fr from './locales.fr.json';
+import de from './locales.de.json';
 
 export const locales = {
   en,
@@ -12,6 +13,7 @@ export const locales = {
   ko,
   ru,
   fr,
+  de,
 };
 
 export const languageOptions = [
@@ -21,4 +23,5 @@ export const languageOptions = [
   { code: 'ko', nativeName: '한국어', i18nKey: 'langKorean', flag: '🇰🇷' },
   { code: 'ru', nativeName: 'Русский', i18nKey: 'langRussian', flag: '🇷🇺' },
   { code: 'fr', nativeName: 'Français', i18nKey: 'langFrench', flag: '🇫🇷' },
+  { code: 'de', nativeName: 'Deutsch', i18nKey: 'langGerman', flag: '🇩🇪' },
 ];
