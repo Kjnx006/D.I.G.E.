@@ -1,0 +1,95 @@
+---
+description: i18n 多语言翻译工作流。当涉及新增、修改、删除翻译 key 或编辑 src/i18n/ 下的 locale 文件时自动激活。
+globs:
+  - src/i18n/**
+  - src/components/**
+  - src/App.jsx
+---
+
+# i18n 多语言翻译规则
+
+## 核心原则
+
+- **zh (中文) 是唯一的 source of truth**，所有 key 以 `locales.zh.json` 为基准
+- **每次新增/修改 key，必须同步所有 6 种语言**：zh、en、ja、ko、ru、fr
+- **必须使用 `i18n:translate` 命令行工具**，禁止手动逐文件编辑 locale JSON
+
+## 命令行工具
+
+```bash
+# 检查各语言缺失/多余的 key
+pnpm run i18n:translate
+
+# 新增或更新单个 key（必须同时提供 6 种语言）
+pnpm run i18n:translate add <key> --zh "中文" --en "English" --ja "日本語" --ko "한국어" --ru "Русский" --fr "Français"
+
+# 一次新增多个 key
+pnpm run i18n:translate add <key1> --zh "..." --en "..." --ja "..." --ko "..." --ru "..." --fr "..." add <key2> --zh "..." --en "..." --ja "..." --ko "..." --ru "..." --fr "..."
+
+# 删除 key（从所有语言文件中移除）
+pnpm run i18n:translate delete <key1> [<key2> ...]
+```
+
+## 标准工作流（必须严格遵循）
+
+### 新增翻译 key
+
+直接使用命令行完成，一步到位：
+
+```bash
+pnpm run i18n:translate add newFeature --zh "新功能" --en "New Feature" --ja "新機能" --ko "새 기능" --ru "Новая функция" --fr "Nouvelle fonctionnalité"
+```
+
+脚本会自动写入所有 locale 文件并校验同步状态。
+
+### 批量新增
+
+多个 key 写在一条命令中：
+
+```bash
+pnpm run i18n:translate add saveSuccess --zh "保存成功" --en "Saved" --ja "保存しました" --ko "저장됨" --ru "Сохранено" --fr "Enregistré" add saveFailed --zh "保存失败" --en "Save failed" --ja "保存に失敗" --ko "저장 실패" --ru "Ошибка сохранения" --fr "Échec de la sauvegarde"
+```
+
+### 修改已有翻译
+
+同 `add` 命令，已有 key 会被覆盖更新。
+
+### 删除翻译 key
+
+```bash
+pnpm run i18n:translate delete obsoleteKey
+```
+
+或使用 prune 工具自动清理未使用的 key：
+
+```bash
+pnpm run i18n:prune --write
+```
+
+## 翻译质量要求
+
+- **语境**：本项目是游戏工具（明日方舟：终末地 / Arknights: Endfield），翻译需符合游戏语境
+- **简洁**：UI 文案应简短精炼，避免冗长
+- **专业术语**：保持各语言间术语一致（如"震荡发电"→"Oscillating"→"振動"→"진동"→"Осцилляция"→"Oscillation"）
+- **key 命名**：使用 camelCase，语义清晰（如 `fuelConsumption`、`minBatteryPercent`）
+
+## 文件结构
+
+```
+src/i18n/
+├── index.jsx          # i18n Provider 和 useI18n hook
+├── locales.js         # locale 导入汇总
+├── locales.zh.json    # 中文 (source of truth)
+├── locales.en.json    # 英文
+├── locales.ja.json    # 日文
+├── locales.ko.json    # 韩文
+├── locales.ru.json    # 俄文
+└── locales.fr.json    # 法文
+```
+
+## 禁止事项
+
+- ❌ 禁止只添加部分语言的翻译（必须 6 语言齐全）
+- ❌ 禁止手动逐个编辑 locale JSON 文件来添加翻译（必须通过 `i18n:translate` 命令）
+- ❌ 禁止在 locale 文件中使用嵌套结构（保持扁平 key-value）
+- ❌ 禁止留下未翻译的占位符（如 "TODO" 或空字符串）

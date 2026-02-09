@@ -8,6 +8,10 @@ export default function Header({ onCalculate, onShare, sidebarCollapsed, onToggl
   const langMenuRef = useRef(null);
 
   const currentLang = languageOptions.find(l => l.code === locale);
+  const getLangLabel = (lang) => {
+    const translated = t(lang.i18nKey);
+    return translated === lang.nativeName ? lang.nativeName : `${lang.nativeName} (${translated})`;
+  };
 
   // 点击外部关闭下拉菜单
   useEffect(() => {
@@ -138,10 +142,10 @@ export default function Header({ onCalculate, onShare, sidebarCollapsed, onToggl
             className="h-10 px-3 bg-endfield-gray border border-endfield-gray-light hover:border-endfield-yellow transition-colors flex items-center gap-2 text-sm text-endfield-text-light"
             aria-expanded={showLangMenu}
             aria-haspopup="listbox"
-            aria-label={`当前语言: ${currentLang?.name}, 点击切换语言`}
+            aria-label={`当前语言: ${currentLang ? getLangLabel(currentLang) : ''}, 点击切换语言`}
           >
             <span className="material-symbols-outlined text-base" aria-hidden="true">language</span>
-            <span>{currentLang?.name}</span>
+            <span>{currentLang ? getLangLabel(currentLang) : ''}</span>
           </button>
 
           {showLangMenu && (
@@ -157,7 +161,7 @@ export default function Header({ onCalculate, onShare, sidebarCollapsed, onToggl
                       ${locale === lang.code ? 'text-endfield-yellow' : 'text-endfield-text-light'}`}
                     lang={lang.code}
                   >
-                    {lang.name}
+                    {getLangLabel(lang)}
                   </button>
                 </li>
               ))}

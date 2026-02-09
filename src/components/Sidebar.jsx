@@ -6,6 +6,10 @@ import CloseButton from './CloseButton';
 
 export default function Sidebar({ params, setParams, collapsed, onClose, onCalculate, onRandomCalculate, onOpenAnnouncement, onOpenPrivacyPolicy }) {
   const { t, locale, changeLocale, languageOptions } = useI18n();
+  const getLangLabel = (lang) => {
+    const translated = t(lang.i18nKey);
+    return translated === lang.nativeName ? lang.nativeName : `${lang.nativeName} (${translated})`;
+  };
   const [showLangMenu, setShowLangMenu] = useState(false);
   const [showPrimaryFuelMenu, setShowPrimaryFuelMenu] = useState(false);
   const [showSecondaryFuelMenu, setShowSecondaryFuelMenu] = useState(false);
@@ -465,7 +469,7 @@ export default function Sidebar({ params, setParams, collapsed, onClose, onCalcu
               className="w-full h-10 bg-endfield-gray border border-endfield-gray-light hover:border-endfield-yellow transition-colors flex items-center justify-center gap-2 text-sm text-endfield-text-light"
             >
               <span className="material-symbols-outlined text-base">language</span>
-              <span>{languageOptions.find(l => l.code === locale)?.name}</span>
+              <span>{(() => { const l = languageOptions.find(l => l.code === locale); return l ? getLangLabel(l) : ''; })()}</span>
             </button>
 
             {showLangMenu && (
@@ -480,7 +484,7 @@ export default function Sidebar({ params, setParams, collapsed, onClose, onCalcu
                     className={`w-full px-3 py-2 text-left text-sm hover:bg-endfield-gray-light transition-colors
                       ${locale === lang.code ? 'text-endfield-yellow' : 'text-endfield-text-light'}`}
                   >
-                    {lang.name}
+                    {getLangLabel(lang)}
                   </button>
                 ))}
               </div>

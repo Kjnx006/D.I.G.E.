@@ -1,13 +1,14 @@
 {
   "name": "factory-designer",
   "private": true,
-  "version": "1.5.1",
+  "version": "1.6.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "i18n:prune": "tsx scripts/i18n-prune.ts"
+    "i18n:prune": "tsx scripts/i18n-prune.ts",
+    "i18n:translate": "tsx scripts/i18n-translate.ts"
   },
   "dependencies": {
     "@sentry/react": "^10.38.0",

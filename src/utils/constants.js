@@ -2,35 +2,35 @@
 export const FUELS = {
   ore: {
     id: 'ore',
-    name: { en: 'Ore', zh: '源矿', ja: '鉱石', ko: '광석' },
+    name: { en: 'Originium Ore', zh: '源矿', ja: '源石鉱物', ko: '오리지늄광물', ru: 'Ориджиниевая руда', fr: 'Minerai d\'Originium' },
     power: 50,      // w
     burnTime: 8,    // s
     image: '/fuels/ore.webp',
   },
   valleyLow: {
     id: 'valleyLow',
-    name: { en: 'Valley Battery (Low)', zh: '低容谷地电池', ja: '谷地電池(低)', ko: '밸리 배터리(저)' },
+    name: { en: 'LC Valley Battery', zh: '低容谷地电池', ja: '小容量谷地バッテリー', ko: '소용량협곡배터리', ru: 'Батарея МЕ Долины', fr: 'Batterie Vallée (faible)' },
     power: 220,
     burnTime: 40,
     image: '/fuels/valleyLow.webp',
   },
   valleyMid: {
     id: 'valleyMid',
-    name: { en: 'Valley Battery (Mid)', zh: '中容谷地电池', ja: '谷地電池(中)', ko: '밸리 배터리(중)' },
+    name: { en: 'SC Valley Battery', zh: '中容谷地电池', ja: '中容量谷地バッテリー', ko: '중용량협곡배터리', ru: 'Батарея СЕ Долины', fr: 'Batterie Vallée (moy.)' },
     power: 420,
     burnTime: 40,
     image: '/fuels/valleyMid.webp',
   },
   valleyHigh: {
     id: 'valleyHigh',
-    name: { en: 'Valley Battery (High)', zh: '高容谷地电池', ja: '谷地電池(高)', ko: '밸리 배터리(고)' },
+    name: { en: 'HC Valley Battery', zh: '高容谷地电池', ja: '大容量谷地バッテリー', ko: '대용량협곡배터리', ru: 'Батарея ВЕ Долины', fr: 'Batterie Vallée (haute)' },
     power: 1100,
     burnTime: 40,
     image: '/fuels/valleyHigh.webp',
   },
   wulingLow: {
     id: 'wulingLow',
-    name: { en: 'Wuling Battery (Low)', zh: '低容武陵电池', ja: '武陵電池(低)', ko: '우링 배터리(저)' },
+    name: { en: 'LC Wuling Battery', zh: '低容武陵电池', ja: '小容量武陵バッテリー', ko: '저용량무릉배터리', ru: 'Батарея МЕ Улина', fr: 'Batterie Wuling (faible)' },
     power: 1600,
     burnTime: 40,
     image: '/fuels/wulingLow.webp',
@@ -42,7 +42,7 @@ export const FUEL_OPTIONS = Object.values(FUELS);
 
 // 副燃料选项（包含"无"）
 export const SECONDARY_FUEL_OPTIONS = [
-  { id: 'none', name: { en: 'None', zh: '无', ja: 'なし', ko: '없음' }, power: 0, burnTime: 0 },
+  { id: 'none', name: { en: 'None', zh: '无', ja: 'なし', ko: '없음', ru: 'Нет', fr: 'Aucun' }, power: 0, burnTime: 0 },
   ...FUEL_OPTIONS,
 ];
 
@@ -124,13 +124,13 @@ export const DEFAULT_INPUT_SOURCE_ID = 'warehouse';
 export const INPUT_SOURCES = {
   warehouse: {
     id: 'warehouse',
-    name: { en: 'Warehouse', zh: '仓库', ja: '倉庫', ko: '창고' },
+    name: { en: 'Warehouse', zh: '仓库', ja: '倉庫', ko: '창고', ru: 'Склад', fr: 'Entrepôt' },
     speed: CONSTANTS.BELT_SPEED,
     interval: CONSTANTS.BELT_INTERVAL,
   },
   packer: {
     id: 'packer',
-    name: { en: 'Packaging Machine', zh: '封装机', ja: '包装機', ko: '포장기' },
+    name: { en: 'Packaging Unit', zh: '封装机', ja: '包装機', ko: '포장기', ru: 'Упаковщик', fr: 'Unité d\'emballage' },
     speed: 0.1,
     interval: 10,
   },

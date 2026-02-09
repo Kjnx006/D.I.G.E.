@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useI18n } from '../i18n';
 
 // 公告配置 - 修改这里来更新公告
-const ANNOUNCEMENT_ID = '2026-02-06-v7'; // 更新公告时修改此 ID
+const ANNOUNCEMENT_ID = '2026-02-09-v1.6.0'; // 更新公告时修改此 ID
 
 const GITHUB_URL = 'https://github.com/djkcyl/D.I.G.E.';
 const ISSUES_URL = 'https://github.com/djkcyl/D.I.G.E./issues';
@@ -62,7 +62,16 @@ const ChangelogContent = {
   zh: () => (
     <>
       <div className="space-y-2">
-        <ChangelogSection version="v1.5.0" title="v1.5.0 更新内容" defaultOpen>
+        <ChangelogSection version="v1.6.0" title="v1.6.0 更新内容" defaultOpen>
+          <ul className={ListStyle}>
+            <li>新增俄语和法语支持</li>
+            <li>语言选择器显示本地语言名称和当前语言翻译</li>
+            <li>修正燃料/电池/设施名称为游戏内官方术语</li>
+            <li>新增 i18n 翻译管理命令行工具</li>
+            <li>修复切换方案时的 DOM 渲染异常</li>
+          </ul>
+        </ChangelogSection>
+        <ChangelogSection version="v1.5.0" title="v1.5.0 更新内容">
           <ul className={ListStyle}>
             <li>新增“输入来源”选项：仓库 / 封装机（10秒/个）</li>
             <li>封装机模式新增输入告警提示</li>
@@ -89,7 +98,16 @@ const ChangelogContent = {
   en: () => (
     <>
       <div className="space-y-2">
-        <ChangelogSection version="v1.5.0" title="v1.5.0 Updates" defaultOpen>
+        <ChangelogSection version="v1.6.0" title="v1.6.0 Updates" defaultOpen>
+          <ul className={ListStyle}>
+            <li>Added Russian and French language support</li>
+            <li>Language selector now shows native name with translated name</li>
+            <li>Fixed fuel/battery/facility names to match official in-game terminology</li>
+            <li>Added i18n translation management CLI tool</li>
+            <li>Fixed DOM rendering error when switching solutions</li>
+          </ul>
+        </ChangelogSection>
+        <ChangelogSection version="v1.5.0" title="v1.5.0 Updates">
           <ul className={ListStyle}>
             <li>Added input source selection: Warehouse / Packaging Machine (10s/item)</li>
             <li>Packer mode now shows an input warning</li>
@@ -116,7 +134,16 @@ const ChangelogContent = {
   ja: () => (
     <>
       <div className="space-y-2">
-        <ChangelogSection version="v1.5.0" title="v1.5.0 更新" defaultOpen>
+        <ChangelogSection version="v1.6.0" title="v1.6.0 更新内容" defaultOpen>
+          <ul className={ListStyle}>
+            <li>ロシア語とフランス語のサポートを追加</li>
+            <li>言語セレクターにネイティブ名と翻訳名を表示</li>
+            <li>燃料・バッテリー・施設名をゲーム内公式名称に修正</li>
+            <li>i18n 翻訳管理 CLI ツールを追加</li>
+            <li>ソリューション切替時の DOM レンダリングエラーを修正</li>
+          </ul>
+        </ChangelogSection>
+        <ChangelogSection version="v1.5.0" title="v1.5.0 更新">
           <ul className={ListStyle}>
             <li>入力元の選択を追加：倉庫 / 包装機（10秒/個）</li>
             <li>包装機モードの入力警告を追加</li>
@@ -143,7 +170,16 @@ const ChangelogContent = {
   ko: () => (
     <>
       <div className="space-y-2">
-        <ChangelogSection version="v1.5.0" title="v1.5.0 업데이트" defaultOpen>
+        <ChangelogSection version="v1.6.0" title="v1.6.0 업데이트" defaultOpen>
+          <ul className={ListStyle}>
+            <li>러시아어 및 프랑스어 지원 추가</li>
+            <li>언어 선택기에 원어 이름과 번역된 이름 표시</li>
+            <li>연료/배터리/시설 명칭을 게임 내 공식 용어로 수정</li>
+            <li>i18n 번역 관리 CLI 도구 추가</li>
+            <li>솔루션 전환 시 DOM 렌더링 오류 수정</li>
+          </ul>
+        </ChangelogSection>
+        <ChangelogSection version="v1.5.0" title="v1.5.0 업데이트">
           <ul className={ListStyle}>
             <li>입력 소스 선택 추가: 창고 / 포장기(10초/개)</li>
             <li>포장기 모드 입력 경고 추가</li>
@@ -162,6 +198,78 @@ const ChangelogContent = {
             <li>차트에서 휠 줌, 드래그, 핀치 줌, 모바일 팬 지원</li>
             <li>각 분기 배터리 연소 상태 라인 추가</li>
             <li>주기 차트/연료 소모/다이어그램 섹션 접기/펼치기 지원</li>
+          </ul>
+        </ChangelogSection>
+      </div>
+    </>
+  ),
+  ru: () => (
+    <>
+      <div className="space-y-2">
+        <ChangelogSection version="v1.6.0" title="v1.6.0 Обновления" defaultOpen>
+          <ul className={ListStyle}>
+            <li>Добавлена поддержка русского и французского языков</li>
+            <li>Селектор языка отображает название на родном языке и перевод</li>
+            <li>Исправлены названия топлива/батарей/объектов на официальные игровые термины</li>
+            <li>Добавлен CLI-инструмент управления переводами i18n</li>
+            <li>Исправлена ошибка рендеринга DOM при переключении решений</li>
+          </ul>
+        </ChangelogSection>
+        <ChangelogSection version="v1.5.0" title="v1.5.0 Обновления">
+          <ul className={ListStyle}>
+            <li>Добавлен выбор источника ввода: Склад / Упаковщик (10с/шт)</li>
+            <li>Режим упаковщика теперь показывает предупреждение</li>
+          </ul>
+        </ChangelogSection>
+        <ChangelogSection version="v1.4.0" title="v1.4.0 Обновления">
+          <ul className={ListStyle}>
+            <li>График цикла с шагом 4 секунды для согласования с периодами горения 8с/40с</li>
+            <li>Автосжатие свыше 1000 точек и переключатель «Точные значения»</li>
+            <li>Панель при наведении теперь показывает время</li>
+          </ul>
+        </ChangelogSection>
+        <ChangelogSection version="v1.3.0" title="v1.3.0 Обновления">
+          <ul className={ListStyle}>
+            <li>Добавлена ось времени на график</li>
+            <li>Поддержка масштабирования колесом, перетаскивания, пинча и панорамирования</li>
+            <li>Добавлены линии состояния горения для каждой ветки</li>
+            <li>Секции графика, расхода топлива и схемы сворачиваются/разворачиваются</li>
+          </ul>
+        </ChangelogSection>
+      </div>
+    </>
+  ),
+  fr: () => (
+    <>
+      <div className="space-y-2">
+        <ChangelogSection version="v1.6.0" title="v1.6.0 Mises à jour" defaultOpen>
+          <ul className={ListStyle}>
+            <li>Ajout du support russe et français</li>
+            <li>Le sélecteur de langue affiche le nom natif et la traduction</li>
+            <li>Correction des noms de carburants/batteries/installations selon la terminologie officielle</li>
+            <li>Ajout d'un outil CLI de gestion des traductions i18n</li>
+            <li>Correction de l'erreur de rendu DOM lors du changement de solution</li>
+          </ul>
+        </ChangelogSection>
+        <ChangelogSection version="v1.5.0" title="v1.5.0 Mises à jour">
+          <ul className={ListStyle}>
+            <li>Ajout du choix de source d'entrée : Entrepôt / Emballeuse (10s/unité)</li>
+            <li>Le mode emballeuse affiche désormais un avertissement</li>
+          </ul>
+        </ChangelogSection>
+        <ChangelogSection version="v1.4.0" title="v1.4.0 Mises à jour">
+          <ul className={ListStyle}>
+            <li>Graphique cyclique échantillonné à 4 secondes pour s'aligner sur les périodes de 8s/40s</li>
+            <li>Compression automatique au-delà de 1000 points et bascule « Valeurs précises »</li>
+            <li>Le panneau au survol affiche maintenant le temps</li>
+          </ul>
+        </ChangelogSection>
+        <ChangelogSection version="v1.3.0" title="v1.3.0 Mises à jour">
+          <ul className={ListStyle}>
+            <li>Ajout d'un axe temporel au graphique</li>
+            <li>Zoom molette, glisser, pincer et panoramique sur mobile</li>
+            <li>Lignes d'état de combustion par branche ajoutées</li>
+            <li>Sections graphique, consommation et schéma repliables</li>
           </ul>
         </ChangelogSection>
       </div>
@@ -311,6 +419,77 @@ const AnnouncementContent = {
         에서{' '}
         <a href={ISSUES_URL} target="_blank" rel="noopener noreferrer" className={LinkStyle}>Issue</a>
         를 제출해 주세요.
+      </p>
+    </>
+  ),
+  ru: () => (
+    <>
+      <p className="mb-3">
+        Добро пожаловать в D.I.G.E. (Dijiang Integrated Generator Efficiency)! Это инструмент для расчёта оптимальных решений энергогенерации теплового пула в Arknights: Endfield.
+      </p>
+      
+      <h3 className={HeadingStyle}>Возможности</h3>
+      <ul className={ListStyle}>
+        <li>Автоматический расчёт оптимальной конфигурации по целевой мощности</li>
+        <li>Поддержка комбинаций основного и вторичного топлива</li>
+        <li>Визуализация кривых мощности и уровня батареи</li>
+        <li>Подробные схемы разделителей и хранилищ</li>
+      </ul>
+      
+      <h3 className={HeadingStyle}>Как использовать</h3>
+      <ul className={ListStyle}>
+        <li>Задайте целевую мощность в панели слева</li>
+        <li>Выберите основное (обязательно) и вторичное (опционально) топливо</li>
+        <li>Настройте минимальный заряд батареи и лимит потерь</li>
+        <li>Нажмите «Рассчитать» для получения оптимальных решений</li>
+        <li>Просматривайте детали и схемы справа</li>
+      </ul>
+      <p className="mt-4">
+        Видеоурок:{' '}
+        <a href={VIDEO_TUTORIAL_URL} target="_blank" rel="noopener noreferrer" className={LinkStyle}>Bilibili — Руководство D.I.G.E.</a>
+      </p>
+
+      <p className="mt-4">
+        Если у вас есть вопросы или предложения, создайте{' '}
+        <a href={ISSUES_URL} target="_blank" rel="noopener noreferrer" className={LinkStyle}>Issue</a>
+        {' '}на{' '}
+        <a href={GITHUB_URL} target="_blank" rel="noopener noreferrer" className={LinkStyle}>GitHub</a>.
+      </p>
+    </>
+  ),
+  fr: () => (
+    <>
+      <p className="mb-3">
+        Bienvenue dans D.I.G.E. (Dijiang Integrated Generator Efficiency) ! C'est un outil de calcul des solutions optimales de génération d'énergie pour le pool thermique d'Arknights: Endfield.
+      </p>
+      
+      <h3 className={HeadingStyle}>Fonctionnalités</h3>
+      <ul className={ListStyle}>
+        <li>Calcul automatique de la configuration optimale selon la puissance cible</li>
+        <li>Combinaisons de carburant principal et secondaire</li>
+        <li>Visualisation des courbes de puissance et du niveau de batterie</li>
+        <li>Schémas détaillés des répartiteurs et stockages</li>
+      </ul>
+      
+      <h3 className={HeadingStyle}>Utilisation</h3>
+      <ul className={ListStyle}>
+        <li>Définissez la puissance cible dans le panneau de gauche</li>
+        <li>Sélectionnez le carburant principal (requis) et secondaire (optionnel)</li>
+        <li>Ajustez le niveau minimum de batterie et la limite de gaspillage</li>
+        <li>Cliquez sur « Calculer » pour obtenir les solutions optimales</li>
+        <li>Consultez les détails et schémas à droite</li>
+      </ul>
+      <p className="mt-4">
+        Tutoriel vidéo :{' '}
+        <a href={VIDEO_TUTORIAL_URL} target="_blank" rel="noopener noreferrer" className={LinkStyle}>Bilibili — Guide D.I.G.E.</a>
+      </p>
+
+      <p className="mt-4">
+        N'hésitez pas à soumettre un{' '}
+        <a href={ISSUES_URL} target="_blank" rel="noopener noreferrer" className={LinkStyle}>Issue</a>
+        {' '}sur{' '}
+        <a href={GITHUB_URL} target="_blank" rel="noopener noreferrer" className={LinkStyle}>GitHub</a>
+        {' '}pour toute question ou suggestion.
       </p>
     </>
   ),

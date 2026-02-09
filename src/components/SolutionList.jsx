@@ -340,7 +340,7 @@ export default function SolutionList({ solutions, selectedIndex, onSelectSolutio
             className={`grid overflow-hidden transition-[grid-template-rows,margin,opacity] duration-300 ease-out ${collapsedSections.diagram ? 'grid-rows-[0fr] mt-0 opacity-0' : 'grid-rows-[1fr] mt-3 opacity-100'}`}
           >
             <div className="min-h-0 overflow-hidden">
-              <SolutionDiagram solution={selectedSolution} />
+              <SolutionDiagram key={selectedIndex} solution={selectedSolution} />
             </div>
           </div>
         </div>

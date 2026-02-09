@@ -8,7 +8,9 @@ const langCodeMap = {
   zh: 'zh-CN',
   en: 'en',
   ja: 'ja',
-  ko: 'ko'
+  ko: 'ko',
+  ru: 'ru',
+  fr: 'fr'
 };
 
 // 从 URL 参数获取语言
