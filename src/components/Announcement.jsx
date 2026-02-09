@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useI18n } from '../i18n';
 
 // 公告配置 - 修改这里来更新公告
-const ANNOUNCEMENT_ID = '2026-02-09-v1.6.0'; // 更新公告时修改此 ID
+const ANNOUNCEMENT_ID = '2026-02-09-v1.7.0'; // 更新公告时修改此 ID
 
 const GITHUB_URL = 'https://github.com/djkcyl/D.I.G.E.';
 const ISSUES_URL = 'https://github.com/djkcyl/D.I.G.E./issues';
@@ -62,13 +62,22 @@ const ChangelogContent = {
   zh: () => (
     <>
       <div className="space-y-2">
-        <ChangelogSection version="v1.6.0" title="v1.6.0 更新内容" defaultOpen>
+        <ChangelogSection version="v1.7.0" title="v1.7.0 更新内容" defaultOpen>
+          <ul className={ListStyle}>
+            <li>优化中日韩混排文字的间距显示</li>
+            <li>语言切换菜单简化，仅显示各语言原名</li>
+            <li>加宽侧边栏，改善长文字语言的显示效果</li>
+            <li>侧边栏底部新增滚动提示，方便找到计算按钮</li>
+            <li>修改参数后移入结果区域会提醒重新计算，支持一键计算、还原参数或忽略</li>
+            <li>多处按钮交互和动画细节优化</li>
+          </ul>
+        </ChangelogSection>
+        <ChangelogSection version="v1.6.0" title="v1.6.0 更新内容">
           <ul className={ListStyle}>
             <li>新增俄语、法语和德语支持</li>
-            <li>语言选择器显示本地语言名称和当前语言翻译</li>
+            <li>语言选择器显示本地语言名称和翻译名称</li>
             <li>修正燃料/电池/设施名称为游戏内官方术语</li>
-            <li>新增 i18n 翻译管理命令行工具</li>
-            <li>修复切换方案时的 DOM 渲染异常</li>
+            <li>修复切换方案时的显示异常</li>
           </ul>
         </ChangelogSection>
         <ChangelogSection version="v1.5.0" title="v1.5.0 更新内容">
@@ -79,9 +88,9 @@ const ChangelogContent = {
         </ChangelogSection>
         <ChangelogSection version="v1.4.0" title="v1.4.0 更新内容">
           <ul className={ListStyle}>
-            <li>周期图表按 4 秒粒度采样，对齐 8 秒/40 秒燃烧周期</li>
-            <li>超过 1000 点自动压缩，并提供“精确数值”查看完整点位</li>
-            <li>悬浮信息改为显示时间</li>
+            <li>周期图表采样优化，更准确对齐燃烧周期</li>
+            <li>数据量较大时自动精简图表，可切换“精确数值”查看完整数据</li>
+            <li>鼠标悬浮信息改为显示时间</li>
           </ul>
         </ChangelogSection>
         <ChangelogSection version="v1.3.0" title="v1.3.0 更新内容">
@@ -98,13 +107,22 @@ const ChangelogContent = {
   en: () => (
     <>
       <div className="space-y-2">
-        <ChangelogSection version="v1.6.0" title="v1.6.0 Updates" defaultOpen>
+        <ChangelogSection version="v1.7.0" title="v1.7.0 Updates" defaultOpen>
+          <ul className={ListStyle}>
+            <li>Improved spacing for mixed CJK and Latin text</li>
+            <li>Simplified language menu to show native names only</li>
+            <li>Wider sidebar for better display of longer languages</li>
+            <li>Scroll hint at sidebar bottom to help locate the Calculate button</li>
+            <li>Smart reminder when parameters are changed but not recalculated, with options to calculate, restore, or dismiss</li>
+            <li>Various button interaction and animation improvements</li>
+          </ul>
+        </ChangelogSection>
+        <ChangelogSection version="v1.6.0" title="v1.6.0 Updates">
           <ul className={ListStyle}>
             <li>Added Russian, French and German language support</li>
-            <li>Language selector now shows native name with translated name</li>
+            <li>Language selector shows native and translated names</li>
             <li>Fixed fuel/battery/facility names to match official in-game terminology</li>
-            <li>Added i18n translation management CLI tool</li>
-            <li>Fixed DOM rendering error when switching solutions</li>
+            <li>Fixed display issue when switching solutions</li>
           </ul>
         </ChangelogSection>
         <ChangelogSection version="v1.5.0" title="v1.5.0 Updates">
@@ -115,9 +133,9 @@ const ChangelogContent = {
         </ChangelogSection>
         <ChangelogSection version="v1.4.0" title="v1.4.0 Updates">
           <ul className={ListStyle}>
-            <li>Cycle chart samples at 4-second intervals to align with 8s/40s burn durations</li>
-            <li>Auto-compresses above 1000 points and adds a "Precise Values" toggle for full points</li>
-            <li>Hover panel now shows time instead of point index</li>
+            <li>Improved cycle chart accuracy to better align with burn cycles</li>
+            <li>Large datasets are automatically simplified; toggle "Precise Values" for full detail</li>
+            <li>Hover info now shows time</li>
           </ul>
         </ChangelogSection>
         <ChangelogSection version="v1.3.0" title="v1.3.0 Updates">
@@ -134,13 +152,22 @@ const ChangelogContent = {
   ja: () => (
     <>
       <div className="space-y-2">
-        <ChangelogSection version="v1.6.0" title="v1.6.0 更新内容" defaultOpen>
+        <ChangelogSection version="v1.7.0" title="v1.7.0 更新内容" defaultOpen>
+          <ul className={ListStyle}>
+            <li>日中韓テキストの間隔表示を改善</li>
+            <li>言語メニューを簡略化し、各言語の原名のみ表示</li>
+            <li>サイドバーを拡幅し、長いテキストの表示を改善</li>
+            <li>計算ボタンが見えない場合にスクロールヒントを表示</li>
+            <li>パラメータ変更後に再計算リマインダーを表示（計算・復元・無視に対応）</li>
+            <li>各種ボタンの操作感やアニメーションを改善</li>
+          </ul>
+        </ChangelogSection>
+        <ChangelogSection version="v1.6.0" title="v1.6.0 更新内容">
           <ul className={ListStyle}>
             <li>ロシア語・フランス語・ドイツ語のサポートを追加</li>
             <li>言語セレクターにネイティブ名と翻訳名を表示</li>
             <li>燃料・バッテリー・施設名をゲーム内公式名称に修正</li>
-            <li>i18n 翻訳管理 CLI ツールを追加</li>
-            <li>ソリューション切替時の DOM レンダリングエラーを修正</li>
+            <li>ソリューション切替時の表示不具合を修正</li>
           </ul>
         </ChangelogSection>
         <ChangelogSection version="v1.5.0" title="v1.5.0 更新">
@@ -151,9 +178,9 @@ const ChangelogContent = {
         </ChangelogSection>
         <ChangelogSection version="v1.4.0" title="v1.4.0 更新内容">
           <ul className={ListStyle}>
-            <li>周期チャートを 4 秒刻みに統一し、8 秒/40 秒燃焼周期に整合</li>
-            <li>1000 点超過時は自動圧縮し、「精密値」トグルで全点表示</li>
-            <li>ホバー情報を時間表示に変更</li>
+            <li>周期チャートの精度を改善し、燃焼周期との整合性を向上</li>
+            <li>データ量が多い場合は自動的にチャートを簡略化。「精密値」で全データ表示可能</li>
+            <li>ホバー情報に時間を表示</li>
           </ul>
         </ChangelogSection>
         <ChangelogSection version="v1.3.0" title="v1.3.0 更新内容">
@@ -170,13 +197,22 @@ const ChangelogContent = {
   ko: () => (
     <>
       <div className="space-y-2">
-        <ChangelogSection version="v1.6.0" title="v1.6.0 업데이트" defaultOpen>
+        <ChangelogSection version="v1.7.0" title="v1.7.0 업데이트" defaultOpen>
+          <ul className={ListStyle}>
+            <li>CJK 혼합 텍스트의 간격 표시 개선</li>
+            <li>언어 메뉴를 간소화하여 각 언어의 원어 이름만 표시</li>
+            <li>사이드바를 확장하여 긴 텍스트 표시 개선</li>
+            <li>계산 버튼이 보이지 않을 때 스크롤 힌트 표시</li>
+            <li>매개변수 변경 후 재계산 알림 표시 (계산/복원/무시 지원)</li>
+            <li>다양한 버튼 상호작용 및 애니메이션 개선</li>
+          </ul>
+        </ChangelogSection>
+        <ChangelogSection version="v1.6.0" title="v1.6.0 업데이트">
           <ul className={ListStyle}>
             <li>러시아어, 프랑스어 및 독일어 지원 추가</li>
             <li>언어 선택기에 원어 이름과 번역된 이름 표시</li>
             <li>연료/배터리/시설 명칭을 게임 내 공식 용어로 수정</li>
-            <li>i18n 번역 관리 CLI 도구 추가</li>
-            <li>솔루션 전환 시 DOM 렌더링 오류 수정</li>
+            <li>솔루션 전환 시 표시 오류 수정</li>
           </ul>
         </ChangelogSection>
         <ChangelogSection version="v1.5.0" title="v1.5.0 업데이트">
@@ -187,9 +223,9 @@ const ChangelogContent = {
         </ChangelogSection>
         <ChangelogSection version="v1.4.0" title="v1.4.0 업데이트">
           <ul className={ListStyle}>
-            <li>주기 차트를 4초 간격으로 고정해 8초/40초 연소 주기와 정렬</li>
-            <li>1000점 초과 시 자동 압축되고, "정밀 값" 토글로 전체 점 표시</li>
-            <li>호버 패널을 시간 표시로 변경</li>
+            <li>주기 차트 정확도를 개선하여 연소 주기와 더 정확히 정렬</li>
+            <li>데이터가 많을 경우 자동으로 차트를 간소화하며, "정밀 값"으로 전체 데이터 확인 가능</li>
+            <li>호버 정보에 시간 표시</li>
           </ul>
         </ChangelogSection>
         <ChangelogSection version="v1.3.0" title="v1.3.0 업데이트">
@@ -206,13 +242,22 @@ const ChangelogContent = {
   ru: () => (
     <>
       <div className="space-y-2">
-        <ChangelogSection version="v1.6.0" title="v1.6.0 Обновления" defaultOpen>
+        <ChangelogSection version="v1.7.0" title="v1.7.0 Обновления" defaultOpen>
+          <ul className={ListStyle}>
+            <li>Улучшены интервалы для смешанного CJK и латинского текста</li>
+            <li>Меню языков упрощено — только родные названия</li>
+            <li>Расширена боковая панель для лучшего отображения длинных текстов</li>
+            <li>Подсказка прокрутки для нахождения кнопки расчёта</li>
+            <li>Напоминание при изменении параметров без пересчёта (рассчитать/восстановить/игнорировать)</li>
+            <li>Различные улучшения кнопок и анимаций</li>
+          </ul>
+        </ChangelogSection>
+        <ChangelogSection version="v1.6.0" title="v1.6.0 Обновления">
           <ul className={ListStyle}>
             <li>Добавлена поддержка русского, французского и немецкого языков</li>
-            <li>Селектор языка отображает название на родном языке и перевод</li>
+            <li>Селектор языка показывает родное и переведённое название</li>
             <li>Исправлены названия топлива/батарей/объектов на официальные игровые термины</li>
-            <li>Добавлен CLI-инструмент управления переводами i18n</li>
-            <li>Исправлена ошибка рендеринга DOM при переключении решений</li>
+            <li>Исправлена ошибка отображения при переключении решений</li>
           </ul>
         </ChangelogSection>
         <ChangelogSection version="v1.5.0" title="v1.5.0 Обновления">
@@ -223,9 +268,9 @@ const ChangelogContent = {
         </ChangelogSection>
         <ChangelogSection version="v1.4.0" title="v1.4.0 Обновления">
           <ul className={ListStyle}>
-            <li>График цикла с шагом 4 секунды для согласования с периодами горения 8с/40с</li>
-            <li>Автосжатие свыше 1000 точек и переключатель «Точные значения»</li>
-            <li>Панель при наведении теперь показывает время</li>
+            <li>Улучшена точность графика цикла для лучшего соответствия циклам горения</li>
+            <li>Большие объёмы данных автоматически упрощаются; переключатель «Точные значения» для полных данных</li>
+            <li>При наведении отображается время</li>
           </ul>
         </ChangelogSection>
         <ChangelogSection version="v1.3.0" title="v1.3.0 Обновления">
@@ -242,13 +287,22 @@ const ChangelogContent = {
   fr: () => (
     <>
       <div className="space-y-2">
-        <ChangelogSection version="v1.6.0" title="v1.6.0 Mises à jour" defaultOpen>
+        <ChangelogSection version="v1.7.0" title="v1.7.0 Mises à jour" defaultOpen>
+          <ul className={ListStyle}>
+            <li>Amélioration de l'espacement pour le texte CJK mixte</li>
+            <li>Menu de langues simplifié, affichant uniquement les noms natifs</li>
+            <li>Barre latérale élargie pour un meilleur affichage des textes longs</li>
+            <li>Indication de défilement pour trouver le bouton Calculer</li>
+            <li>Rappel intelligent après modification des paramètres (calculer/restaurer/ignorer)</li>
+            <li>Diverses améliorations des boutons et animations</li>
+          </ul>
+        </ChangelogSection>
+        <ChangelogSection version="v1.6.0" title="v1.6.0 Mises à jour">
           <ul className={ListStyle}>
             <li>Ajout du support russe, français et allemand</li>
             <li>Le sélecteur de langue affiche le nom natif et la traduction</li>
             <li>Correction des noms de carburants/batteries/installations selon la terminologie officielle</li>
-            <li>Ajout d'un outil CLI de gestion des traductions i18n</li>
-            <li>Correction de l'erreur de rendu DOM lors du changement de solution</li>
+            <li>Correction d'un problème d'affichage lors du changement de solution</li>
           </ul>
         </ChangelogSection>
         <ChangelogSection version="v1.5.0" title="v1.5.0 Mises à jour">
@@ -259,9 +313,9 @@ const ChangelogContent = {
         </ChangelogSection>
         <ChangelogSection version="v1.4.0" title="v1.4.0 Mises à jour">
           <ul className={ListStyle}>
-            <li>Graphique cyclique échantillonné à 4 secondes pour s'aligner sur les périodes de 8s/40s</li>
-            <li>Compression automatique au-delà de 1000 points et bascule « Valeurs précises »</li>
-            <li>Le panneau au survol affiche maintenant le temps</li>
+            <li>Précision améliorée du graphique cyclique pour mieux correspondre aux cycles de combustion</li>
+            <li>Simplification automatique des grands jeux de données ; bascule « Valeurs précises » pour les détails complets</li>
+            <li>Le survol affiche maintenant le temps</li>
           </ul>
         </ChangelogSection>
         <ChangelogSection version="v1.3.0" title="v1.3.0 Mises à jour">
@@ -278,13 +332,22 @@ const ChangelogContent = {
   de: () => (
     <>
       <div className="space-y-2">
-        <ChangelogSection version="v1.6.0" title="v1.6.0 Updates" defaultOpen>
+        <ChangelogSection version="v1.7.0" title="v1.7.0 Updates" defaultOpen>
+          <ul className={ListStyle}>
+            <li>Verbesserte Abstände für gemischten CJK- und lateinischen Text</li>
+            <li>Sprachmenü vereinfacht — zeigt nur native Namen</li>
+            <li>Seitenleiste verbreitert für bessere Darstellung langer Texte</li>
+            <li>Scroll-Hinweis zum Auffinden der Berechnen-Taste</li>
+            <li>Erinnerung bei Parameteränderung ohne Neuberechnung (berechnen/wiederherstellen/ignorieren)</li>
+            <li>Verschiedene Verbesserungen bei Schaltflächen und Animationen</li>
+          </ul>
+        </ChangelogSection>
+        <ChangelogSection version="v1.6.0" title="v1.6.0 Updates">
           <ul className={ListStyle}>
             <li>Russisch, Französisch und Deutsch hinzugefügt</li>
             <li>Sprachauswahl zeigt nativen Namen und Übersetzung</li>
             <li>Brennstoff-/Batterie-/Anlagennamen an offizielle Spielterminologie angepasst</li>
-            <li>i18n-Übersetzungsverwaltungs-CLI-Tool hinzugefügt</li>
-            <li>DOM-Rendering-Fehler beim Lösungswechsel behoben</li>
+            <li>Anzeigefehler beim Lösungswechsel behoben</li>
           </ul>
         </ChangelogSection>
         <ChangelogSection version="v1.5.0" title="v1.5.0 Updates">
@@ -295,9 +358,9 @@ const ChangelogContent = {
         </ChangelogSection>
         <ChangelogSection version="v1.4.0" title="v1.4.0 Updates">
           <ul className={ListStyle}>
-            <li>Zyklusdiagramm mit 4-Sekunden-Intervall für 8s/40s Brennzyklen</li>
-            <li>Automatische Komprimierung über 1000 Punkte mit „Genaue Werte"-Umschalter</li>
-            <li>Hover-Panel zeigt jetzt Zeit an</li>
+            <li>Verbesserte Genauigkeit des Zyklusdiagramms zur besseren Ausrichtung an Brennzyklen</li>
+            <li>Große Datenmengen werden automatisch vereinfacht; „Genaue Werte" für vollständige Details</li>
+            <li>Hover-Info zeigt jetzt die Zeit an</li>
           </ul>
         </ChangelogSection>
         <ChangelogSection version="v1.3.0" title="v1.3.0 Updates">
@@ -568,6 +631,7 @@ const AnnouncementContent = {
 };
 
 const STORAGE_KEY = 'dige-announcement-dismissed';
+const CHANGELOG_VIEWED_KEY = 'dige-changelog-viewed';
 
 // 检查是否需要自动显示公告
 export function shouldShowAnnouncement() {
@@ -575,10 +639,20 @@ export function shouldShowAnnouncement() {
   return dismissedId !== ANNOUNCEMENT_ID;
 }
 
+// 检查更新日志是否有未读内容
+export function hasUnreadChangelog() {
+  if (typeof window === 'undefined') return false;
+  return localStorage.getItem(CHANGELOG_VIEWED_KEY) !== ANNOUNCEMENT_ID;
+}
+
 export default function Announcement({ show, onClose }) {
   const { t, locale } = useI18n();
   const [dontShowAgain, setDontShowAgain] = useState(false);
   const [activeTab, setActiveTab] = useState('announcement');
+  const [changelogUnread, setChangelogUnread] = useState(() => {
+    if (typeof window === 'undefined') return false;
+    return localStorage.getItem(CHANGELOG_VIEWED_KEY) !== ANNOUNCEMENT_ID;
+  });
 
   useEffect(() => {
     if (show) {
@@ -628,14 +702,23 @@ export default function Announcement({ show, onClose }) {
           </button>
           <button
             type="button"
-            onClick={() => setActiveTab('changelog')}
-            className={`h-9 border text-sm tracking-wider transition-colors ${
+            onClick={() => {
+              setActiveTab('changelog');
+              if (changelogUnread) {
+                setChangelogUnread(false);
+                localStorage.setItem(CHANGELOG_VIEWED_KEY, ANNOUNCEMENT_ID);
+              }
+            }}
+            className={`relative h-9 border text-sm tracking-wider transition-colors ${
               !isAnnouncement
                 ? 'text-endfield-yellow border-endfield-yellow bg-endfield-yellow/10'
                 : 'text-endfield-text-light border-endfield-gray-light hover:border-endfield-text'
             }`}
           >
             {t('changelog')}
+            {changelogUnread && (
+              <span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-red-500 rounded-full animate-pulse" />
+            )}
           </button>
         </div>
 

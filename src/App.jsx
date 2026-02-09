@@ -51,6 +51,18 @@ function AppContent({ onOpenAnnouncement, onOpenPrivacyPolicy }) {
   });
   // 默认展开侧边栏
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  // 追踪参数是否修改但未计算
+  const [paramsDirty, setParamsDirty] = useState(false);
+  const [showDirtyOverlay, setShowDirtyOverlay] = useState(false);
+  const [dirtyDismissed, setDirtyDismissed] = useState(false);
+  const lastCalcParamsRef = useRef(null);
+
+  // 包装 setParams，自动标记脏状态
+  const setParamsWithDirty = useCallback((updater) => {
+    setParams(updater);
+    setParamsDirty(true);
+    setDirtyDismissed(false);
+  }, []);
 
   const runCalculation = useCallback(async (overrideParams = null) => {
     setIsLoading(true);
@@ -74,11 +86,18 @@ function AppContent({ onOpenAnnouncement, onOpenPrivacyPolicy }) {
 
       setSolutions(results);
       setSelectedIndex(0);
+      setParamsDirty(false);
+      setShowDirtyOverlay(false);
+      setDirtyDismissed(false);
+      lastCalcParamsRef.current = { ...calcParams };
     } catch (error) {
       console.error('Calculation error:', error);
       setIsLoading(false);
       setShowError(true);
       setSolutions([]);
+      setParamsDirty(false);
+      setShowDirtyOverlay(false);
+      setDirtyDismissed(false);
     }
   }, [params]);
 
@@ -218,7 +237,7 @@ function AppContent({ onOpenAnnouncement, onOpenPrivacyPolicy }) {
         <div className="flex-1 flex overflow-hidden">
           <Sidebar
             params={params}
-            setParams={setParams}
+            setParams={setParamsWithDirty}
             collapsed={sidebarCollapsed}
             onClose={() => setSidebarCollapsed(true)}
             onCalculate={runCalculation}
@@ -227,7 +246,11 @@ function AppContent({ onOpenAnnouncement, onOpenPrivacyPolicy }) {
             onOpenPrivacyPolicy={onOpenPrivacyPolicy}
           />
 
-          <div className="flex-1 overflow-hidden bg-[radial-gradient(circle_at_85%_20%,rgba(255,250,0,0.08),transparent_40%),repeating-linear-gradient(135deg,rgba(255,250,0,0.04)_0_1px,transparent_1px_14px),linear-gradient(180deg,rgba(255,250,0,0.02),transparent_35%,rgba(255,250,0,0.015))]">
+          <div
+            className="flex-1 overflow-hidden bg-[radial-gradient(circle_at_85%_20%,rgba(255,250,0,0.08),transparent_40%),repeating-linear-gradient(135deg,rgba(255,250,0,0.04)_0_1px,transparent_1px_14px),linear-gradient(180deg,rgba(255,250,0,0.02),transparent_35%,rgba(255,250,0,0.015))] relative"
+            onMouseEnter={() => paramsDirty && !dirtyDismissed && setShowDirtyOverlay(true)}
+            onMouseLeave={() => setShowDirtyOverlay(false)}
+          >
             <main className="mx-auto w-full max-w-[1800px] h-full flex flex-col min-w-0 bg-endfield-black/92 backdrop-blur-[1px] relative overflow-hidden">
               <SolutionList
                 solutions={solutions}
@@ -238,6 +261,50 @@ function AppContent({ onOpenAnnouncement, onOpenPrivacyPolicy }) {
 
               <LoadingOverlay isLoading={isLoading} />
             </main>
+
+            {/* 参数已修改未计算时的遮罩提示 */}
+            {showDirtyOverlay && paramsDirty && (
+              <div className="absolute inset-0 z-40 bg-endfield-black/80 backdrop-blur-sm flex flex-col items-center justify-center gap-4">
+                <span className="material-symbols-outlined text-5xl text-endfield-yellow">sync_problem</span>
+                <p className="text-lg font-bold text-endfield-text-light tracking-wider">{t('paramsChanged')}</p>
+                <p className="text-sm text-endfield-text">{t('clickCalculateToUpdate')}</p>
+                <div className="mt-2 grid grid-cols-1 sm:grid-cols-2 gap-3 w-72 sm:w-[28rem]">
+                  <button
+                    onClick={() => { runCalculation(); setShowDirtyOverlay(false); }}
+                    className="min-h-10 px-3 py-2 bg-endfield-yellow hover:bg-endfield-yellow-glow hover:-translate-y-0.5 text-endfield-black font-bold tracking-wider uppercase transition-all flex items-center justify-center text-sm glow-yellow"
+                  >
+                    <span className="inline-flex items-center gap-2">
+                      <span className="material-symbols-outlined text-base">calculate</span>
+                      {t('calculate')}
+                    </span>
+                  </button>
+                  {lastCalcParamsRef.current && (
+                    <button
+                      onClick={() => {
+                        setParams({ ...lastCalcParamsRef.current });
+                        setParamsDirty(false);
+                        setShowDirtyOverlay(false);
+                      }}
+                      className="min-h-10 px-3 py-2 border border-endfield-yellow/40 text-endfield-yellow font-bold tracking-wider uppercase hover:bg-endfield-yellow/10 hover:-translate-y-0.5 transition-all flex items-center justify-center text-sm"
+                    >
+                      <span className="inline-flex items-center gap-2">
+                        <span className="material-symbols-outlined text-base">undo</span>
+                        {t('restoreParams')}
+                      </span>
+                    </button>
+                  )}
+                </div>
+                <button
+                  onClick={() => {
+                    setShowDirtyOverlay(false);
+                    setDirtyDismissed(true);
+                  }}
+                  className="text-xs text-endfield-text hover:text-endfield-text-light transition-colors tracking-wider"
+                >
+                  {t('ignoreWarning')}
+                </button>
+              </div>
+            )}
           </div>
         </div>
 

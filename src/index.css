@@ -11,10 +11,15 @@ html {
 body {
   font-family: "Frex Sans GB VF";
   font-weight: normal;
+  text-autospace: normal;
 }
 
 * {
   -webkit-touch-callout: none;
+}
+
+button {
+  cursor: pointer;
 }
 
 /* Custom theme colors */

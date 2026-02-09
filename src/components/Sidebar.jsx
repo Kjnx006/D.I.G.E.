@@ -1,23 +1,25 @@
 import { useState, useEffect, useRef } from 'react';
 import { useI18n } from '../i18n';
+import { hasUnreadChangelog } from './Announcement';
 import { FUEL_OPTIONS, SECONDARY_FUEL_OPTIONS, INPUT_SOURCES, INPUT_SOURCE_OPTIONS, DEFAULT_INPUT_SOURCE_ID } from '../utils/constants';
 import { SHARE_LIMITS } from '../utils/shareParams';
 import CloseButton from './CloseButton';
 
 export default function Sidebar({ params, setParams, collapsed, onClose, onCalculate, onRandomCalculate, onOpenAnnouncement, onOpenPrivacyPolicy }) {
   const { t, locale, changeLocale, languageOptions } = useI18n();
-  const getLangLabel = (lang) => {
-    const translated = t(lang.i18nKey);
-    return translated === lang.nativeName ? lang.nativeName : `${lang.nativeName} (${translated})`;
-  };
   const [showLangMenu, setShowLangMenu] = useState(false);
   const [showPrimaryFuelMenu, setShowPrimaryFuelMenu] = useState(false);
   const [showSecondaryFuelMenu, setShowSecondaryFuelMenu] = useState(false);
   const [showInputWarning, setShowInputWarning] = useState(false);
+  const [calcButtonVisible, setCalcButtonVisible] = useState(true);
+  const [scrollHintMounted, setScrollHintMounted] = useState(false);
+  const [scrollHintVisible, setScrollHintVisible] = useState(false);
 
   const primaryFuelRef = useRef(null);
   const secondaryFuelRef = useRef(null);
   const langMenuRef = useRef(null);
+  const calcButtonRef = useRef(null);
+  const scrollContainerRef = useRef(null);
 
   // 点击外部关闭下拉菜单
   useEffect(() => {
@@ -79,6 +81,40 @@ export default function Sidebar({ params, setParams, collapsed, onClose, onCalcu
     }
   }, [selectedInputSourceId, showInputWarning]);
 
+  // 监听桌面端计算按钮是否在可视区域内
+  useEffect(() => {
+    const button = calcButtonRef.current;
+    const container = scrollContainerRef.current;
+    if (!button || !container) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => setCalcButtonVisible(entry.isIntersecting),
+      { root: container, threshold: 0.5 }
+    );
+    observer.observe(button);
+    return () => observer.disconnect();
+  }, []);
+
+  // 滚动提示的挂载/卸载动画控制
+  const shouldShowHint = !calcButtonVisible && !collapsed;
+  useEffect(() => {
+    if (shouldShowHint) {
+      setScrollHintMounted(true);
+      requestAnimationFrame(() => requestAnimationFrame(() => setScrollHintVisible(true)));
+    } else {
+      setScrollHintVisible(false);
+      const timer = setTimeout(() => setScrollHintMounted(false), 300);
+      return () => clearTimeout(timer);
+    }
+  }, [shouldShowHint]);
+
+  const scrollToCalcButton = () => {
+    const container = scrollContainerRef.current;
+    if (container) {
+      container.scrollTo({ top: container.scrollHeight, behavior: 'smooth' });
+    }
+  };
+
   return (
     <>
       {/* 移动端背景遮罩 - 使用 CSS 控制显示 */}
@@ -90,13 +126,13 @@ export default function Sidebar({ params, setParams, collapsed, onClose, onCalcu
       />
       <aside 
         className={`
-          w-72 sm:w-80
+          w-80 sm:w-96
           bg-endfield-dark/95 md:bg-endfield-dark/80 
           border-r border-endfield-gray-light 
           overflow-hidden flex flex-col shrink-0 
           transition-all duration-300
           fixed md:relative inset-y-0 left-0 z-30 md:z-10
-          ${collapsed ? '-translate-x-full md:-ml-80 pointer-events-none' : 'translate-x-0 md:ml-0 pointer-events-auto'}
+          ${collapsed ? '-translate-x-full md:-ml-96 pointer-events-none' : 'translate-x-0 md:ml-0 pointer-events-auto'}
         `}
         role="complementary"
         aria-label="参数配置面板"
@@ -114,7 +150,7 @@ export default function Sidebar({ params, setParams, collapsed, onClose, onCalcu
         </div>
         
         {/* Sidebar Content */}
-        <div className="flex-1 overflow-y-auto scrollbar-gutter-stable p-4 sm:p-6 flex flex-col gap-4 sm:gap-6">
+        <div ref={scrollContainerRef} className="flex-1 overflow-y-auto scrollbar-gutter-stable p-4 sm:p-6 flex flex-col gap-4 sm:gap-6">
       {/* 目标发电量 */}
       <fieldset className="space-y-4 border-none p-0 m-0">
         <legend className="text-sm font-bold text-endfield-text uppercase tracking-widest flex items-center gap-2 p-0">
@@ -418,8 +454,9 @@ export default function Sidebar({ params, setParams, collapsed, onClose, onCalcu
 
         {/* 桌面端计算按钮 */}
         <button
+          ref={calcButtonRef}
           onClick={() => onCalculate()}
-          className="hidden md:flex w-full mt-4 h-10 bg-endfield-yellow hover:bg-endfield-yellow-glow text-endfield-black font-bold tracking-wider uppercase transition-all items-center justify-center gap-2 text-sm glow-yellow shrink-0"
+          className="hidden md:flex w-full mt-4 h-10 bg-endfield-yellow hover:bg-endfield-yellow-glow hover:-translate-y-0.5 text-endfield-black font-bold tracking-wider uppercase transition-all items-center justify-center gap-2 text-sm glow-yellow shrink-0"
         >
           <span className="material-symbols-outlined text-base">calculate</span>
           {t('calculate')}
@@ -443,10 +480,13 @@ export default function Sidebar({ params, setParams, collapsed, onClose, onCalcu
               onOpenAnnouncement();
               onClose();
             }}
-            className="w-full h-10 bg-endfield-gray border border-endfield-gray-light hover:border-endfield-yellow transition-colors flex items-center justify-center gap-2 text-endfield-text-light hover:text-endfield-yellow cursor-default"
+            className="relative w-full h-10 bg-endfield-gray border border-endfield-gray-light hover:border-endfield-yellow transition-colors flex items-center justify-center gap-2 text-endfield-text-light hover:text-endfield-yellow"
           >
             <span className="material-symbols-outlined text-xl">campaign</span>
             <span className="text-sm">{t('announcement')}</span>
+            {hasUnreadChangelog() && (
+              <span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-red-500 rounded-full animate-pulse" />
+            )}
           </button>
 
           {/* GitHub 链接 */}
@@ -469,7 +509,7 @@ export default function Sidebar({ params, setParams, collapsed, onClose, onCalcu
               className="w-full h-10 bg-endfield-gray border border-endfield-gray-light hover:border-endfield-yellow transition-colors flex items-center justify-center gap-2 text-sm text-endfield-text-light"
             >
               <span className="material-symbols-outlined text-base">language</span>
-              <span>{(() => { const l = languageOptions.find(l => l.code === locale); return l ? getLangLabel(l) : ''; })()}</span>
+              <span>{(() => { const l = languageOptions.find(l => l.code === locale); return l ? l.nativeName : ''; })()}</span>
             </button>
 
             {showLangMenu && (
@@ -484,7 +524,7 @@ export default function Sidebar({ params, setParams, collapsed, onClose, onCalcu
                     className={`w-full px-3 py-2 text-left text-sm hover:bg-endfield-gray-light transition-colors
                       ${locale === lang.code ? 'text-endfield-yellow' : 'text-endfield-text-light'}`}
                   >
-                    {getLangLabel(lang)}
+                    {lang.nativeName}
                   </button>
                 ))}
               </div>
@@ -492,6 +532,21 @@ export default function Sidebar({ params, setParams, collapsed, onClose, onCalcu
           </div>
         </div>
       </div>
+
+        {/* 桌面端：计算按钮不可见时的底部渐变提示 */}
+        {scrollHintMounted && (
+          <div className={`hidden md:flex absolute bottom-0 left-0 right-0 h-20 bg-linear-to-t from-endfield-dark from-40% to-transparent items-end justify-center pb-3 pointer-events-none transition-all duration-300 ease-out ${
+            scrollHintVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
+          }`}>
+            <button
+              onClick={scrollToCalcButton}
+              className="pointer-events-auto px-4 py-1.5 bg-endfield-yellow/15 border border-endfield-yellow/40 hover:bg-endfield-yellow/25 transition-colors flex items-center gap-1.5 text-xs text-endfield-yellow tracking-wider"
+            >
+              <span className="material-symbols-outlined text-sm">keyboard_double_arrow_down</span>
+              {t('scrollToCalculate')}
+            </button>
+          </div>
+        )}
     </aside>
 
     {showInputWarning && (

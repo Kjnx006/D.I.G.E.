@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { useI18n } from '../i18n';
+import { hasUnreadChangelog } from './Announcement';
 
 export default function Header({ onCalculate, onShare, sidebarCollapsed, onToggleSidebar, onOpenAnnouncement, onOpenPrivacyPolicy }) {
   const { t, locale, changeLocale, languageOptions } = useI18n();
@@ -8,10 +9,6 @@ export default function Header({ onCalculate, onShare, sidebarCollapsed, onToggl
   const langMenuRef = useRef(null);
 
   const currentLang = languageOptions.find(l => l.code === locale);
-  const getLangLabel = (lang) => {
-    const translated = t(lang.i18nKey);
-    return translated === lang.nativeName ? lang.nativeName : `${lang.nativeName} (${translated})`;
-  };
 
   // 点击外部关闭下拉菜单
   useEffect(() => {
@@ -114,11 +111,14 @@ export default function Header({ onCalculate, onShare, sidebarCollapsed, onToggl
         {/* Announcement Button - 桌面端显示 */}
         <button
           onClick={onOpenAnnouncement}
-          className="hidden md:flex h-10 w-10 bg-endfield-gray border border-endfield-gray-light hover:border-endfield-yellow transition-colors items-center justify-center text-endfield-text-light hover:text-endfield-yellow cursor-default"
+          className="relative hidden md:flex h-10 w-10 bg-endfield-gray border border-endfield-gray-light hover:border-endfield-yellow transition-colors items-center justify-center text-endfield-text-light hover:text-endfield-yellow"
           title={t('announcement')}
           aria-label={t('announcement')}
         >
           <span className="material-symbols-outlined text-xl" aria-hidden="true">campaign</span>
+          {hasUnreadChangelog() && (
+            <span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-red-500 rounded-full animate-pulse" />
+          )}
         </button>
 
         {/* GitHub Link - 桌面端显示 */}
@@ -126,7 +126,7 @@ export default function Header({ onCalculate, onShare, sidebarCollapsed, onToggl
           href="https://github.com/djkcyl/D.I.G.E."
           target="_blank"
           rel="noopener noreferrer"
-          className="hidden md:flex h-10 w-10 bg-endfield-gray border border-endfield-gray-light hover:border-endfield-yellow transition-colors items-center justify-center text-endfield-text-light hover:text-endfield-yellow cursor-default"
+          className="hidden md:flex h-10 w-10 bg-endfield-gray border border-endfield-gray-light hover:border-endfield-yellow transition-colors items-center justify-center text-endfield-text-light hover:text-endfield-yellow"
           title="GitHub"
           aria-label="GitHub 项目页面"
         >
@@ -142,10 +142,10 @@ export default function Header({ onCalculate, onShare, sidebarCollapsed, onToggl
             className="h-10 px-3 bg-endfield-gray border border-endfield-gray-light hover:border-endfield-yellow transition-colors flex items-center gap-2 text-sm text-endfield-text-light"
             aria-expanded={showLangMenu}
             aria-haspopup="listbox"
-            aria-label={`当前语言: ${currentLang ? getLangLabel(currentLang) : ''}, 点击切换语言`}
+            aria-label={`当前语言: ${currentLang ? currentLang.nativeName : ''}, 点击切换语言`}
           >
             <span className="material-symbols-outlined text-base" aria-hidden="true">language</span>
-            <span>{currentLang ? getLangLabel(currentLang) : ''}</span>
+            <span>{currentLang ? currentLang.nativeName : ''}</span>
           </button>
 
           {showLangMenu && (
@@ -161,7 +161,7 @@ export default function Header({ onCalculate, onShare, sidebarCollapsed, onToggl
                       ${locale === lang.code ? 'text-endfield-yellow' : 'text-endfield-text-light'}`}
                     lang={lang.code}
                   >
-                    {getLangLabel(lang)}
+                    {lang.nativeName}
                   </button>
                 </li>
               ))}
@@ -172,7 +172,7 @@ export default function Header({ onCalculate, onShare, sidebarCollapsed, onToggl
         {/* 移动端计算按钮 */}
         <button
           onClick={() => onCalculate()}
-          className="md:hidden h-9 px-3 bg-endfield-yellow hover:bg-endfield-yellow-glow text-endfield-black font-bold tracking-wider uppercase transition-all flex items-center gap-1.5 text-sm glow-yellow"
+          className="md:hidden h-9 px-3 bg-endfield-yellow hover:bg-endfield-yellow-glow hover:-translate-y-0.5 text-endfield-black font-bold tracking-wider uppercase transition-all flex items-center gap-1.5 text-sm glow-yellow"
           aria-label={t('calculate')}
         >
           <span className="material-symbols-outlined text-base" aria-hidden="true">calculate</span>
