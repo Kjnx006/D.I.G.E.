@@ -257,7 +257,7 @@ export default function SolutionList({ solutions, selectedIndex, onSelectSolutio
             >
               <div className="min-h-0 overflow-hidden">
                 <div className="bg-endfield-gray border border-endfield-gray-light overflow-hidden">
-                <table className="w-full text-sm">
+                <table key={selectedIndex} className="w-full text-sm">
                   <thead>
                     <tr className="border-b border-endfield-gray-light bg-endfield-dark/50">
                       <th className="text-left p-2 text-endfield-text font-normal">{t('fuelType')}</th>
