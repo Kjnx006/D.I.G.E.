@@ -31,14 +31,6 @@ if (sentryDsn) {
   })
 }
 
-if (import.meta.env.PROD && 'serviceWorker' in navigator && window.isSecureContext) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('/sw.js').catch((error) => {
-      console.error('Service worker registration failed:', error);
-    });
-  });
-}
-
 ReactDOM.createRoot(document.getElementById('root')).render(
   <Sentry.ErrorBoundary fallback={<div>Something went wrong.</div>}>
     <React.StrictMode>
