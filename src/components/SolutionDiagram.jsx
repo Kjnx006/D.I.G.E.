@@ -162,7 +162,7 @@ export default function SolutionDiagram({ solution }) {
   const oscFuelData = oscillatingFuel || solution.fuel;
 
   return (
-    <div className="space-y-2 sm:space-y-3">
+    <div className="space-y-2 sm:space-y-3 notranslate" translate="no">
       {/* 警告 */}
       <div className="p-2.5 bg-red-900/20 border border-red-900/50 text-sm text-red-300 flex items-center gap-2">
         <span className="material-symbols-outlined text-sm">warning</span>

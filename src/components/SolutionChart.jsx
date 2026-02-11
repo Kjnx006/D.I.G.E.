@@ -49,7 +49,7 @@ export default function SolutionChart({ solution, targetPower, batteryCapacity, 
 
   if (!solution || !sourceBatteryLog || sourceBatteryLog.length === 0) {
     return (
-      <div className="h-48 flex items-center justify-center text-endfield-text text-sm">
+      <div className="h-48 flex items-center justify-center text-endfield-text text-sm notranslate" translate="no">
         {t('noChartData')}
       </div>
     );
@@ -525,7 +525,7 @@ export default function SolutionChart({ solution, targetPower, batteryCapacity, 
   }, [maxX, minVisibleSpanPoints]);
 
   return (
-    <div className="h-44 sm:h-56">
+    <div className="h-44 sm:h-56 notranslate" translate="no">
       <Line ref={chartRef} data={data} options={options} />
     </div>
   );

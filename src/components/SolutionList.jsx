@@ -91,7 +91,7 @@ export default function SolutionList({ solutions, selectedIndex, onSelectSolutio
   };
 
   return (
-    <div className="flex-1 flex flex-col overflow-hidden">
+    <div className="flex-1 flex flex-col overflow-hidden notranslate" translate="no">
       {/* 方案选择 + 数据摘要 - 紧凑横向布局 */}
       <div className="shrink-0 p-2 sm:p-4 border-b border-endfield-gray-light bg-endfield-dark/50">
         {/* 方案标签 */}
@@ -257,7 +257,7 @@ export default function SolutionList({ solutions, selectedIndex, onSelectSolutio
             >
               <div className="min-h-0 overflow-hidden">
                 <div className="bg-endfield-gray border border-endfield-gray-light overflow-hidden">
-                <table key={selectedIndex} className="w-full text-sm">
+                <table className="w-full text-sm">
                   <thead>
                     <tr className="border-b border-endfield-gray-light bg-endfield-dark/50">
                       <th className="text-left p-2 text-endfield-text font-normal">{t('fuelType')}</th>
@@ -340,7 +340,7 @@ export default function SolutionList({ solutions, selectedIndex, onSelectSolutio
             className={`grid overflow-hidden transition-[grid-template-rows,margin,opacity] duration-300 ease-out ${collapsedSections.diagram ? 'grid-rows-[0fr] mt-0 opacity-0' : 'grid-rows-[1fr] mt-3 opacity-100'}`}
           >
             <div className="min-h-0 overflow-hidden">
-              <SolutionDiagram key={selectedIndex} solution={selectedSolution} />
+              <SolutionDiagram solution={selectedSolution} />
             </div>
           </div>
         </div>
