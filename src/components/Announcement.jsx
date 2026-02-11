@@ -1,8 +1,8 @@
-import { useState, useEffect } from 'react';
+﻿import { useState, useEffect } from 'react';
 import { useI18n } from '../i18n';
 
 // 公告配置 - 修改这里来更新公告
-const ANNOUNCEMENT_ID = '2026-02-09-v1.7.0'; // 更新公告时修改此 ID
+const ANNOUNCEMENT_ID = '2026-02-11-v1.7.0'; // 更新公告时修改此 ID
 
 const GITHUB_URL = 'https://github.com/djkcyl/D.I.G.E.';
 const ISSUES_URL = 'https://github.com/djkcyl/D.I.G.E./issues';
@@ -383,6 +383,9 @@ const AnnouncementContent = {
       <p className="mb-3">
         欢迎使用 D.I.G.E.（Dijiang Integrated Generator Efficiency）！这是一个用于计算明日方舟：终末地中热能池最优发电方案的工具。
       </p>
+      <p className="mb-3 text-endfield-yellow/90">
+        开发进展：目前网站正在持续研究底层算法，优化方案；同时也在推进可视化功能升级，提供更直观的蓝图可视化预览，方便直接在游戏中复刻。相关更新将逐步上线。
+      </p>
       
       <h3 className={HeadingStyle}>基本功能</h3>
       <ul className={ListStyle}>
@@ -417,6 +420,9 @@ const AnnouncementContent = {
     <>
       <p className="mb-3">
         Welcome to D.I.G.E. (Dijiang Integrated Generator Efficiency)! This is a tool for calculating optimal power generation solutions for the Thermal Pool in Arknights: Endfield.
+      </p>
+      <p className="mb-3 text-endfield-yellow/90">
+        Development update: the website is continuously researching core algorithms and optimizing generation solutions. We are also upgrading visualization features to provide a more intuitive blueprint preview, making it easier to reproduce configurations directly in game. These updates will be released gradually.
       </p>
       
       <h3 className={HeadingStyle}>Features</h3>
@@ -454,6 +460,9 @@ const AnnouncementContent = {
       <p className="mb-3">
         D.I.G.E.（Dijiang Integrated Generator Efficiency）へようこそ！これはアークナイツ：エンドフィールドの熱エネルギープールの最適発電方案を計算するツールです。
       </p>
+      <p className="mb-3 text-endfield-yellow/90">
+        開発進捗：現在、サイトでは基盤アルゴリズムの研究と発電方案の最適化を継続しています。あわせて可視化機能の強化も進めており、より直感的なブループリントのプレビューを提供し、ゲーム内での再現をしやすくします。関連更新は段階的に公開予定です。
+      </p>
       
       <h3 className={HeadingStyle}>基本機能</h3>
       <ul className={ListStyle}>
@@ -489,6 +498,9 @@ const AnnouncementContent = {
     <>
       <p className="mb-3">
         D.I.G.E.(Dijiang Integrated Generator Efficiency)에 오신 것을 환영합니다! 이것은 명일방주: 종말지의 열에너지 풀 최적 발전 방안을 계산하는 도구입니다.
+      </p>
+      <p className="mb-3 text-endfield-yellow/90">
+        개발 진행 상황: 현재 웹사이트는 핵심 알고리즘을 지속적으로 연구하고 발전 방안을 최적화하고 있습니다. 동시에 시각화 기능도 고도화하여 더 직관적인 블루프린트 미리보기를 제공하고, 게임 내에서 바로 재현하기 쉽도록 개선하고 있습니다. 관련 업데이트는 순차적으로 적용될 예정입니다.
       </p>
       
       <h3 className={HeadingStyle}>기본 기능</h3>
@@ -526,6 +538,9 @@ const AnnouncementContent = {
       <p className="mb-3">
         Добро пожаловать в D.I.G.E. (Dijiang Integrated Generator Efficiency)! Это инструмент для расчёта оптимальных решений энергогенерации теплового пула в Arknights: Endfield.
       </p>
+      <p className="mb-3 text-endfield-yellow/90">
+        Ход разработки: сейчас сайт продолжает исследование базовых алгоритмов и оптимизацию решений генерации. Параллельно мы улучшаем функции визуализации, чтобы дать более наглядный предварительный просмотр чертежей и упростить прямое воспроизведение в игре. Обновления будут выходить постепенно.
+      </p>
       
       <h3 className={HeadingStyle}>Возможности</h3>
       <ul className={ListStyle}>
@@ -560,6 +575,9 @@ const AnnouncementContent = {
     <>
       <p className="mb-3">
         Bienvenue dans D.I.G.E. (Dijiang Integrated Generator Efficiency) ! C'est un outil de calcul des solutions optimales de génération d'énergie pour le pool thermique d'Arknights: Endfield.
+      </p>
+      <p className="mb-3 text-endfield-yellow/90">
+        Avancement du développement : le site poursuit la recherche sur les algorithmes de base et l’optimisation des solutions. En parallèle, nous améliorons la visualisation pour proposer un aperçu de blueprint plus intuitif, afin de faciliter la reproduction directe en jeu. Les mises à jour concernées seront déployées progressivement.
       </p>
       
       <h3 className={HeadingStyle}>Fonctionnalités</h3>
@@ -596,6 +614,9 @@ const AnnouncementContent = {
     <>
       <p className="mb-3">
         Willkommen bei D.I.G.E. (Dijiang Integrated Generator Efficiency)! Dies ist ein Werkzeug zur Berechnung optimaler Stromerzeugungslösungen für den Thermischen Pool in Arknights: Endfield.
+      </p>
+      <p className="mb-3 text-endfield-yellow/90">
+        Entwicklungsstand: Die Website erforscht kontinuierlich die Kernalgorithmen und optimiert die Lösungen. Gleichzeitig bauen wir die Visualisierung aus, um eine intuitivere Blueprint-Vorschau bereitzustellen und das direkte Nachbauen im Spiel zu erleichtern. Die entsprechenden Updates werden schrittweise veröffentlicht.
       </p>
       
       <h3 className={HeadingStyle}>Funktionen</h3>
