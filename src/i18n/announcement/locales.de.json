@@ -1,0 +1,133 @@
+{
+  "announcement": {
+    "blocks": [
+      {
+        "type": "paragraph",
+        "className": "mb-3",
+        "text": "Willkommen bei D.I.G.E. (Dijiang Integrated Generator Efficiency)! Dies ist ein Werkzeug zur Berechnung optimaler Stromerzeugungslösungen für den Thermischen Pool in Arknights: Endfield."
+      },
+      {
+        "type": "paragraph",
+        "className": "mb-3 text-endfield-yellow/90",
+        "text": "Entwicklungsstand: Die Website erforscht kontinuierlich die Kernalgorithmen und optimiert die Lösungen. Gleichzeitig bauen wir die Visualisierung aus, um eine intuitivere Blueprint-Vorschau bereitzustellen und das direkte Nachbauen im Spiel zu erleichtern. Die entsprechenden Updates werden schrittweise veröffentlicht."
+      },
+      {
+        "type": "heading",
+        "text": "Funktionen"
+      },
+      {
+        "type": "list",
+        "items": [
+          "Automatische Berechnung der optimalen Erzeugung basierend auf der Zielleistung",
+          "Unterstützung für Primär- und Sekundärbrennstoff-Kombinationen",
+          "Visualisierung von Leistungskurven und Batterieständen",
+          "Detaillierte Splitter- und Speicherkonfigurationen"
+        ]
+      },
+      {
+        "type": "heading",
+        "text": "Verwendung"
+      },
+      {
+        "type": "list",
+        "items": [
+          "Zielleistung im linken Bedienfeld einstellen",
+          "Primärbrennstoff (erforderlich) und Sekundärbrennstoff (optional) auswählen",
+          "Mindestbatteriestand und maximale Verschwendung anpassen",
+          "Auf „Berechnen\" klicken, um optimale Lösungen zu erhalten",
+          "Lösungsdetails und Diagramme rechts ansehen"
+        ]
+      },
+      {
+        "type": "paragraph",
+        "className": "mt-4",
+        "segments": [
+          {
+            "text": "Video-Tutorial: "
+          },
+          {
+            "link": "tutorial",
+            "text": "Bilibili — D.I.G.E. Anleitung"
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "className": "mt-4",
+        "segments": [
+          {
+            "text": "Bei Fragen oder Vorschlägen können Sie gerne ein "
+          },
+          {
+            "link": "issues",
+            "text": "Issue"
+          },
+          {
+            "text": " auf "
+          },
+          {
+            "link": "github",
+            "text": "GitHub"
+          },
+          {
+            "text": " erstellen."
+          }
+        ]
+      }
+    ]
+  },
+  "changelog": {
+    "sections": [
+      {
+        "version": "v1.7.0",
+        "title": "v1.7.0 Updates",
+        "defaultOpen": true,
+        "items": [
+          "Verbesserte Abstände für gemischten CJK- und lateinischen Text",
+          "Sprachmenü vereinfacht — zeigt nur native Namen",
+          "Seitenleiste verbreitert für bessere Darstellung langer Texte",
+          "Scroll-Hinweis zum Auffinden der Berechnen-Taste",
+          "Erinnerung bei Parameteränderung ohne Neuberechnung (berechnen/wiederherstellen/ignorieren)",
+          "Verschiedene Verbesserungen bei Schaltflächen und Animationen"
+        ]
+      },
+      {
+        "version": "v1.6.0",
+        "title": "v1.6.0 Updates",
+        "items": [
+          "Russisch, Französisch und Deutsch hinzugefügt",
+          "Sprachauswahl zeigt nativen Namen und Übersetzung",
+          "Brennstoff-/Batterie-/Anlagennamen an offizielle Spielterminologie angepasst",
+          "Anzeigefehler beim Lösungswechsel behoben"
+        ]
+      },
+      {
+        "version": "v1.5.0",
+        "title": "v1.5.0 Updates",
+        "items": [
+          "Eingabequelle hinzugefügt: Lager / Verpackungseinheit (10s/Stück)",
+          "Verpackungsmodus zeigt jetzt eine Eingabewarnung"
+        ]
+      },
+      {
+        "version": "v1.4.0",
+        "title": "v1.4.0 Updates",
+        "items": [
+          "Verbesserte Genauigkeit des Zyklusdiagramms zur besseren Ausrichtung an Brennzyklen",
+          "Große Datenmengen werden automatisch vereinfacht; „Genaue Werte\" für vollständige Details",
+          "Hover-Info zeigt jetzt die Zeit an"
+        ]
+      },
+      {
+        "version": "v1.3.0",
+        "title": "v1.3.0 Updates",
+        "items": [
+          "Zeitachse zum Diagramm hinzugefügt",
+          "Mausrad-Zoom, Ziehen, Pinch-Zoom und mobiles Schwenken",
+          "Brennzustandslinien pro Zweig hinzugefügt",
+          "Zyklusdiagramm, Brennstoffverbrauch und Diagramm einklappbar"
+        ]
+      }
+    ]
+  }
+}

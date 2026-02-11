@@ -1,0 +1,133 @@
+{
+  "announcement": {
+    "blocks": [
+      {
+        "type": "paragraph",
+        "className": "mb-3",
+        "text": "Bienvenue dans D.I.G.E. (Dijiang Integrated Generator Efficiency) ! C'est un outil de calcul des solutions optimales de génération d'énergie pour le pool thermique d'Arknights: Endfield."
+      },
+      {
+        "type": "paragraph",
+        "className": "mb-3 text-endfield-yellow/90",
+        "text": "Avancement du développement : le site poursuit la recherche sur les algorithmes de base et l’optimisation des solutions. En parallèle, nous améliorons la visualisation pour proposer un aperçu de blueprint plus intuitif, afin de faciliter la reproduction directe en jeu. Les mises à jour concernées seront déployées progressivement."
+      },
+      {
+        "type": "heading",
+        "text": "Fonctionnalités"
+      },
+      {
+        "type": "list",
+        "items": [
+          "Calcul automatique de la configuration optimale selon la puissance cible",
+          "Combinaisons de carburant principal et secondaire",
+          "Visualisation des courbes de puissance et du niveau de batterie",
+          "Schémas détaillés des répartiteurs et stockages"
+        ]
+      },
+      {
+        "type": "heading",
+        "text": "Utilisation"
+      },
+      {
+        "type": "list",
+        "items": [
+          "Définissez la puissance cible dans le panneau de gauche",
+          "Sélectionnez le carburant principal (requis) et secondaire (optionnel)",
+          "Ajustez le niveau minimum de batterie et la limite de gaspillage",
+          "Cliquez sur « Calculer » pour obtenir les solutions optimales",
+          "Consultez les détails et schémas à droite"
+        ]
+      },
+      {
+        "type": "paragraph",
+        "className": "mt-4",
+        "segments": [
+          {
+            "text": "Tutoriel vidéo : "
+          },
+          {
+            "link": "tutorial",
+            "text": "Bilibili — Guide D.I.G.E."
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "className": "mt-4",
+        "segments": [
+          {
+            "text": "N'hésitez pas à soumettre un "
+          },
+          {
+            "link": "issues",
+            "text": "Issue"
+          },
+          {
+            "text": " sur "
+          },
+          {
+            "link": "github",
+            "text": "GitHub"
+          },
+          {
+            "text": " pour toute question ou suggestion."
+          }
+        ]
+      }
+    ]
+  },
+  "changelog": {
+    "sections": [
+      {
+        "version": "v1.7.0",
+        "title": "v1.7.0 Mises à jour",
+        "defaultOpen": true,
+        "items": [
+          "Amélioration de l'espacement pour le texte CJK mixte",
+          "Menu de langues simplifié, affichant uniquement les noms natifs",
+          "Barre latérale élargie pour un meilleur affichage des textes longs",
+          "Indication de défilement pour trouver le bouton Calculer",
+          "Rappel intelligent après modification des paramètres (calculer/restaurer/ignorer)",
+          "Diverses améliorations des boutons et animations"
+        ]
+      },
+      {
+        "version": "v1.6.0",
+        "title": "v1.6.0 Mises à jour",
+        "items": [
+          "Ajout du support russe, français et allemand",
+          "Le sélecteur de langue affiche le nom natif et la traduction",
+          "Correction des noms de carburants/batteries/installations selon la terminologie officielle",
+          "Correction d'un problème d'affichage lors du changement de solution"
+        ]
+      },
+      {
+        "version": "v1.5.0",
+        "title": "v1.5.0 Mises à jour",
+        "items": [
+          "Ajout du choix de source d'entrée : Entrepôt / Emballeuse (10s/unité)",
+          "Le mode emballeuse affiche désormais un avertissement"
+        ]
+      },
+      {
+        "version": "v1.4.0",
+        "title": "v1.4.0 Mises à jour",
+        "items": [
+          "Précision améliorée du graphique cyclique pour mieux correspondre aux cycles de combustion",
+          "Simplification automatique des grands jeux de données ; bascule « Valeurs précises » pour les détails complets",
+          "Le survol affiche maintenant le temps"
+        ]
+      },
+      {
+        "version": "v1.3.0",
+        "title": "v1.3.0 Mises à jour",
+        "items": [
+          "Ajout d'un axe temporel au graphique",
+          "Zoom molette, glisser, pincer et panoramique sur mobile",
+          "Lignes d'état de combustion par branche ajoutées",
+          "Sections graphique, consommation et schéma repliables"
+        ]
+      }
+    ]
+  }
+}

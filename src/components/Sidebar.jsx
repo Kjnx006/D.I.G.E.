@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { useI18n } from '../i18n';
-import { hasUnreadChangelog } from './Announcement';
+import { hasUnreadAnnouncementOrChangelog } from './Announcement';
 import { FUEL_OPTIONS, SECONDARY_FUEL_OPTIONS, INPUT_SOURCES, INPUT_SOURCE_OPTIONS, DEFAULT_INPUT_SOURCE_ID } from '../utils/constants';
 import { SHARE_LIMITS } from '../utils/shareParams';
 import CloseButton from './CloseButton';
@@ -484,7 +484,7 @@ export default function Sidebar({ params, setParams, collapsed, onClose, onCalcu
           >
             <span className="material-symbols-outlined text-xl">campaign</span>
             <span className="text-sm">{t('announcement')}</span>
-            {hasUnreadChangelog() && (
+            {hasUnreadAnnouncementOrChangelog() && (
               <span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-red-500 rounded-full animate-pulse" />
             )}
           </button>

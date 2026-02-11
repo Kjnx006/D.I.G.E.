@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { useI18n } from '../i18n';
-import { hasUnreadChangelog } from './Announcement';
+import { hasUnreadAnnouncementOrChangelog } from './Announcement';
 
 export default function Header({ onCalculate, onShare, sidebarCollapsed, onToggleSidebar, onOpenAnnouncement, onOpenPrivacyPolicy }) {
   const { t, locale, changeLocale, languageOptions } = useI18n();
@@ -116,7 +116,7 @@ export default function Header({ onCalculate, onShare, sidebarCollapsed, onToggl
           aria-label={t('announcement')}
         >
           <span className="material-symbols-outlined text-xl" aria-hidden="true">campaign</span>
-          {hasUnreadChangelog() && (
+          {hasUnreadAnnouncementOrChangelog() && (
             <span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-red-500 rounded-full animate-pulse" />
           )}
         </button>
