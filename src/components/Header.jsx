@@ -1,12 +1,18 @@
 import { useState, useEffect, useRef } from 'react';
+import { QRCodeSVG } from 'qrcode.react';
 import { useI18n } from '../i18n';
 import { hasUnreadAnnouncementOrChangelog } from './Announcement';
+
+const QQ_GROUP_URL = 'https://qm.qq.com/q/zL6wp3emTQ';
 
 export default function Header({ onCalculate, onShare, sidebarCollapsed, onToggleSidebar, onOpenAnnouncement, onOpenPrivacyPolicy }) {
   const { t, locale, changeLocale, languageOptions } = useI18n();
   const [showLangMenu, setShowLangMenu] = useState(false);
+  const [showQrPopover, setShowQrPopover] = useState(false);
+  const [qrExiting, setQrExiting] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
   const langMenuRef = useRef(null);
+  const qrTimerRef = useRef(null);
 
   const currentLang = languageOptions.find(l => l.code === locale);
 
@@ -21,6 +27,20 @@ export default function Header({ onCalculate, onShare, sidebarCollapsed, onToggl
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
+
+  useEffect(() => () => { if (qrTimerRef.current) clearTimeout(qrTimerRef.current); }, []);
+
+  const onQrEnter = () => {
+    if (qrTimerRef.current) clearTimeout(qrTimerRef.current);
+    setQrExiting(false);
+    qrTimerRef.current = setTimeout(() => setShowQrPopover(true), 200);
+  };
+  const onQrLeave = () => {
+    if (qrTimerRef.current) clearTimeout(qrTimerRef.current);
+    if (!showQrPopover) return;
+    setQrExiting(true);
+    qrTimerRef.current = setTimeout(() => { setShowQrPopover(false); setQrExiting(false); }, 200);
+  };
 
   return (
     <header 
@@ -123,6 +143,43 @@ export default function Header({ onCalculate, onShare, sidebarCollapsed, onToggl
             <span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-red-500 rounded-full animate-pulse" />
           )}
         </button>
+
+        {/* 加入 QQ 群 - 仅中文显示，悬停延迟显示二维码 */}
+        {locale === 'zh' && (
+          <div
+            className="relative hidden md:block"
+            onMouseEnter={onQrEnter}
+            onMouseLeave={onQrLeave}
+          >
+            <a
+              href={QQ_GROUP_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex h-10 w-10 bg-endfield-gray border border-endfield-gray-light hover:border-endfield-yellow transition-colors items-center justify-center text-endfield-text-light hover:text-endfield-yellow"
+              title={t('joinQQGroup')}
+              aria-label={t('joinQQGroup')}
+            >
+              <span className="material-symbols-outlined text-xl" aria-hidden="true">group</span>
+            </a>
+            {showQrPopover && (
+              <div
+                className={`absolute right-0 top-full mt-2 px-3 pt-3 pb-2 bg-endfield-gray border border-endfield-yellow/50 shadow-xl z-50 animate-qr-enter origin-top-right transition-opacity duration-200 ${
+                  qrExiting ? 'opacity-0' : 'opacity-100'
+                }`}
+              >
+                <QRCodeSVG
+                  value={QQ_GROUP_URL}
+                  size={160}
+                  level="M"
+                  bgColor="#ffffff"
+                  fgColor="#0a0a0a"
+                  marginSize={2}
+                />
+                <p className="mt-2 text-center text-xs text-endfield-text-light leading-none">{t('scanToJoinGroup')}</p>
+              </div>
+            )}
+          </div>
+        )}
 
         {/* GitHub Link - 桌面端显示 */}
         <a

@@ -489,6 +489,19 @@ export default function Sidebar({ params, setParams, collapsed, onClose, onCalcu
             )}
           </button>
 
+          {/* 加入 QQ 群 - 仅中文显示 */}
+          {locale === 'zh' && (
+            <a
+              href="https://qm.qq.com/q/zL6wp3emTQ"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-full h-10 bg-endfield-gray border border-endfield-gray-light hover:border-endfield-yellow transition-colors flex items-center justify-center gap-2 text-endfield-text-light hover:text-endfield-yellow"
+            >
+              <span className="material-symbols-outlined text-xl">group</span>
+              <span className="text-sm">{t('joinQQGroup')}</span>
+            </a>
+          )}
+
           {/* GitHub 链接 */}
           <a
             href="https://github.com/djkcyl/D.I.G.E."

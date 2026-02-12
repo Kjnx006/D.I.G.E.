@@ -46,6 +46,7 @@ const CHANGELOG_ID = buildContentId('changelog', pickLocalizedSection('changelog
 const GITHUB_URL = 'https://github.com/djkcyl/D.I.G.E.';
 const ISSUES_URL = 'https://github.com/djkcyl/D.I.G.E./issues';
 const VIDEO_TUTORIAL_URL = 'https://www.bilibili.com/video/BV1VrfSByEBo';
+const QQ_GROUP_URL = 'https://qm.qq.com/q/zL6wp3emTQ';
 
 const LinkStyle = 'text-endfield-yellow hover:text-endfield-yellow-glow underline underline-offset-2 transition-colors';
 const HeadingStyle = 'text-endfield-yellow font-bold mt-4 mb-2';
@@ -322,6 +323,18 @@ export default function Announcement({ show, onClose }) {
           </div>
           <span className="text-sm text-endfield-text group-hover:text-endfield-text-light transition-colors">{t('dontShowAgain')}</span>
         </label>
+
+        {locale === 'zh' && (
+          <a
+            href={QQ_GROUP_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mb-4 flex w-full items-center justify-center gap-2 h-10 bg-endfield-gray/60 border border-endfield-yellow/30 hover:border-endfield-yellow transition-colors text-endfield-yellow text-sm"
+          >
+            <span className="material-symbols-outlined text-xl">group</span>
+            <span>{t('joinQQGroup')}</span>
+          </a>
+        )}
 
         <button
           type="button"

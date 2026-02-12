@@ -88,7 +88,8 @@
           "Wider sidebar for better display of longer languages",
           "Scroll hint at sidebar bottom to help locate the Calculate button",
           "Smart reminder when parameters are changed but not recalculated, with options to calculate, restore, or dismiss",
-          "Various button interaction and animation improvements"
+          "Various button interaction and animation improvements",
+          "Added QQ group join feature (Chinese only)"
         ]
       },
       {
