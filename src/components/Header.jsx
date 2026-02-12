@@ -31,7 +31,7 @@ export default function Header({ onCalculate, onShare, sidebarCollapsed, onToggl
         {/* 移动端：汉堡菜单按钮 */}
         <button
           onClick={onToggleSidebar}
-          className="md:hidden w-8 h-8 flex items-center justify-center text-endfield-yellow"
+          className="relative md:hidden w-8 h-8 flex items-center justify-center text-endfield-yellow"
           title={sidebarCollapsed ? t('expandSidebar') : t('collapseSidebar')}
           aria-label={sidebarCollapsed ? t('expandSidebar') : t('collapseSidebar')}
           aria-expanded={!sidebarCollapsed}
@@ -39,6 +39,9 @@ export default function Header({ onCalculate, onShare, sidebarCollapsed, onToggl
           <span className="material-symbols-outlined text-xl" aria-hidden="true">
             {sidebarCollapsed ? 'menu' : 'close'}
           </span>
+          {hasUnreadAnnouncementOrChangelog() && (
+            <span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-red-500 rounded-full animate-pulse" aria-hidden="true" />
+          )}
         </button>
         
         {/* 桌面端：黄色竖条/箭头 */}
