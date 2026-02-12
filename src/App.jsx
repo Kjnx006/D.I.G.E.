@@ -214,6 +214,7 @@ function AppContent({ onOpenAnnouncement, onOpenPrivacyPolicy }) {
         <Header
           onCalculate={runCalculation}
           onShare={handleOpenShareModal}
+          onShowStatus={showShareStatus}
           sidebarCollapsed={sidebarCollapsed}
           onToggleSidebar={() => setSidebarCollapsed(!sidebarCollapsed)}
           onOpenAnnouncement={onOpenAnnouncement}

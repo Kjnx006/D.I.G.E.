@@ -4,8 +4,9 @@ import { useI18n } from '../i18n';
 import { hasUnreadAnnouncementOrChangelog } from './Announcement';
 
 const QQ_GROUP_URL = 'https://qm.qq.com/q/zL6wp3emTQ';
+const QQ_GROUP_NUMBER = '1084531249';
 
-export default function Header({ onCalculate, onShare, sidebarCollapsed, onToggleSidebar, onOpenAnnouncement, onOpenPrivacyPolicy }) {
+export default function Header({ onCalculate, onShare, onShowStatus, sidebarCollapsed, onToggleSidebar, onOpenAnnouncement, onOpenPrivacyPolicy }) {
   const { t, locale, changeLocale, languageOptions } = useI18n();
   const [showLangMenu, setShowLangMenu] = useState(false);
   const [showQrPopover, setShowQrPopover] = useState(false);
@@ -162,10 +163,24 @@ export default function Header({ onCalculate, onShare, sidebarCollapsed, onToggl
               <span className="material-symbols-outlined text-xl" aria-hidden="true">group</span>
             </a>
             {showQrPopover && (
-              <div
-                className={`absolute right-0 top-full mt-2 px-3 pt-3 pb-2 bg-endfield-gray border border-endfield-yellow/50 shadow-xl z-50 animate-qr-enter origin-top-right transition-opacity duration-200 ${
+              <button
+                type="button"
+                onClick={async (e) => {
+                  e.preventDefault();
+                  try {
+                    if (navigator.clipboard?.writeText) {
+                      await navigator.clipboard.writeText(QQ_GROUP_NUMBER);
+                      onShowStatus?.(t('qqGroupCopied'));
+                    }
+                  } catch {
+                    // ignore
+                  }
+                }}
+                className={`absolute right-0 top-full mt-2 px-3 pt-3 pb-2 bg-endfield-gray border border-endfield-yellow/50 shadow-xl z-50 animate-qr-enter origin-top-right transition-opacity duration-200 flex flex-col items-center cursor-pointer ${
                   qrExiting ? 'opacity-0' : 'opacity-100'
                 }`}
+                title={t('qqGroupCopyLabel')}
+                aria-label={t('qqGroupCopyLabel')}
               >
                 <QRCodeSVG
                   value={QQ_GROUP_URL}
@@ -176,7 +191,10 @@ export default function Header({ onCalculate, onShare, sidebarCollapsed, onToggl
                   marginSize={2}
                 />
                 <p className="mt-2 text-center text-xs text-endfield-text-light leading-none">{t('scanToJoinGroup')}</p>
-              </div>
+                <span className="mt-1.5 text-xs text-endfield-yellow hover:text-endfield-yellow-glow underline underline-offset-2 transition-colors">
+                  1084531249
+                </span>
+              </button>
             )}
           </div>
         )}
