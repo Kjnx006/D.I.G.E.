@@ -19,35 +19,58 @@ Agent 在处理本项目代码时 **必须** 遵循以下规则。
 
 ### 翻译工具
 
-项目提供命令行翻译工具 `scripts/i18n-translate.ts`。  
+项目提供命令行翻译工具 `scripts/i18n.ts`。  
 **任何涉及新增、修改、删除翻译 key 的操作，必须通过此工具完成，禁止手动编辑 locale JSON 文件。**
 
 ### 命令
 
 ```bash
 # 检查各语言的同步状态
-pnpm run i18n:translate
+pnpm run i18n translate
 
 # 新增 / 更新翻译（必须同时提供 7 种语言）
-pnpm run i18n:translate add <key> --zh "中文" --en "English" --ja "日本語" --ko "한국어" --ru "Русский" --fr "Français" --de "Deutsch"
+pnpm run i18n translate add <key> --zh "中文" --en "English" --ja "日本語" --ko "한국어" --ru "Русский" --fr "Français" --de "Deutsch"
 
 # 批量新增（一条命令添加多个 key）
-pnpm run i18n:translate add <key1> --zh "..." --en "..." --ja "..." --ko "..." --ru "..." --fr "..." --de "..." \
+pnpm run i18n translate add <key1> --zh "..." --en "..." --ja "..." --ko "..." --ru "..." --fr "..." --de "..." \
                          add <key2> --zh "..." --en "..." --ja "..." --ko "..." --ru "..." --fr "..." --de "..."
 
+# 生成待翻译模板（格式: [key][lang][xxx]）
+pnpm run i18n translate generate <output.json> <key1> [<key2> ...]
+
+# 从模板批量写回翻译
+pnpm run i18n translate apply <input.json>
+
 # 删除 key
-pnpm run i18n:translate delete <key1> [<key2> ...]
+pnpm run i18n translate delete <key1> [<key2> ...]
 
 # 清理代码中未使用的 key
-pnpm run i18n:prune --write
+pnpm run i18n prune --write
 ```
 
 ### 工作流
 
 1. 确定需要新增的 key 名称（camelCase，语义清晰）
-2. 翻译为全部 7 种语言
-3. 使用 `pnpm run i18n:translate add` 命令一次性写入
-4. 脚本会自动校验同步状态，确认输出 `All locale files are in sync`
+2. 选择以下任一方式写入翻译：
+   - 方式 A（直接写入）：准备 7 语言翻译后使用 `pnpm run i18n translate add`
+   - 方式 B（模板写入）：先 `generate` 生成模板，手动填写后用 `apply` 批量写回
+3. 脚本会自动校验同步状态，确认输出 `All locale files are in sync`
+
+### 模板格式（generate / apply）
+
+```json
+{
+  "keyName": {
+    "zh": "中文",
+    "en": "English",
+    "ja": "日本語",
+    "ko": "한국어",
+    "ru": "Русский",
+    "fr": "Français",
+    "de": "Deutsch"
+  }
+}
+```
 
 ### 翻译规范
 
@@ -82,8 +105,7 @@ src/i18n/
 └── locales.de.json    # 德文
 
 scripts/
-├── i18n-translate.ts  # 一键翻译命令行工具
-└── i18n-prune.ts      # 未使用 key 清理工具
+└── i18n.ts            # 统一 i18n 工具（translate + prune）
 ```
 
 ---
@@ -103,6 +125,7 @@ scripts/
 
 ### 提交前检查
 
-- 运行 `pnpm run i18n:translate` 确认翻译同步
+- 运行 `pnpm run i18n translate` 确认翻译同步
 - 确保无 linter 错误
 - 不提交包含 secrets 的文件
+

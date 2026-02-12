@@ -12,58 +12,92 @@ globs:
 
 - **zh (中文) 是唯一的 source of truth**，所有 key 以 `locales.zh.json` 为基准
 - **每次新增/修改 key，必须同步所有 7 种语言**：zh、en、ja、ko、ru、fr、de
-- **必须使用 `i18n:translate` 命令行工具**，禁止手动逐文件编辑 locale JSON
+- **必须使用 `i18n` 命令行工具**，禁止手动逐文件编辑 locale JSON
 
 ## 命令行工具
 
 ```bash
 # 检查各语言缺失/多余的 key
-pnpm run i18n:translate
+pnpm run i18n translate
 
 # 新增或更新单个 key（必须同时提供 7 种语言）
-pnpm run i18n:translate add <key> --zh "中文" --en "English" --ja "日本語" --ko "한국어" --ru "Русский" --fr "Français" --de "Deutsch"
+pnpm run i18n translate add <key> --zh "中文" --en "English" --ja "日本語" --ko "한국어" --ru "Русский" --fr "Français" --de "Deutsch"
 
 # 一次新增多个 key
-pnpm run i18n:translate add <key1> --zh "..." --en "..." --ja "..." --ko "..." --ru "..." --fr "..." --de "..." add <key2> --zh "..." --en "..." --ja "..." --ko "..." --ru "..." --fr "..." --de "..."
+pnpm run i18n translate add <key1> --zh "..." --en "..." --ja "..." --ko "..." --ru "..." --fr "..." --de "..." add <key2> --zh "..." --en "..." --ja "..." --ko "..." --ru "..." --fr "..." --de "..."
+
+# 生成待翻译模板（格式: [key][lang][xxx]）
+pnpm run i18n translate generate <output.json> <key1> [<key2> ...]
+
+# 从模板批量写回翻译
+pnpm run i18n translate apply <input.json>
 
 # 删除 key（从所有语言文件中移除）
-pnpm run i18n:translate delete <key1> [<key2> ...]
+pnpm run i18n translate delete <key1> [<key2> ...]
 ```
 
 ## 标准工作流（必须严格遵循）
 
-### 新增翻译 key
+### 新增翻译 key（直接写入）
 
 直接使用命令行完成，一步到位：
 
 ```bash
-pnpm run i18n:translate add newFeature --zh "新功能" --en "New Feature" --ja "新機能" --ko "새 기능" --ru "Новая функция" --fr "Nouvelle fonctionnalité" --de "Neue Funktion"
+pnpm run i18n translate add newFeature --zh "新功能" --en "New Feature" --ja "新機能" --ko "새 기능" --ru "Новая функция" --fr "Nouvelle fonctionnalité" --de "Neue Funktion"
 ```
 
 脚本会自动写入所有 locale 文件并校验同步状态。
+
+### 新增翻译 key（模板写入）
+
+先生成模板，再手动填写，最后应用：
+
+```bash
+pnpm run i18n translate generate ./tmp/todo-i18n.json keyA keyB
+```
+
+模板文件结构（`[key][lang][xxx]`）：
+
+```json
+{
+  "keyA": {
+    "zh": "中文",
+    "en": "English",
+    "ja": "日本語",
+    "ko": "한국어",
+    "ru": "Русский",
+    "fr": "Français",
+    "de": "Deutsch"
+  }
+}
+```
+
+```bash
+pnpm run i18n translate apply ./tmp/todo-i18n.json
+```
 
 ### 批量新增
 
 多个 key 写在一条命令中：
 
 ```bash
-pnpm run i18n:translate add saveSuccess --zh "保存成功" --en "Saved" --ja "保存しました" --ko "저장됨" --ru "Сохранено" --fr "Enregistré" --de "Gespeichert" add saveFailed --zh "保存失败" --en "Save failed" --ja "保存に失敗" --ko "저장 실패" --ru "Ошибка сохранения" --fr "Échec de la sauvegarde" --de "Speichern fehlgeschlagen"
+pnpm run i18n translate add saveSuccess --zh "保存成功" --en "Saved" --ja "保存しました" --ko "저장됨" --ru "Сохранено" --fr "Enregistré" --de "Gespeichert" add saveFailed --zh "保存失败" --en "Save failed" --ja "保存に失敗" --ko "저장 실패" --ru "Ошибка сохранения" --fr "Échec de la sauvegarde" --de "Speichern fehlgeschlagen"
 ```
 
 ### 修改已有翻译
 
-同 `add` 命令，已有 key 会被覆盖更新。
+同 `add` 命令，已有 key 会被覆盖更新；也可通过 `generate/apply` 批量修改。
 
 ### 删除翻译 key
 
 ```bash
-pnpm run i18n:translate delete obsoleteKey
+pnpm run i18n translate delete obsoleteKey
 ```
 
 或使用 prune 工具自动清理未使用的 key：
 
 ```bash
-pnpm run i18n:prune --write
+pnpm run i18n prune --write
 ```
 
 ## 翻译质量要求
@@ -91,6 +125,7 @@ src/i18n/
 ## 禁止事项
 
 - ❌ 禁止只添加部分语言的翻译（必须 7 语言齐全）
-- ❌ 禁止手动逐个编辑 locale JSON 文件来添加翻译（必须通过 `i18n:translate` 命令）
+- ❌ 禁止手动逐个编辑 locale JSON 文件来添加翻译（必须通过 `i18n` 命令）
 - ❌ 禁止在 locale 文件中使用嵌套结构（保持扁平 key-value）
 - ❌ 禁止留下未翻译的占位符（如 "TODO" 或空字符串）
+

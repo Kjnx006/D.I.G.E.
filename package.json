@@ -7,8 +7,9 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "i18n:prune": "tsx scripts/i18n-prune.ts",
-    "i18n:translate": "tsx scripts/i18n-translate.ts"
+    "i18n": "tsx scripts/i18n.ts",
+    "i18n:prune": "tsx scripts/i18n.ts prune",
+    "i18n:translate": "tsx scripts/i18n.ts translate"
   },
   "dependencies": {
     "@sentry/react": "^10.38.0",
@@ -39,3 +40,4 @@
     ]
   }
 }
+
