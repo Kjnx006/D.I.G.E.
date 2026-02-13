@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useI18n } from '../i18n';
 import { announcementLocales } from '../i18n/announcement/locales';
+import Icon from './Icon';
 
 // 已读状态版本。变更指纹算法时递增。
 const CONTENT_ID_SCHEMA_VERSION = 'v1';
@@ -77,13 +78,12 @@ function ChangelogSection({ version, title, defaultOpen = false, children }) {
         aria-expanded={open}
         aria-label={`${open ? t('collapseSection') : t('expandSection')}: ${title || version}`}
       >
-        <span
-          className={`material-symbols-outlined text-sm leading-none transition-transform ${
+        <Icon
+          name="chevron_right"
+          className={`text-sm leading-none transition-transform ${
             open ? 'rotate-90 text-endfield-yellow' : 'text-endfield-text/50'
           }`}
-        >
-          chevron_right
-        </span>
+        />
         <span className={`text-sm font-semibold leading-none py-0 ${open ? 'text-endfield-text-light' : 'text-endfield-text/80'}`}>
           {title || version}
         </span>
@@ -250,9 +250,7 @@ export default function Announcement({ show, onClose }) {
     <div className="fixed inset-0 bg-endfield-black/95 backdrop-blur z-50 flex items-center justify-center p-4">
       <div className="bg-endfield-gray border border-endfield-yellow/30 p-6 max-w-xl w-full relative h-[90vh] flex flex-col">
         <div className="flex items-center gap-2 mb-4 pb-3 border-b border-endfield-gray-light">
-          <span className="material-symbols-outlined text-endfield-yellow">
-            {isAnnouncement ? 'campaign' : 'history'}
-          </span>
+          <Icon name={isAnnouncement ? 'campaign' : 'history'} className="text-endfield-yellow" />
           <h2 className="text-base font-bold text-endfield-text-light uppercase tracking-wider">
             {isAnnouncement ? t('announcement') : t('changelog')}
           </h2>
@@ -318,7 +316,7 @@ export default function Announcement({ show, onClose }) {
               className="absolute inset-0 opacity-0 cursor-pointer"
             />
             {dontShowAgain && (
-              <span className="material-symbols-outlined text-endfield-yellow text-sm">check</span>
+              <Icon name="check" className="text-endfield-yellow" />
             )}
           </div>
           <span className="text-sm text-endfield-text group-hover:text-endfield-text-light transition-colors">{t('dontShowAgain')}</span>
@@ -331,7 +329,7 @@ export default function Announcement({ show, onClose }) {
             rel="noopener noreferrer"
             className="mb-4 flex w-full items-center justify-center gap-2 h-10 bg-endfield-gray/60 border border-endfield-yellow/30 hover:border-endfield-yellow transition-colors text-endfield-yellow text-sm"
           >
-            <span className="material-symbols-outlined text-xl">group</span>
+            <Icon name="group" />
             <span>{t('joinQQGroup')}</span>
           </a>
         )}

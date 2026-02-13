@@ -83,6 +83,7 @@
         "title": "v1.7.0 Mises à jour",
         "defaultOpen": true,
         "items": [
+          "Bibliothèque d'icônes mise à jour pour un affichage plus cohérent",
           "Amélioration de l'espacement pour le texte CJK mixte",
           "Menu de langues simplifié, affichant uniquement les noms natifs",
           "Barre latérale élargie pour un meilleur affichage des textes longs",

@@ -83,6 +83,7 @@
         "title": "v1.7.0 Updates",
         "defaultOpen": true,
         "items": [
+          "Upgraded icon library for more consistent display",
           "Improved spacing for mixed CJK and Latin text",
           "Simplified language menu to show native names only",
           "Wider sidebar for better display of longer languages",

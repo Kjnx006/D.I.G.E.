@@ -1,6 +1,7 @@
 import { useState, useRef, useCallback } from 'react';
 import { useI18n } from '../i18n';
 import { CONSTANTS } from '../utils/constants';
+import Icon from './Icon';
 
 // 可拖拽的电路分支组件
 function DraggableBranch({ branch, idx, t }) {
@@ -86,7 +87,7 @@ function DraggableBranch({ branch, idx, t }) {
             </div>
           )}
         </div>
-        <span className="material-symbols-outlined text-endfield-text/50 text-sm shrink-0">arrow_right_alt</span>
+        <Icon name="arrow_right_alt" className="text-endfield-text/50 shrink-0" />
       </div>
     );
   };
@@ -119,16 +120,16 @@ function DraggableBranch({ branch, idx, t }) {
         <div className="flex items-center gap-1 w-max">
           {/* 输入 */}
           <div className="w-8 h-8 bg-endfield-gray border border-endfield-gray-light flex items-center justify-center text-endfield-text shrink-0">
-            <span className="material-symbols-outlined text-sm">input</span>
+            <Icon name="input" />
           </div>
-          <span className="material-symbols-outlined text-endfield-text/50 text-sm shrink-0">arrow_right_alt</span>
+          <Icon name="arrow_right_alt" className="text-endfield-text/50 shrink-0" />
 
           {/* 分流器序列 */}
           {steps.map((type, stepIdx) => renderSplitter(type, stepIdx))}
 
           {/* 发电机 */}
           <div className="h-8 px-2.5 bg-endfield-yellow/10 border border-endfield-yellow/50 flex items-center gap-1 text-endfield-yellow shrink-0">
-            <span className="material-symbols-outlined text-sm">bolt</span>
+            <Icon name="bolt" />
             <span className="text-sm font-bold uppercase">{t('gen')}</span>
           </div>
         </div>
@@ -165,19 +166,19 @@ export default function SolutionDiagram({ solution }) {
     <div className="space-y-2 sm:space-y-3 notranslate" translate="no">
       {/* 警告 */}
       <div className="p-2.5 bg-red-900/20 border border-red-900/50 text-sm text-red-300 flex items-center gap-2">
-        <span className="material-symbols-outlined text-sm">warning</span>
+        <Icon name="warning" />
         <span>{t('storageBoxWarningShort')}</span>
       </div>
       {showPackerWarning && (
         <div className="p-2.5 bg-red-900/20 border border-red-900/50 text-sm text-red-300 flex items-center gap-2">
-          <span className="material-symbols-outlined text-sm">warning</span>
+          <Icon name="warning" />
           <span>{t('inputWarningPacker')}</span>
         </div>
       )}
 
       {/* 基础发电 - 静态显示 */}
       <div className="flex flex-wrap items-center gap-2 p-3 bg-endfield-gray border border-endfield-gray-light">
-        <span className="material-symbols-outlined text-sm text-endfield-yellow">factory</span>
+        <Icon name="factory" className="text-endfield-yellow" />
         <span className="text-sm text-endfield-text uppercase">{t('basePowerShort')}:</span>
         {baseConfig.generators > 0 ? (
           <>
@@ -203,7 +204,7 @@ export default function SolutionDiagram({ solution }) {
       {oscillating && oscillating.length > 0 && (
         <div className="border border-endfield-gray-light bg-endfield-gray/30">
           <div className="flex flex-wrap items-center gap-2 p-3 border-b border-endfield-gray-light bg-endfield-gray/50">
-            <span className="material-symbols-outlined text-sm text-endfield-yellow">electric_bolt</span>
+            <Icon name="electric_bolt" className="text-endfield-yellow" />
             <span className="text-sm text-endfield-text uppercase">{t('oscillatingShort')}:</span>
             <span className="text-sm font-bold text-endfield-text-light">{oscillating.length}</span>
             <span className="text-sm text-endfield-text">× {getFuelName(oscFuelData)}</span>
