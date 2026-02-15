@@ -143,42 +143,43 @@ function SimpleBranch({ branch, t }) {
   );
 }
 
-const BLUEPRINT_SVG = {
-  belt: '/svg/conveyor-straight.svg',
-  left_turn_belt: '/svg/conveyor-turn.svg',
-  right_turn_belt: '/svg/conveyor-turn.svg',
-  conveyor_bridge: '/svg/conveyor-bridge.svg',
-  splitter: '/svg/splitter.svg',
-  converger: '/svg/merger.svg',
+const BLUEPRINT_IMG = {
+  belt: '/svg/icon_belt_grid.png',
+  left_turn_belt: '/svg/icon_belt_corner_1.png',
+  right_turn_belt: '/svg/icon_belt_corner_1.png',
+  conveyor_bridge: '/svg/bg_logistic_log_connector.png',
+  splitter: '/svg/bg_logistic_log_splitter.png',
+  converger: '/svg/bg_logistic_log_converger.png',
 };
 
 /**
- * 根据 face 和 SVG 原始方向计算旋转角度（度）
- * 原始方向：conveyor-straight 右→左，conveyor-turn 右→上，conveyor-bridge 上→下，
- * splitter 上进/右下左出，merger 右侧出/上左下进
+ * 根据 face 和 PNG 原始方向计算旋转角度（度）
+ * 原始方向：icon_belt_grid 左进右出，icon_belt_corner_1 上进右出，
+ * bg_logistic_log_connector 上→下，bg_logistic_log_splitter 上侧进/右下左侧出，
+ * bg_logistic_log_converger 下侧出/左上右侧进
  */
-function getSvgRotation(part) {
+function getImgRotation(part) {
   if (!part?.partId) return 0;
   const face = part.face || 'RIGHT';
 
   switch (part.partId) {
     case 'belt':
-      // conveyor-straight: 右→左，face 为传送带流向
+      // icon_belt_grid: 左进右出，face 为传送带流向
       switch (face) {
         case 'LEFT': return 0;
         case 'RIGHT': return 180;
-        case 'UP': return 90;
-        case 'DOWN': return -90;
+        case 'UP': return -90;
+        case 'DOWN': return 90;
         default: return 0;
       }
     case 'left_turn_belt':
-      // conveyor-turn 右→上，left_turn 在 row0 为 下→左，180° + 镜像 + 顺时针 90°
-      return 270;
+      // icon_belt_corner_1 上进右出，left_turn 需 下→左
+      return 180;
     case 'right_turn_belt':
-      // conveyor-turn 右→上，right_turn 在 row4 为 上→左（曲线在左上角）
-      return -90;
+      // icon_belt_corner_1 上进右出，right_turn 需 上→左（镜像即可）
+      return 0;
     case 'conveyor_bridge':
-      // 上→下
+      // bg_logistic_log_connector: 上→下
       switch (face) {
         case 'DOWN': return 0;
         case 'UP': return 180;
@@ -187,7 +188,7 @@ function getSvgRotation(part) {
         default: return 0;
       }
     case 'splitter':
-      // 上进右下左出，蓝图里 splitter 左进右出（face RIGHT），需旋转使上进→左进、右出保持
+      // bg_logistic_log_splitter: 上侧进，右下左侧出
       switch (face) {
         case 'RIGHT': return -90;
         case 'LEFT': return 90;
@@ -196,12 +197,12 @@ function getSvgRotation(part) {
         default: return -90;
       }
     case 'converger':
-      // 右侧出上左下进，蓝图里 converger 左出（face LEFT），需旋转使右出→左出
+      // bg_logistic_log_converger: 下侧出，左上右侧进
       switch (face) {
-        case 'RIGHT': return 0;
-        case 'LEFT': return 180;
-        case 'UP': return -90;
-        case 'DOWN': return 90;
+        case 'DOWN': return 0;
+        case 'UP': return 180;
+        case 'LEFT': return 90;
+        case 'RIGHT': return -90;
         default: return 0;
       }
     default:
@@ -209,24 +210,24 @@ function getSvgRotation(part) {
   }
 }
 
-/** left_turn_belt 下→左 需镜像以修正箭头方向 */
-function getSvgMirror(part) {
-  return part?.partId === 'left_turn_belt';
+/** right_turn_belt 上→左 需镜像（PNG 上进右出，镜像后上进左出） */
+function getImgMirror(part) {
+  return part?.partId === 'right_turn_belt';
 }
 
 function BlueprintCell({ part, rowIndex, colIndex }) {
-  const svgSrc = part?.partId ? BLUEPRINT_SVG[part.partId] : null;
-  const rotation = getSvgRotation(part);
-  const mirror = getSvgMirror(part);
+  const imgSrc = part?.partId ? BLUEPRINT_IMG[part.partId] : null;
+  const rotation = getImgRotation(part);
+  const mirror = getImgMirror(part);
 
-  if (svgSrc) {
+  if (imgSrc) {
     return (
       <div
         key={`${rowIndex}-${colIndex}`}
         className="w-7 h-7 sm:w-8 sm:h-8 border border-endfield-gray-light flex items-center justify-center overflow-hidden bg-endfield-black/30"
       >
         <img
-          src={svgSrc}
+          src={imgSrc}
           alt=""
           draggable={false}
           onDragStart={(e) => e.preventDefault()}
@@ -316,13 +317,13 @@ function BlueprintLegend({ t }) {
     <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs text-endfield-text-light">
       <div className="flex items-center gap-2 border border-endfield-gray-light bg-endfield-gray/60 px-2 py-1.5">
         <div className="h-6 w-6 border border-endfield-gray-light bg-endfield-black/50 flex items-center justify-center overflow-hidden shrink-0">
-          <img src="/svg/splitter.svg" alt="" draggable={false} className="w-full h-full object-contain pointer-events-none" style={{ transform: 'rotate(-90deg)' }} />
+          <img src="/svg/bg_logistic_log_splitter.png" alt="" draggable={false} className="w-full h-full object-contain pointer-events-none" style={{ transform: 'rotate(-90deg)' }} />
         </div>
         <span>{t('legendBlueprintS')}</span>
       </div>
       <div className="flex items-center gap-2 border border-endfield-gray-light bg-endfield-gray/60 px-2 py-1.5">
         <div className="h-6 w-6 border border-endfield-gray-light bg-endfield-black/50 flex items-center justify-center overflow-hidden shrink-0">
-          <img src="/svg/merger.svg" alt="" draggable={false} className="w-full h-full object-contain pointer-events-none" />
+          <img src="/svg/bg_logistic_log_converger.png" alt="" draggable={false} className="w-full h-full object-contain pointer-events-none" style={{ transform: 'rotate(-90deg)' }} />
         </div>
         <span>{t('legendBlueprintM')}</span>
       </div>
