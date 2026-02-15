@@ -478,14 +478,16 @@ export default function SolutionDiagram({ solution }) {
             </div>
           </div>
 
-          <div className="divide-y divide-endfield-gray-light/50">
-            {oscillating.map((branch, idx) =>
-              mode === 'simple' ? (
-                <SimpleBranch key={idx} branch={branch} t={t} />
-              ) : (
-                <BlueprintBranch key={idx} branch={branch} />
-              ),
-            )}
+          <div className="flex flex-wrap justify-start gap-3 p-2 sm:p-3">
+            {oscillating.map((branch, idx) => (
+              <div key={idx} className="min-w-[min(100%,360px)]">
+                {mode === 'simple' ? (
+                  <SimpleBranch branch={branch} t={t} />
+                ) : (
+                  <BlueprintBranch branch={branch} />
+                )}
+              </div>
+            ))}
           </div>
         </div>
       )}
