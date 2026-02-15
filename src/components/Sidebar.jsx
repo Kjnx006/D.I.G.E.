@@ -57,7 +57,7 @@ export default function Sidebar({ params, setParams, collapsed, onClose, onCalcu
       return;
     }
     if (key === 'maxBranches') {
-      const clamped = clampNumber(value, 1, 5);
+      const clamped = clampNumber(value, SHARE_LIMITS.MIN_BRANCHES, SHARE_LIMITS.MAX_BRANCHES);
       setParams(prev => ({ ...prev, [key]: clamped }));
       return;
     }
@@ -262,15 +262,15 @@ export default function Sidebar({ params, setParams, collapsed, onClose, onCalcu
           <input
             id="max-branches-input"
             type="range"
-            min="1"
-            max="5"
+            min={SHARE_LIMITS.MIN_BRANCHES}
+            max={SHARE_LIMITS.MAX_BRANCHES}
             step="1"
             value={params.maxBranches ?? 3}
             onChange={(e) => handleChange('maxBranches', parseInt(e.target.value, 10))}
             className="w-full cursor-pointer"
             aria-label={t('maxBranches')}
-            aria-valuemin={1}
-            aria-valuemax={5}
+            aria-valuemin={SHARE_LIMITS.MIN_BRANCHES}
+            aria-valuemax={SHARE_LIMITS.MAX_BRANCHES}
             aria-valuenow={params.maxBranches ?? 3}
           />
           <div className="flex justify-between text-xs text-endfield-text/50 px-0.5">
