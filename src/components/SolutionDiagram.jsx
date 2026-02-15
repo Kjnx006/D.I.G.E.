@@ -344,12 +344,6 @@ function BlueprintLegend({ t }) {
         </div>
         <span>{t('legendBlueprintT')}</span>
       </div>
-      <div className="flex items-center gap-2 border border-endfield-gray-light bg-endfield-gray/60 px-2 py-1.5">
-        <div className="h-6 px-2 border border-endfield-gray-light text-endfield-text-light bg-endfield-black/50 flex items-center text-[10px] font-semibold">
-          ^ v &lt; &gt;
-        </div>
-        <span>{t('legendBlueprintFace')}</span>
-      </div>
     </div>
   );
 }

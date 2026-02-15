@@ -102,9 +102,15 @@ export default function Header({ onCalculate, onShare, onShowStatus, sidebarColl
                 {t('appTitle')}
               </h1>
             </a>
-            <span className="inline text-xs text-endfield-yellow border border-endfield-yellow/30 bg-endfield-yellow/5 px-1.5 py-px">
+            <button
+              type="button"
+              onClick={() => onOpenAnnouncement('changelog')}
+              className="inline text-xs text-endfield-yellow border border-endfield-yellow/30 bg-endfield-yellow/5 px-1.5 py-px hover:bg-endfield-yellow/15 hover:border-endfield-yellow/50 cursor-pointer transition-colors"
+              title={t('changelog')}
+              aria-label={t('changelog')}
+            >
               v{__APP_VERSION__}
-            </span>
+            </button>
           </div>
           <p className="hidden md:block text-sm text-endfield-text tracking-wider mt-0.5">
             {t('appSubtitle')}

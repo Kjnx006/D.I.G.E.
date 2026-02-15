@@ -204,10 +204,10 @@ export function hasUnreadAnnouncementOrChangelog() {
   return hasUnreadAnnouncement() || hasUnreadChangelog();
 }
 
-export default function Announcement({ show, onClose }) {
+export default function Announcement({ show, initialTab = 'announcement', onClose }) {
   const { t, locale } = useI18n();
   const [dontShowAgain, setDontShowAgain] = useState(false);
-  const [activeTab, setActiveTab] = useState('announcement');
+  const [activeTab, setActiveTab] = useState(initialTab);
   const [announcementUnread, setAnnouncementUnread] = useState(() => {
     if (typeof window === 'undefined') return false;
     return localStorage.getItem(ANNOUNCEMENT_VIEWED_KEY) !== ANNOUNCEMENT_ID;
@@ -219,17 +219,25 @@ export default function Announcement({ show, onClose }) {
 
   useEffect(() => {
     if (show) {
-      setActiveTab('announcement');
+      setActiveTab(initialTab);
     }
-  }, [show]);
+  }, [show, initialTab]);
 
   useEffect(() => {
     if (!show) return;
-    if (announcementUnread) {
+    if (announcementUnread && initialTab === 'announcement') {
       setAnnouncementUnread(false);
       localStorage.setItem(ANNOUNCEMENT_VIEWED_KEY, ANNOUNCEMENT_ID);
     }
-  }, [show, announcementUnread]);
+  }, [show, announcementUnread, initialTab]);
+
+  useEffect(() => {
+    if (!show) return;
+    if (changelogUnread && initialTab === 'changelog') {
+      setChangelogUnread(false);
+      localStorage.setItem(CHANGELOG_VIEWED_KEY, CHANGELOG_ID);
+    }
+  }, [show, changelogUnread, initialTab]);
 
   const handleClose = () => {
     if (dontShowAgain) {
