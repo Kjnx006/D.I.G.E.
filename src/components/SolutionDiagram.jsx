@@ -143,49 +143,140 @@ function SimpleBranch({ branch, t }) {
   );
 }
 
-function getPartToken(part) {
-  if (!part || !part.partId) return '';
-  const arrow = FACE_ARROW[part.face] || '>';
+const BLUEPRINT_SVG = {
+  belt: '/svg/conveyor-straight.svg',
+  left_turn_belt: '/svg/conveyor-turn.svg',
+  right_turn_belt: '/svg/conveyor-turn.svg',
+  conveyor_bridge: '/svg/conveyor-bridge.svg',
+  splitter: '/svg/splitter.svg',
+  converger: '/svg/merger.svg',
+};
+
+/**
+ * 根据 face 和 SVG 原始方向计算旋转角度（度）
+ * 原始方向：conveyor-straight 右→左，conveyor-turn 右→上，conveyor-bridge 上→下，
+ * splitter 上进/右下左出，merger 右侧出/上左下进
+ */
+function getSvgRotation(part) {
+  if (!part?.partId) return 0;
+  const face = part.face || 'RIGHT';
+
   switch (part.partId) {
-    case 'input_source':
-      return `I${arrow}`;
-    case 'thermal_bank':
-      return `T${arrow}`;
-    case 'splitter':
-      return `S${arrow}`;
-    case 'converger':
-      return `M${arrow}`;
-    case 'recycle_source':
-      return `R${arrow}`;
-    case 'left_turn_belt':
-      return `L${arrow}`;
-    case 'right_turn_belt':
-      return `R${arrow}`;
     case 'belt':
-      return arrow;
+      // conveyor-straight: 右→左，face 为传送带流向
+      switch (face) {
+        case 'LEFT': return 0;
+        case 'RIGHT': return 180;
+        case 'UP': return 90;
+        case 'DOWN': return -90;
+        default: return 0;
+      }
+    case 'left_turn_belt':
+      // conveyor-turn 右→上，left_turn 在 row0 为 下→左，180° + 镜像 + 顺时针 90°
+      return 270;
+    case 'right_turn_belt':
+      // conveyor-turn 右→上，right_turn 在 row4 为 上→左（曲线在左上角）
+      return -90;
+    case 'conveyor_bridge':
+      // 上→下
+      switch (face) {
+        case 'DOWN': return 0;
+        case 'UP': return 180;
+        case 'LEFT': return 90;
+        case 'RIGHT': return -90;
+        default: return 0;
+      }
+    case 'splitter':
+      // 上进右下左出，蓝图里 splitter 左进右出（face RIGHT），需旋转使上进→左进、右出保持
+      switch (face) {
+        case 'RIGHT': return -90;
+        case 'LEFT': return 90;
+        case 'UP': return 180;
+        case 'DOWN': return 0;
+        default: return -90;
+      }
+    case 'converger':
+      // 右侧出上左下进，蓝图里 converger 左出（face LEFT），需旋转使右出→左出
+      switch (face) {
+        case 'RIGHT': return 0;
+        case 'LEFT': return 180;
+        case 'UP': return -90;
+        case 'DOWN': return 90;
+        default: return 0;
+      }
     default:
-      return '?';
+      return 0;
   }
 }
 
-function getPartClasses(part) {
-  if (!part || !part.partId) {
-    return 'border-endfield-gray-light/20 text-transparent bg-endfield-black/10';
+/** left_turn_belt 下→左 需镜像以修正箭头方向 */
+function getSvgMirror(part) {
+  return part?.partId === 'left_turn_belt';
+}
+
+function BlueprintCell({ part, rowIndex, colIndex }) {
+  const svgSrc = part?.partId ? BLUEPRINT_SVG[part.partId] : null;
+  const rotation = getSvgRotation(part);
+  const mirror = getSvgMirror(part);
+
+  if (svgSrc) {
+    return (
+      <div
+        key={`${rowIndex}-${colIndex}`}
+        className="w-7 h-7 sm:w-8 sm:h-8 border border-endfield-gray-light flex items-center justify-center overflow-hidden bg-endfield-black/30"
+      >
+        <img
+          src={svgSrc}
+          alt=""
+          draggable={false}
+          onDragStart={(e) => e.preventDefault()}
+          className="w-full h-full object-contain pointer-events-none"
+          style={{ transform: `rotate(${rotation}deg)${mirror ? ' scaleX(-1)' : ''}` }}
+        />
+      </div>
+    );
   }
-  switch (part.partId) {
-    case 'input_source':
-      return 'border-endfield-text-light/70 text-endfield-text-light bg-endfield-gray/80';
-    case 'thermal_bank':
-      return 'border-endfield-yellow/60 text-endfield-yellow bg-endfield-yellow/10';
-    case 'splitter':
-      return 'border-endfield-yellow/50 text-endfield-yellow bg-endfield-gray/80';
-    case 'converger':
-      return 'border-endfield-text-light/50 text-endfield-text-light bg-endfield-gray/80';
-    case 'recycle_source':
-      return 'border-endfield-text/60 text-endfield-text bg-endfield-gray/80';
-    default:
-      return 'border-endfield-gray-light text-endfield-text bg-endfield-black/70';
+
+  const arrow = FACE_ARROW[part?.face] || '>';
+  let token = '?';
+  if (part?.partId) {
+    switch (part.partId) {
+      case 'input_source':
+        token = 'I';
+        break;
+      case 'thermal_bank':
+        token = 'T';
+        break;
+      case 'recycle_source':
+        token = 'R';
+        break;
+      default:
+        token = arrow;
+    }
   }
+
+  const getPartClasses = (p) => {
+    if (!p || !p.partId) return 'border-endfield-gray-light/20 text-transparent bg-endfield-black/10';
+    switch (p.partId) {
+      case 'input_source':
+        return 'border-endfield-text-light/70 text-endfield-text-light bg-endfield-gray/80';
+      case 'thermal_bank':
+        return 'border-endfield-yellow/60 text-endfield-yellow bg-endfield-yellow/10';
+      case 'recycle_source':
+        return 'border-endfield-text/60 text-endfield-text bg-endfield-gray/80';
+      default:
+        return 'border-endfield-gray-light text-endfield-text bg-endfield-black/70';
+    }
+  };
+
+  return (
+    <div
+      key={`${rowIndex}-${colIndex}`}
+      className={`w-7 h-7 sm:w-8 sm:h-8 border flex items-center justify-center text-[10px] sm:text-xs font-semibold ${getPartClasses(part)}`}
+    >
+      {token}
+    </div>
+  );
 }
 
 function BlueprintBranch({ branch }) {
@@ -196,28 +287,23 @@ function BlueprintBranch({ branch }) {
   return (
     <div className="flex items-center gap-2 sm:gap-3 py-2 sm:py-3 px-1 sm:px-2">
       <BranchLabel denominator={denominator} power={power} />
-      <div className="flex-1 overflow-x-auto pb-1">
+      <div className="flex-1 overflow-x-auto pb-1 select-none">
         {hasBlueprint ? (
-          <div className="blueprint-grid inline-block border border-endfield-gray-light p-2">
+          <div className="blueprint-grid inline-block border border-endfield-gray-light p-2 select-none">
             <div
-              className="grid gap-1"
+              className="grid gap-0 select-none"
               style={{ gridTemplateColumns: `repeat(${blueprint[0].length}, minmax(0, 1fr))` }}
             >
               {blueprint.flatMap((row, rowIndex) =>
                 row.map((part, colIndex) => (
-                  <div
-                    key={`${rowIndex}-${colIndex}`}
-                    className={`w-7 h-7 sm:w-8 sm:h-8 border flex items-center justify-center text-[10px] sm:text-xs font-semibold ${getPartClasses(part)}`}
-                  >
-                    {getPartToken(part)}
-                  </div>
+                  <BlueprintCell key={`${rowIndex}-${colIndex}`} part={part} rowIndex={rowIndex} colIndex={colIndex} />
                 )),
               )}
             </div>
           </div>
         ) : (
           <div className="h-8 px-2 border border-endfield-gray-light text-endfield-text-light bg-endfield-black/50 inline-flex items-center text-[10px] font-semibold">
-            I&gt; S&gt; M&lt; T&gt; R&gt;
+            I S M T R
           </div>
         )}
       </div>
@@ -229,6 +315,18 @@ function BlueprintLegend({ t }) {
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs text-endfield-text-light">
       <div className="flex items-center gap-2 border border-endfield-gray-light bg-endfield-gray/60 px-2 py-1.5">
+        <div className="h-6 w-6 border border-endfield-gray-light bg-endfield-black/50 flex items-center justify-center overflow-hidden shrink-0">
+          <img src="/svg/splitter.svg" alt="" draggable={false} className="w-full h-full object-contain pointer-events-none" style={{ transform: 'rotate(-90deg)' }} />
+        </div>
+        <span>{t('legendBlueprintS')}</span>
+      </div>
+      <div className="flex items-center gap-2 border border-endfield-gray-light bg-endfield-gray/60 px-2 py-1.5">
+        <div className="h-6 w-6 border border-endfield-gray-light bg-endfield-black/50 flex items-center justify-center overflow-hidden shrink-0">
+          <img src="/svg/merger.svg" alt="" draggable={false} className="w-full h-full object-contain pointer-events-none" />
+        </div>
+        <span>{t('legendBlueprintM')}</span>
+      </div>
+      <div className="flex items-center gap-2 border border-endfield-gray-light bg-endfield-gray/60 px-2 py-1.5">
         <div className="h-6 min-w-[34px] px-2 border border-endfield-gray-light text-endfield-text-light bg-endfield-black/50 flex items-center justify-center text-[10px] font-semibold">
           I
         </div>
@@ -236,27 +334,15 @@ function BlueprintLegend({ t }) {
       </div>
       <div className="flex items-center gap-2 border border-endfield-gray-light bg-endfield-gray/60 px-2 py-1.5">
         <div className="h-6 min-w-[34px] px-2 border border-endfield-gray-light text-endfield-text-light bg-endfield-black/50 flex items-center justify-center text-[10px] font-semibold">
-          S
+          R
         </div>
-        <span>{t('legendBlueprintS')}</span>
-      </div>
-      <div className="flex items-center gap-2 border border-endfield-gray-light bg-endfield-gray/60 px-2 py-1.5">
-        <div className="h-6 min-w-[34px] px-2 border border-endfield-gray-light text-endfield-text-light bg-endfield-black/50 flex items-center justify-center text-[10px] font-semibold">
-          M
-        </div>
-        <span>{t('legendBlueprintM')}</span>
+        <span>{t('legendBlueprintR')}</span>
       </div>
       <div className="flex items-center gap-2 border border-endfield-gray-light bg-endfield-gray/60 px-2 py-1.5">
         <div className="h-6 min-w-[34px] px-2 border border-endfield-gray-light text-endfield-text-light bg-endfield-black/50 flex items-center justify-center text-[10px] font-semibold">
           T
         </div>
         <span>{t('legendBlueprintT')}</span>
-      </div>
-      <div className="flex items-center gap-2 border border-endfield-gray-light bg-endfield-gray/60 px-2 py-1.5">
-        <div className="h-6 min-w-[34px] px-2 border border-endfield-gray-light text-endfield-text-light bg-endfield-black/50 flex items-center justify-center text-[10px] font-semibold">
-          R
-        </div>
-        <span>{t('legendBlueprintR')}</span>
       </div>
       <div className="flex items-center gap-2 border border-endfield-gray-light bg-endfield-gray/60 px-2 py-1.5">
         <div className="h-6 px-2 border border-endfield-gray-light text-endfield-text-light bg-endfield-black/50 flex items-center text-[10px] font-semibold">
