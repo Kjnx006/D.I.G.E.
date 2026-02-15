@@ -56,6 +56,11 @@ export default function Sidebar({ params, setParams, collapsed, onClose, onCalcu
       setParams(prev => ({ ...prev, [key]: clamped }));
       return;
     }
+    if (key === 'maxBranches') {
+      const clamped = clampNumber(value, 1, 5);
+      setParams(prev => ({ ...prev, [key]: clamped }));
+      return;
+    }
     if (key === 'minBatteryPercent') {
       const clamped = clampNumber(value, 0, 100);
       setParams(prev => ({ ...prev, [key]: clamped }));
@@ -247,6 +252,34 @@ export default function Sidebar({ params, setParams, collapsed, onClose, onCalcu
             onKeyDown={(e) => e.key === 'Enter' && onCalculate()}
             className="w-full bg-endfield-gray border border-endfield-gray-light px-3 py-2 text-sm text-endfield-text-light focus:border-endfield-yellow focus:outline-none"
           />
+        </div>
+
+        <div className="space-y-2">
+          <div className="flex justify-between">
+            <label htmlFor="max-branches-input" className="text-sm text-endfield-text">{t('maxBranches')}</label>
+            <span className="text-sm text-endfield-text-light" aria-live="polite">{params.maxBranches ?? 3}</span>
+          </div>
+          <input
+            id="max-branches-input"
+            type="range"
+            min="1"
+            max="5"
+            step="1"
+            value={params.maxBranches ?? 3}
+            onChange={(e) => handleChange('maxBranches', parseInt(e.target.value, 10))}
+            className="w-full cursor-pointer"
+            aria-label={t('maxBranches')}
+            aria-valuemin={1}
+            aria-valuemax={5}
+            aria-valuenow={params.maxBranches ?? 3}
+          />
+          <div className="flex justify-between text-xs text-endfield-text/50 px-0.5">
+            <span>1</span>
+            <span>2</span>
+            <span>3</span>
+            <span>4</span>
+            <span>5</span>
+          </div>
         </div>
       </fieldset>
 

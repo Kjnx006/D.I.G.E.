@@ -9,7 +9,7 @@
       {
         "type": "paragraph",
         "className": "mb-3 text-endfield-yellow/90",
-        "text": "开发进展：目前网站正在持续研究底层算法，优化方案；同时也在推进可视化功能升级，提供更直观的蓝图可视化预览，方便直接在游戏中复刻。相关更新将逐步上线。"
+        "text": "开发进展：目前网站仍在持续研究底层算法并优化方案，相关更新将逐步上线。"
       },
       {
         "type": "heading",
@@ -79,9 +79,18 @@
   "changelog": {
     "sections": [
       {
+        "version": "v1.8.0",
+        "title": "v1.8.0 更新内容",
+        "defaultOpen": true,
+        "items": [
+          "新增蓝图模式，可切换查看蓝图方案。",
+          "新增最大分支数配置，用于控制方案复杂度。"
+        ]
+      },
+      {
         "version": "v1.7.0",
         "title": "v1.7.0 更新内容",
-        "defaultOpen": true,
+        "defaultOpen": false,
         "items": [
           "图标库升级，界面图标显示更统一",
           "优化中日韩混排文字的间距显示",

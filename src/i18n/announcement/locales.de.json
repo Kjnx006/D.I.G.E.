@@ -9,7 +9,7 @@
       {
         "type": "paragraph",
         "className": "mb-3 text-endfield-yellow/90",
-        "text": "Entwicklungsstand: Die Website erforscht kontinuierlich die Kernalgorithmen und optimiert die Lösungen. Gleichzeitig bauen wir die Visualisierung aus, um eine intuitivere Blueprint-Vorschau bereitzustellen und das direkte Nachbauen im Spiel zu erleichtern. Die entsprechenden Updates werden schrittweise veröffentlicht."
+        "text": "Entwicklungsstand: Wir arbeiten weiterhin an Kernalgorithmen und der Optimierung der Pläne. Entsprechende Updates werden schrittweise veröffentlicht."
       },
       {
         "type": "heading",
@@ -79,9 +79,18 @@
   "changelog": {
     "sections": [
       {
+        "version": "v1.8.0",
+        "title": "v1.8.0 Updates",
+        "defaultOpen": true,
+        "items": [
+          "Blueprint-Modus hinzugefügt, um den Plan in Blueprint-Ansicht darzustellen.",
+          "Einstellung „maximale Zweiganzahl“ hinzugefügt, um die Komplexität zu steuern."
+        ]
+      },
+      {
         "version": "v1.7.0",
         "title": "v1.7.0 Updates",
-        "defaultOpen": true,
+        "defaultOpen": false,
         "items": [
           "Icon-Bibliothek aktualisiert für einheitlichere Darstellung",
           "Verbesserte Abstände für gemischten CJK- und lateinischen Text",

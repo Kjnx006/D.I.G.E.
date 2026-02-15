@@ -22,6 +22,7 @@ const DEFAULT_PARAMS = {
   targetPower: 2656,
   minBatteryPercent: 5,
   maxWaste: 30,
+  maxBranches: 3,
   primaryFuelId: 'wulingLow',
   secondaryFuelId: 'none',
   inputSourceId: 'warehouse',

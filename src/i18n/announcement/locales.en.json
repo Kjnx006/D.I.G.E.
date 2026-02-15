@@ -9,7 +9,7 @@
       {
         "type": "paragraph",
         "className": "mb-3 text-endfield-yellow/90",
-        "text": "Development update: the website is continuously researching core algorithms and optimizing generation solutions. We are also upgrading visualization features to provide a more intuitive blueprint preview, making it easier to reproduce configurations directly in game. These updates will be released gradually."
+        "text": "Development update: we are continuing to refine core algorithms and optimize plans. Related updates will be released gradually."
       },
       {
         "type": "heading",
@@ -79,9 +79,18 @@
   "changelog": {
     "sections": [
       {
+        "version": "v1.8.0",
+        "title": "v1.8.0 Updates",
+        "defaultOpen": true,
+        "items": [
+          "Added Blueprint mode for blueprint-style plan viewing.",
+          "Added Max Branches setting to control plan complexity."
+        ]
+      },
+      {
         "version": "v1.7.0",
         "title": "v1.7.0 Updates",
-        "defaultOpen": true,
+        "defaultOpen": false,
         "items": [
           "Upgraded icon library for more consistent display",
           "Improved spacing for mixed CJK and Latin text",
