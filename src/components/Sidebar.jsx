@@ -503,7 +503,7 @@ export default function Sidebar({ params, setParams, collapsed, onClose, onCalcu
           {/* 公告按钮 */}
           <button
             onClick={() => {
-              onOpenAnnouncement();
+              onOpenAnnouncement('announcement');
               onClose();
             }}
             className="relative w-full h-10 bg-endfield-gray border border-endfield-gray-light hover:border-endfield-yellow transition-colors flex items-center justify-center gap-2 text-endfield-text-light hover:text-endfield-yellow"
