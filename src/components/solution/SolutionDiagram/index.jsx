@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { useI18n } from '../../../i18n';
 import {
   downloadEndfieldBlueprint,
+  downloadEndfieldBlueprintPng,
   downloadEndfieldBlueprintZip,
 } from '../../../utils/endfieldBlueprint';
 import Icon from '../../ui/Icon';
@@ -103,8 +104,10 @@ export default function SolutionDiagram({ solution }) {
         const denominator = Number(branch.denominator);
         const safeDenominator =
           Number.isFinite(denominator) && denominator > 0 ? denominator : 'unknown';
+        const power = Number(branch.power);
+        const powerToken = `${Number.isFinite(power) ? Math.round(power) : 'unknown'}w`;
         downloadEndfieldBlueprint(branch, {
-          filename: `dige_branch_${branchIndex + 1}_1_${safeDenominator}.json`,
+          filename: `dige_branch_${branchIndex + 1}_1_${safeDenominator}_${powerToken}_blueprint.json`,
         });
       } catch (error) {
         console.error('Blueprint export failed:', error);
@@ -113,7 +116,28 @@ export default function SolutionDiagram({ solution }) {
     [oscillating],
   );
 
-  const handleExportAllBranchesZip = useCallback(() => {
+  const handleExportSingleBranchPng = useCallback(
+    async (branchIndex) => {
+      const branch = oscillating?.[branchIndex];
+      if (!branch) return;
+      try {
+        const denominator = Number(branch.denominator);
+        const safeDenominator =
+          Number.isFinite(denominator) && denominator > 0 ? denominator : 'unknown';
+        const power = Number(branch.power);
+        const powerToken = `${Number.isFinite(power) ? Math.round(power) : 'unknown'}w`;
+        await downloadEndfieldBlueprintPng(branch, {
+          filename: `dige_branch_${branchIndex + 1}_1_${safeDenominator}_${powerToken}.png`,
+          branchLabel: `${t('branch')} ${branchIndex + 1}`,
+        });
+      } catch (error) {
+        console.error('Blueprint PNG export failed:', error);
+      }
+    },
+    [oscillating, t],
+  );
+
+  const handleExportAllBranchesZip = useCallback(async () => {
     if (!Array.isArray(oscillating) || oscillating.length === 0) return;
     try {
       const totalPower = oscillating.reduce((sum, branch) => {
@@ -122,8 +146,9 @@ export default function SolutionDiagram({ solution }) {
       }, 0);
       const powerToken = `${Math.round(totalPower)}w`;
 
-      downloadEndfieldBlueprintZip(oscillating, {
+      await downloadEndfieldBlueprintZip(oscillating, {
         filename: `dige_branches_all_${oscillating.length}_${powerToken}.zip`,
+        includePng: true,
       });
       setExportModalOpen(false);
     } catch (error) {
@@ -298,9 +323,9 @@ export default function SolutionDiagram({ solution }) {
               {oscillating.map((branch, idx) => (
                 <div
                   key={idx}
-                  className="w-full border border-endfield-gray-light bg-endfield-gray/40 px-3 py-2 flex items-center justify-between gap-2 transition-colors hover:border-endfield-yellow/70 hover:bg-endfield-gray/70"
+                  className="w-full border border-endfield-gray-light bg-endfield-gray/40 px-3 py-2 flex items-center gap-2 transition-colors hover:border-endfield-yellow/70 hover:bg-endfield-gray/70"
                 >
-                  <div className="min-w-0">
+                  <div className="min-w-0 flex-1">
                     <div className="text-sm font-semibold text-endfield-text-light">
                       {t('branch')} {idx + 1}
                     </div>
@@ -308,14 +333,28 @@ export default function SolutionDiagram({ solution }) {
                       1/{branch.denominator} | {branch.power.toFixed(0)}w
                     </div>
                   </div>
-                  <button
-                    type="button"
-                    onClick={() => handleExportSingleBranch(idx)}
-                    className="shrink-0 inline-flex items-center gap-1 px-2 py-1 text-xs border border-endfield-gray-light text-endfield-text-light bg-endfield-gray/80 hover:text-endfield-yellow hover:border-endfield-yellow transition-colors"
-                  >
-                    <Icon name="download" className="w-4 h-4" />
-                    {t('downloadSingleBranch')}
-                  </button>
+                  <div className="ml-auto flex shrink-0 items-center gap-2">
+                    <button
+                      type="button"
+                      onClick={() => handleExportSingleBranch(idx)}
+                      className="inline-flex items-center gap-1 px-2 py-1 text-xs border border-endfield-gray-light text-endfield-text-light bg-endfield-gray/80 hover:text-endfield-yellow hover:border-endfield-yellow transition-colors"
+                      title="JSON"
+                      aria-label="JSON"
+                    >
+                      <Icon name="download" className="w-4 h-4" />
+                      JSON
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => void handleExportSingleBranchPng(idx)}
+                      className="inline-flex items-center gap-1 px-2 py-1 text-xs border border-endfield-gray-light text-endfield-text-light bg-endfield-gray/80 hover:text-endfield-yellow hover:border-endfield-yellow transition-colors"
+                      title="PNG"
+                      aria-label="PNG"
+                    >
+                      <Icon name="image" className="w-4 h-4" />
+                      PNG
+                    </button>
+                  </div>
                 </div>
               ))}
             </div>
@@ -323,7 +362,7 @@ export default function SolutionDiagram({ solution }) {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1">
               <button
                 type="button"
-                onClick={handleExportAllBranchesZip}
+                onClick={() => void handleExportAllBranchesZip()}
                 className="h-10 bg-endfield-yellow hover:bg-endfield-yellow-glow text-endfield-black font-bold tracking-wider transition-all flex items-center justify-center gap-2 text-sm"
               >
                 <Icon name="folder_zip" className="w-4 h-4" />
