@@ -9,6 +9,7 @@ import {
   CHANGELOG_VIEWED_KEY,
 } from '../../../utils/announcement';
 import Icon from '../../ui/Icon';
+import Modal from '../../ui/Modal';
 import AnnouncementBody from './AnnouncementBody';
 import ChangelogBody from './ChangelogBody';
 
@@ -33,7 +34,12 @@ export function hasUnreadAnnouncementOrChangelog() {
   return hasUnreadAnnouncement() || hasUnreadChangelog();
 }
 
-export default function Announcement({ show, initialTab = 'announcement', onClose }) {
+export default function Announcement({
+  show,
+  initialTab = 'announcement',
+  onClose,
+  closeOnBackdrop = false,
+}) {
   const { t, locale } = useI18n();
   const [dontShowAgain, setDontShowAgain] = useState(false);
   const [activeTab, setActiveTab] = useState(initialTab);
@@ -84,11 +90,16 @@ export default function Announcement({ show, initialTab = 'announcement', onClos
   const isAnnouncement = activeTab === 'announcement';
 
   return (
-    <div className="fixed inset-0 bg-endfield-black/95 backdrop-blur z-50 flex items-center justify-center p-4">
-      <div className="bg-endfield-gray border border-endfield-yellow/30 p-6 max-w-xl w-full relative h-[90vh] flex flex-col">
+    <Modal
+      show={show}
+      onClose={handleClose}
+      closeOnBackdrop={closeOnBackdrop}
+      ariaLabelledby="announcement-modal-title"
+      contentClassName="max-w-xl h-[90vh]"
+    >
         <div className="flex items-center gap-2 mb-4 pb-3 border-b border-endfield-gray-light">
           <Icon name={isAnnouncement ? 'campaign' : 'history'} className="text-endfield-yellow" />
-          <h2 className="text-base font-bold text-endfield-text-light uppercase tracking-wider">
+          <h2 id="announcement-modal-title" className="text-base font-bold text-endfield-text-light uppercase tracking-wider">
             {isAnnouncement ? t('announcement') : t('changelog')}
           </h2>
         </div>
@@ -178,7 +189,6 @@ export default function Announcement({ show, initialTab = 'announcement', onClos
         >
           {t('understood')}
         </button>
-      </div>
-    </div>
+    </Modal>
   );
 }

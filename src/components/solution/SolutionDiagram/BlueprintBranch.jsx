@@ -105,14 +105,6 @@ export default function BlueprintBranch({
     [handlePanStart],
   );
 
-  const onTouchStart = useCallback(
-    (e) => {
-      if (e.touches.length === 1) handlePanStart(e.touches[0].clientX, e.touches[0].clientY);
-      if (e.touches.length >= 2) handlePanEnd();
-    },
-    [handlePanStart, handlePanEnd],
-  );
-
   const onTouchMove = useCallback(
     (e) => {
       if (e.touches.length >= 2) {
@@ -148,7 +140,7 @@ export default function BlueprintBranch({
         }}
       >
         <div className="w-max mx-auto">
-          <div className="flex items-center justify-center gap-2 mb-1.5">
+          <div className="flex items-center justify-center gap-2 mb-1">
             <span className="text-xs text-endfield-yellow font-bold">1/{denominator}</span>
             <span className="text-[10px] text-endfield-text">{power.toFixed(0)}w</span>
           </div>

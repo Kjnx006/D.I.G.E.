@@ -153,11 +153,13 @@ export default function Sidebar({
       <WarningModal
         show={showInputWarning}
         message={t('inputWarningPacker')}
+        closeOnBackdrop={false}
         onClose={() => setShowInputWarning(false)}
       />
       <WarningModal
         show={showExcludeBeltWarning}
         message={t('excludeBeltWarning')}
+        closeOnBackdrop={false}
         onClose={() => setShowExcludeBeltWarning(false)}
       />
     </>

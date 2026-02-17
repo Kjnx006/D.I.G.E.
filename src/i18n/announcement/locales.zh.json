@@ -79,9 +79,18 @@
   "changelog": {
     "sections": [
       {
+        "version": "v1.9.0",
+        "title": "v1.9.0 更新内容",
+        "defaultOpen": true,
+        "items": [
+          "新增蓝图导出功能，支持单分支下载与全部分支 ZIP 打包下载。",
+          "优化弹窗交互，重要警告需通过按钮确认关闭，避免误触。"
+        ]
+      },
+      {
         "version": "v1.8.0",
         "title": "v1.8.0 更新内容",
-        "defaultOpen": true,
+        "defaultOpen": false,
         "items": [
           "新增蓝图模式，可切换查看蓝图方案。",
           "新增最大分支数配置，用于控制方案复杂度。",

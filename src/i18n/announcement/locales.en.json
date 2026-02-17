@@ -79,9 +79,18 @@
   "changelog": {
     "sections": [
       {
+        "version": "v1.9.0",
+        "title": "v1.9.0 Updates",
+        "defaultOpen": true,
+        "items": [
+          "Added blueprint export with single-branch download and all-branches ZIP download.",
+          "Improved modal interactions: important warnings now require explicit button confirmation to close."
+        ]
+      },
+      {
         "version": "v1.8.0",
         "title": "v1.8.0 Updates",
-        "defaultOpen": true,
+        "defaultOpen": false,
         "items": [
           "Added Blueprint mode for blueprint-style plan viewing.",
           "Added Max Branches setting to control plan complexity.",

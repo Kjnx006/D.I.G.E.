@@ -79,9 +79,18 @@
   "changelog": {
     "sections": [
       {
+        "version": "v1.9.0",
+        "title": "v1.9.0 Mises à jour",
+        "defaultOpen": true,
+        "items": [
+          "Ajout de l'export blueprint avec téléchargement par branche et téléchargement de toutes les branches en ZIP.",
+          "Amélioration des interactions de modales : les alertes importantes nécessitent désormais une confirmation explicite par bouton pour être fermées."
+        ]
+      },
+      {
         "version": "v1.8.0",
         "title": "v1.8.0 Mises à jour",
-        "defaultOpen": true,
+        "defaultOpen": false,
         "items": [
           "Ajout du mode Blueprint pour afficher le plan en vue blueprint.",
           "Ajout du paramètre « nombre maximal de branches » pour contrôler la complexité du plan.",

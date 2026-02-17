@@ -287,8 +287,9 @@ function AppContent({ onOpenAnnouncement, onOpenPrivacyPolicy, onOpenQA }) {
           onClose={handleCloseShareModal}
           onCopy={handleCopyShareUrl}
           onShare={handleNativeShare}
+          closeOnBackdrop={true}
         />
-        <ErrorState show={showError} onDismiss={() => setShowError(false)} />
+        <ErrorState show={showError} onDismiss={() => setShowError(false)} closeOnBackdrop={false} />
     </div>
   );
 }
@@ -311,9 +312,18 @@ function App() {
         onOpenPrivacyPolicy={() => setShowPrivacyPolicy(true)}
         onOpenQA={() => setShowQA(true)}
       />
-      <Announcement show={showAnnouncement} initialTab={announcementInitialTab} onClose={() => setShowAnnouncement(false)} />
-      <PrivacyPolicyModal show={showPrivacyPolicy} onClose={() => setShowPrivacyPolicy(false)} />
-      <QAModal show={showQA} onClose={() => setShowQA(false)} />
+      <Announcement
+        show={showAnnouncement}
+        initialTab={announcementInitialTab}
+        onClose={() => setShowAnnouncement(false)}
+        closeOnBackdrop={false}
+      />
+      <PrivacyPolicyModal
+        show={showPrivacyPolicy}
+        onClose={() => setShowPrivacyPolicy(false)}
+        closeOnBackdrop={true}
+      />
+      <QAModal show={showQA} onClose={() => setShowQA(false)} closeOnBackdrop={true} />
     </I18nProvider>
   );
 }

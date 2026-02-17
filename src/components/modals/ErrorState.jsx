@@ -1,30 +1,38 @@
 import { useI18n } from '../../i18n';
 import Icon from '../ui/Icon';
+import Modal from '../ui/Modal';
 
-export default function ErrorState({ show, onDismiss }) {
+export default function ErrorState({ show, onDismiss, closeOnBackdrop = false }) {
   const { t } = useI18n();
 
   if (!show) return null;
 
   return (
-    <div className="fixed inset-0 bg-endfield-black/95 backdrop-blur z-50 flex items-center justify-center p-4">
-      <div className="bg-endfield-gray border border-red-900/50 p-6 max-w-lg w-full relative flex flex-col gap-4 corner-mark">
-        <div className="flex items-center gap-2 pb-3 border-b border-red-900/50">
+    <Modal
+      show={show}
+      onClose={onDismiss}
+      closeOnBackdrop={closeOnBackdrop}
+      ariaLabelledby="error-state-title"
+      title={
+        <>
           <Icon name="error" className="text-red-300" />
-          <h2 className="text-base font-bold text-endfield-text-light uppercase tracking-wider">
+          <h2
+            id="error-state-title"
+            className="text-base font-bold text-endfield-text-light uppercase tracking-wider"
+          >
             {t('noSolutionFound')}
           </h2>
-        </div>
-        <p className="text-sm text-red-200 leading-relaxed">
-          {t('errorSuggestion')}
-        </p>
-        <button
-          onClick={onDismiss}
-          className="shrink-0 w-full h-10 min-h-10 bg-red-600/90 hover:bg-red-500 text-white font-bold tracking-wider transition-all flex items-center justify-center gap-2 text-sm"
-        >
-          {t('dismiss')}
-        </button>
-      </div>
-    </div>
+        </>
+      }
+      contentClassName="max-w-lg !border-red-900/50 corner-mark gap-4"
+    >
+      <p className="text-sm text-red-200 leading-relaxed">{t('errorSuggestion')}</p>
+      <button
+        onClick={onDismiss}
+        className="shrink-0 w-full h-10 min-h-10 bg-red-600/90 hover:bg-red-500 text-white font-bold tracking-wider transition-all flex items-center justify-center gap-2 text-sm"
+      >
+        {t('dismiss')}
+      </button>
+    </Modal>
   );
 }

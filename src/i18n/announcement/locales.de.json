@@ -79,9 +79,18 @@
   "changelog": {
     "sections": [
       {
+        "version": "v1.9.0",
+        "title": "v1.9.0 Updates",
+        "defaultOpen": true,
+        "items": [
+          "Blueprint-Export hinzugefügt: einzelne Zweige und alle Zweige als ZIP können direkt heruntergeladen werden.",
+          "Modal-Interaktionen verbessert: wichtige Warnhinweise lassen sich nur noch nach ausdrücklicher Bestätigung per Schaltfläche schließen."
+        ]
+      },
+      {
         "version": "v1.8.0",
         "title": "v1.8.0 Updates",
-        "defaultOpen": true,
+        "defaultOpen": false,
         "items": [
           "Blueprint-Modus hinzugefügt, um den Plan in Blueprint-Ansicht darzustellen.",
           "Einstellung „maximale Zweiganzahl“ hinzugefügt, um die Komplexität zu steuern.",

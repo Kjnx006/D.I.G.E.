@@ -1,6 +1,11 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useI18n } from '../../../i18n';
+import {
+  downloadEndfieldBlueprint,
+  downloadEndfieldBlueprintZip,
+} from '../../../utils/endfieldBlueprint';
 import Icon from '../../ui/Icon';
+import Modal from '../../ui/Modal';
 import SimpleBranch from './SimpleBranch';
 import BlueprintBranch from './BlueprintBranch';
 import BlueprintLegend from './BlueprintLegend';
@@ -14,10 +19,14 @@ export default function SolutionDiagram({ solution }) {
   const { t, locale } = useI18n();
   const [mode, setMode] = useState('blueprint');
   const [blueprintZoom, setBlueprintZoom] = useState(1);
+  const [exportModalOpen, setExportModalOpen] = useState(false);
   const pinchRef = useRef({ initialDistance: 0, initialZoom: 1 });
   const blueprintContainerRef = useRef(null);
 
-  const clampZoom = useCallback((z) => Math.max(BLUEPRINT_ZOOM_MIN, Math.min(BLUEPRINT_ZOOM_MAX, z)), []);
+  const clampZoom = useCallback(
+    (z) => Math.max(BLUEPRINT_ZOOM_MIN, Math.min(BLUEPRINT_ZOOM_MAX, z)),
+    [],
+  );
 
   const handleBlueprintWheel = useCallback(
     (e) => {
@@ -60,6 +69,14 @@ export default function SolutionDiagram({ solution }) {
     pinchRef.current = { initialDistance: 0, initialZoom: 1 };
   }, []);
 
+  const handleOpenExportModal = useCallback(() => {
+    setExportModalOpen(true);
+  }, []);
+
+  const handleCloseExportModal = useCallback(() => {
+    setExportModalOpen(false);
+  }, []);
+
   useEffect(() => {
     if (mode !== 'blueprint') setBlueprintZoom(1);
   }, [mode]);
@@ -75,6 +92,44 @@ export default function SolutionDiagram({ solution }) {
   const { oscillating, oscillatingFuel, inputSourceId, exclude_belt } = solution;
   const showPackerWarning = inputSourceId === 'packer';
   const showExcludeBeltWarning = exclude_belt === false;
+  const canExportBlueprint =
+    mode === 'blueprint' && Array.isArray(oscillating) && oscillating.length > 0;
+
+  const handleExportSingleBranch = useCallback(
+    (branchIndex) => {
+      const branch = oscillating?.[branchIndex];
+      if (!branch) return;
+      try {
+        const denominator = Number(branch.denominator);
+        const safeDenominator =
+          Number.isFinite(denominator) && denominator > 0 ? denominator : 'unknown';
+        downloadEndfieldBlueprint(branch, {
+          filename: `dige_branch_${branchIndex + 1}_1_${safeDenominator}.json`,
+        });
+      } catch (error) {
+        console.error('Blueprint export failed:', error);
+      }
+    },
+    [oscillating],
+  );
+
+  const handleExportAllBranchesZip = useCallback(() => {
+    if (!Array.isArray(oscillating) || oscillating.length === 0) return;
+    try {
+      const totalPower = oscillating.reduce((sum, branch) => {
+        const branchPower = Number(branch?.power);
+        return sum + (Number.isFinite(branchPower) ? branchPower : 0);
+      }, 0);
+      const powerToken = `${Math.round(totalPower)}w`;
+
+      downloadEndfieldBlueprintZip(oscillating, {
+        filename: `dige_branches_all_${oscillating.length}_${powerToken}.zip`,
+      });
+      setExportModalOpen(false);
+    } catch (error) {
+      console.error('Blueprint zip export failed:', error);
+    }
+  }, [oscillating]);
 
   return (
     <div className="space-y-2 sm:space-y-3 notranslate" translate="no">
@@ -100,7 +155,12 @@ export default function SolutionDiagram({ solution }) {
             <Icon name="electric_bolt" className="text-endfield-yellow" />
             <span className="text-sm text-endfield-text uppercase">{t('oscillatingShort')}:</span>
             <span className="text-sm font-bold text-endfield-text-light">{oscillating.length}</span>
-            <span className="text-sm text-endfield-text">x {oscillatingFuel ? (oscillatingFuel.name?.[locale] || oscillatingFuel.name?.en) : (solution.fuel?.name?.[locale] || solution.fuel?.name?.en)}</span>
+            <span className="text-sm text-endfield-text">
+              x{' '}
+              {oscillatingFuel
+                ? oscillatingFuel.name?.[locale] || oscillatingFuel.name?.en
+                : solution.fuel?.name?.[locale] || solution.fuel?.name?.en}
+            </span>
             <span className="text-sm text-endfield-text">=</span>
             <span className="text-sm font-bold text-endfield-yellow">
               {oscillating.reduce((sum, b) => sum + b.power, 0).toFixed(0)}w
@@ -108,36 +168,51 @@ export default function SolutionDiagram({ solution }) {
             <span className="text-xs text-endfield-text/70">
               ({oscillating.map((b) => `${b.power.toFixed(0)}w`).join(' + ')})
             </span>
-            <span className="text-xs text-endfield-text/60 ml-auto">{t('diagramViewMode')}:</span>
-            <div className="inline-flex border border-endfield-gray-light bg-endfield-gray/80">
-              <button
-                type="button"
-                onClick={() => setMode('blueprint')}
-                className={`px-2 py-1 text-xs transition-colors ${
-                  mode === 'blueprint'
-                    ? 'text-endfield-yellow bg-endfield-yellow/10'
-                    : 'text-endfield-text-light hover:text-endfield-yellow'
-                }`}
-              >
-                {t('blueprintMode')}
-              </button>
-              <button
-                type="button"
-                onClick={() => setMode('simple')}
-                className={`px-2 py-1 text-xs border-l border-endfield-gray-light transition-colors ${
-                  mode === 'simple'
-                    ? 'text-endfield-yellow bg-endfield-yellow/10'
-                    : 'text-endfield-text-light hover:text-endfield-yellow'
-                }`}
-              >
-                {t('simpleMode')}
-              </button>
+            <div className="ml-auto flex items-center gap-2">
+              {canExportBlueprint && (
+                <button
+                  type="button"
+                  onClick={handleOpenExportModal}
+                  className="inline-flex items-center gap-1.5 px-2 py-1 text-xs border border-endfield-gray-light text-endfield-text-light bg-endfield-gray/80 hover:text-endfield-yellow hover:border-endfield-yellow transition-colors"
+                  title={t('exportBlueprintJson')}
+                  aria-label={t('exportBlueprintJson')}
+                >
+                  <Icon name="download" className="w-4 h-4" />
+                  <span>{t('exportBlueprintJson')}</span>
+                </button>
+              )}
+              <div className="inline-flex border border-endfield-gray-light bg-endfield-gray/80">
+                <button
+                  type="button"
+                  onClick={() => setMode('blueprint')}
+                  className={`px-2 py-1 text-xs transition-colors ${
+                    mode === 'blueprint'
+                      ? 'text-endfield-yellow bg-endfield-yellow/10'
+                      : 'text-endfield-text-light hover:text-endfield-yellow'
+                  }`}
+                >
+                  {t('blueprintMode')}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setMode('simple')}
+                  className={`px-2 py-1 text-xs border-l border-endfield-gray-light transition-colors ${
+                    mode === 'simple'
+                      ? 'text-endfield-yellow bg-endfield-yellow/10'
+                      : 'text-endfield-text-light hover:text-endfield-yellow'
+                  }`}
+                >
+                  {t('simpleMode')}
+                </button>
+              </div>
             </div>
           </div>
 
           <div
             ref={blueprintContainerRef}
-            className={`flex gap-3 p-2 sm:p-3 ${mode === 'simple' ? 'flex-col' : 'flex-wrap justify-center'}`}
+            className={`flex gap-3 p-2 sm:p-3 ${
+              mode === 'simple' ? 'flex-col' : 'flex-wrap justify-center'
+            }`}
           >
             {oscillating.map((branch, idx) => (
               <div
@@ -189,11 +264,81 @@ export default function SolutionDiagram({ solution }) {
             <ol className="list-decimal list-inside space-y-1 text-xs text-endfield-text/80">
               <li>{t('diagramTutorialStep1')}</li>
               <li>{t('diagramTutorialStep2')}</li>
-              <li>{mode === 'blueprint' ? t('diagramTutorialBlueprint') : t('diagramTutorialSimple')}</li>
+              <li>
+                {mode === 'blueprint' ? t('diagramTutorialBlueprint') : t('diagramTutorialSimple')}
+              </li>
               <li>{t('diagramTutorialStep4')}</li>
             </ol>
           </div>
         </div>
+      )}
+
+      {oscillating && oscillating.length > 0 && (
+        <Modal
+          show={exportModalOpen}
+          onClose={handleCloseExportModal}
+          ariaLabelledby="export-blueprint-title"
+          title={
+            <>
+              <Icon name="download" className="text-endfield-yellow" />
+              <h2
+                id="export-blueprint-title"
+                className="text-base font-bold text-endfield-text-light uppercase tracking-wider"
+              >
+                {t('exportBlueprintJson')}
+              </h2>
+            </>
+          }
+          contentClassName="max-w-md"
+        >
+          <div className="space-y-3">
+            <p className="text-xs text-endfield-text/70">{t('selectExportBranch')}</p>
+
+            <div className="max-h-72 overflow-y-auto space-y-2">
+              {oscillating.map((branch, idx) => (
+                <div
+                  key={idx}
+                  className="w-full border border-endfield-gray-light bg-endfield-gray/40 px-3 py-2 flex items-center justify-between gap-2 transition-colors hover:border-endfield-yellow/70 hover:bg-endfield-gray/70"
+                >
+                  <div className="min-w-0">
+                    <div className="text-sm font-semibold text-endfield-text-light">
+                      {t('branch')} {idx + 1}
+                    </div>
+                    <div className="text-xs text-endfield-text/80">
+                      1/{branch.denominator} | {branch.power.toFixed(0)}w
+                    </div>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => handleExportSingleBranch(idx)}
+                    className="shrink-0 inline-flex items-center gap-1 px-2 py-1 text-xs border border-endfield-gray-light text-endfield-text-light bg-endfield-gray/80 hover:text-endfield-yellow hover:border-endfield-yellow transition-colors"
+                  >
+                    <Icon name="download" className="w-4 h-4" />
+                    {t('downloadSingleBranch')}
+                  </button>
+                </div>
+              ))}
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1">
+              <button
+                type="button"
+                onClick={handleExportAllBranchesZip}
+                className="h-10 bg-endfield-yellow hover:bg-endfield-yellow-glow text-endfield-black font-bold tracking-wider transition-all flex items-center justify-center gap-2 text-sm"
+              >
+                <Icon name="folder_zip" className="w-4 h-4" />
+                {t('downloadAllBranchesZip')}
+              </button>
+              <button
+                type="button"
+                onClick={handleCloseExportModal}
+                className="h-10 w-full bg-endfield-gray hover:border-endfield-yellow border border-endfield-gray-light text-endfield-text-light font-bold tracking-wider transition-all flex items-center justify-center gap-2 text-sm"
+              >
+                {t('close')}
+              </button>
+            </div>
+          </div>
+        </Modal>
       )}
     </div>
   );

@@ -1,13 +1,16 @@
 /**
- * 模态框基座组件
- * @param {boolean} show - 是否显示
- * @param {function} onClose - 关闭回调
- * @param {ReactNode} title - 标题内容
- * @param {string} ariaLabelledby - 标题元素 id（无障碍）
- * @param {ReactNode} children - 内容
- * @param {string} contentClassName - 内容区额外 class
+ * Reusable modal shell.
+ * `closeOnBackdrop` controls whether clicking outside content closes the modal.
  */
-export default function Modal({ show, onClose, title, ariaLabelledby, children, contentClassName = '' }) {
+export default function Modal({
+  show,
+  onClose,
+  closeOnBackdrop = true,
+  title,
+  ariaLabelledby,
+  children,
+  contentClassName = '',
+}) {
   if (!show) return null;
 
   return (
@@ -16,7 +19,7 @@ export default function Modal({ show, onClose, title, ariaLabelledby, children, 
       role="dialog"
       aria-modal="true"
       aria-labelledby={ariaLabelledby}
-      onClick={onClose}
+      onClick={closeOnBackdrop ? onClose : undefined}
     >
       <div
         className={`bg-endfield-gray border border-endfield-yellow/30 p-6 max-w-xl w-full relative flex flex-col ${contentClassName}`.trim()}
