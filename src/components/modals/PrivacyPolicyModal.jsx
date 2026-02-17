@@ -1,5 +1,5 @@
-import { useI18n } from '../i18n';
-import Icon from './Icon';
+import { useI18n } from '../../i18n';
+import Icon from '../ui/Icon';
 
 export default function PrivacyPolicyModal({ show, onClose }) {
   const { t } = useI18n();

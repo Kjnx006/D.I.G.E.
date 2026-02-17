@@ -1,9 +1,9 @@
-import { useI18n } from '../i18n';
-import Icon from './Icon';
+import { useI18n } from '../../i18n';
+import Icon from '../ui/Icon';
 
 export default function ErrorState({ show, onDismiss }) {
   const { t } = useI18n();
-  
+
   if (!show) return null;
 
   return (

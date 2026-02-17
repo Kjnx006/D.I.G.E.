@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react';
-import { useI18n } from '../i18n';
-import Icon from './Icon';
+import { useI18n } from '../../i18n';
+import Icon from '../ui/Icon';
 
 export default function ShareModal({ show, shareUrl, onClose, onCopy, onShare }) {
   const { t } = useI18n();

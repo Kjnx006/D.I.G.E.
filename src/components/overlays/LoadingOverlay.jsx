@@ -1,9 +1,9 @@
-import { useI18n } from '../i18n';
-import Icon from './Icon';
+import { useI18n } from '../../i18n';
+import Icon from '../ui/Icon';
 
 export default function LoadingOverlay({ isLoading }) {
   const { t } = useI18n();
-  
+
   if (!isLoading) return null;
 
   return (

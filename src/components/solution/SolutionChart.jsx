@@ -10,8 +10,8 @@ import {
 } from 'chart.js';
 import { Line } from 'react-chartjs-2';
 import { useEffect, useMemo, useRef } from 'react';
-import { useI18n } from '../i18n';
-import { formatTime } from '../utils/constants';
+import { useI18n } from '../../i18n';
+import { formatTime } from '../../utils/constants';
 
 ChartJS.register(
   LinearScale,
@@ -23,7 +23,6 @@ ChartJS.register(
   Filler
 );
 
-// 全局字体配置
 const fontFamily = "Frex Sans GB VF";
 const TARGET_SECONDS_PER_POINT = 4;
 const MAX_CHART_POINTS = 1000;
@@ -55,12 +54,10 @@ export default function SolutionChart({ solution, targetPower, batteryCapacity, 
     );
   }
 
-  // 采样数据以提高性能
   let batteryData = sourceBatteryLog || [];
   let powerData = sourcePowerLog || [];
   let burnStateData = sourceBurnStateLog || [];
 
-  // Strict granularity: one point every 4 seconds.
   const rawBatteryData = batteryData;
   const rawPowerData = powerData;
   const rawBurnStateData = burnStateData;
@@ -178,7 +175,6 @@ export default function SolutionChart({ solution, targetPower, batteryCapacity, 
       storedSpanPoints
     )
     : { min: 0, max: maxX };
-  // Clamp battery percentage to [0, 100].
   const batteryPercent = batteryData.map(v => Math.min(100, Math.max(0, (v / batteryCapacity) * 100)));
   const powerPoints = xValues.map((x, i) => ({ x, y: powerData[i] ?? null }));
   const targetPoints = xValues.map((x) => ({ x, y: targetPower }));

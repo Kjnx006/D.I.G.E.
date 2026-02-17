@@ -1,8 +1,8 @@
 import { useState, useEffect, useRef } from 'react';
 import { QRCodeSVG } from 'qrcode.react';
-import { useI18n } from '../i18n';
-import { hasUnreadAnnouncementOrChangelog } from './Announcement';
-import Icon from './Icon';
+import { useI18n } from '../../i18n';
+import { hasUnreadAnnouncementOrChangelog } from '../modals/Announcement';
+import Icon from '../ui/Icon';
 
 const QQ_GROUP_URL = 'https://qm.qq.com/q/zL6wp3emTQ';
 const QQ_GROUP_NUMBER = '1084531249';
@@ -18,14 +18,12 @@ export default function Header({ onCalculate, onShare, onShowStatus, sidebarColl
 
   const currentLang = languageOptions.find(l => l.code === locale);
 
-  // 点击外部关闭下拉菜单
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (langMenuRef.current && !langMenuRef.current.contains(event.target)) {
         setShowLangMenu(false);
       }
     };
-
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
@@ -45,12 +43,11 @@ export default function Header({ onCalculate, onShare, onShowStatus, sidebarColl
   };
 
   return (
-    <header 
+    <header
       className="bg-endfield-dark border-b border-endfield-gray-light p-2 sm:p-4 flex items-center justify-between shrink-0"
       role="banner"
     >
       <div className="flex items-center gap-2 sm:gap-3">
-        {/* 移动端：汉堡菜单按钮 */}
         <button
           onClick={onToggleSidebar}
           className="relative md:hidden w-8 h-8 flex items-center justify-center text-endfield-yellow"
@@ -63,8 +60,7 @@ export default function Header({ onCalculate, onShare, onShowStatus, sidebarColl
             <span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-red-500 rounded-full animate-pulse" aria-hidden="true" />
           )}
         </button>
-        
-        {/* 桌面端：黄色竖条/箭头 */}
+
         <button
           onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}
@@ -78,16 +74,15 @@ export default function Header({ onCalculate, onShare, onShowStatus, sidebarColl
             className="h-full transition-all duration-200 bg-endfield-yellow animate-pulse-glow"
             style={{
               width: isHovered ? '12px' : '4px',
-              clipPath: isHovered 
-                ? (sidebarCollapsed 
-                    ? 'polygon(0 0, 100% 50%, 0 100%)' 
+              clipPath: isHovered
+                ? (sidebarCollapsed
+                    ? 'polygon(0 0, 100% 50%, 0 100%)'
                     : 'polygon(0 50%, 100% 0, 100% 100%)')
                 : 'none',
             }}
             aria-hidden="true"
           />
         </button>
-        {/* 标题区域 */}
         <div className="flex flex-col justify-center">
           <div className="flex items-center gap-2">
             <a
@@ -137,7 +132,6 @@ export default function Header({ onCalculate, onShare, onShowStatus, sidebarColl
           <Icon name="share" />
         </button>
 
-        {/* Announcement Button - 桌面端显示 */}
         <button
           onClick={() => onOpenAnnouncement('announcement')}
           className="relative hidden md:flex h-10 w-10 bg-endfield-gray border border-endfield-gray-light hover:border-endfield-yellow transition-colors items-center justify-center text-endfield-text-light hover:text-endfield-yellow"
@@ -150,7 +144,6 @@ export default function Header({ onCalculate, onShare, onShowStatus, sidebarColl
           )}
         </button>
 
-        {/* 加入 QQ 群 - 仅中文显示，悬停延迟显示二维码 */}
         {locale === 'zh' && (
           <div
             className="relative hidden md:block"
@@ -204,7 +197,6 @@ export default function Header({ onCalculate, onShare, onShowStatus, sidebarColl
           </div>
         )}
 
-        {/* GitHub Link - 桌面端显示 */}
         <a
           href="https://github.com/djkcyl/D.I.G.E."
           target="_blank"
@@ -216,7 +208,6 @@ export default function Header({ onCalculate, onShare, onShowStatus, sidebarColl
           <Icon icon="mdi:github" />
         </a>
 
-        {/* Language Switcher - 桌面端显示 */}
         <nav className="relative hidden md:block" ref={langMenuRef} aria-label="语言切换">
           <button
             onClick={() => setShowLangMenu(!showLangMenu)}
@@ -250,7 +241,6 @@ export default function Header({ onCalculate, onShare, onShowStatus, sidebarColl
           )}
         </nav>
 
-        {/* 移动端计算按钮 */}
         <button
           onClick={() => onCalculate()}
           className="md:hidden h-9 px-3 bg-endfield-yellow hover:bg-endfield-yellow-glow hover:-translate-y-0.5 text-endfield-black font-bold tracking-wider uppercase transition-all flex items-center gap-1.5 text-sm glow-yellow"

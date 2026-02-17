@@ -1,15 +1,16 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { I18nProvider, useI18n } from './i18n';
-import Header from './components/Header';
-import Sidebar from './components/Sidebar';
-import SolutionList from './components/SolutionList';
-import LoadingOverlay from './components/LoadingOverlay';
-import ErrorState from './components/ErrorState';
-import Announcement, { shouldShowAnnouncement } from './components/Announcement';
-import PrivacyPolicyModal from './components/PrivacyPolicyModal';
-import CloseButton from './components/CloseButton';
-import ShareModal from './components/ShareModal';
-import Icon from './components/Icon';
+import Header from './components/layout/Header';
+import Sidebar from './components/layout/Sidebar';
+import SolutionList from './components/solution/SolutionList';
+import LoadingOverlay from './components/overlays/LoadingOverlay';
+import ErrorState from './components/modals/ErrorState';
+import Announcement, { shouldShowAnnouncement } from './components/modals/Announcement';
+import PrivacyPolicyModal from './components/modals/PrivacyPolicyModal';
+import ShareModal from './components/modals/ShareModal';
+import ShareStatusToast from './components/overlays/ShareStatusToast';
+import DirtyOverlay from './components/overlays/DirtyOverlay';
+import Footer from './components/Footer';
 import { FactoryDesigner } from './utils/FactoryDesigner';
 import { buildShareUrl, getShareParamsFromUrl } from './utils/shareParams';
 
@@ -224,19 +225,7 @@ function AppContent({ onOpenAnnouncement, onOpenPrivacyPolicy }) {
           onOpenPrivacyPolicy={onOpenPrivacyPolicy}
         />
 
-        {shareStatusMessage && (
-          <div className="fixed top-3 left-1/2 -translate-x-1/2 z-[60] pointer-events-none">
-            <div
-              className={`bg-endfield-gray border border-endfield-yellow/50 text-endfield-yellow text-xs sm:text-sm px-3 py-2 shadow-[0_10px_30px_rgba(0,0,0,0.35)] transition-opacity duration-200 ease-out ${
-                shareStatusVisible ? 'opacity-100' : 'opacity-0'
-              }`}
-              role="status"
-              aria-live="polite"
-            >
-              {shareStatusMessage}
-            </div>
-          </div>
-        )}
+        <ShareStatusToast message={shareStatusMessage} visible={shareStatusVisible} />
 
         <div className="flex-1 flex overflow-hidden">
           <Sidebar
@@ -266,92 +255,28 @@ function AppContent({ onOpenAnnouncement, onOpenPrivacyPolicy }) {
               <LoadingOverlay isLoading={isLoading} />
             </main>
 
-            {/* 参数已修改未计算时的遮罩提示 */}
-            {showDirtyOverlay && paramsDirty && (
-              <div className="absolute inset-0 z-40 bg-endfield-black/80 backdrop-blur-sm flex flex-col items-center justify-center gap-4">
-                <Icon name="sync_problem" className="text-endfield-yellow" />
-                <p className="text-lg font-bold text-endfield-text-light tracking-wider">{t('paramsChanged')}</p>
-                <p className="text-sm text-endfield-text">{t('clickCalculateToUpdate')}</p>
-                <div className="mt-2 grid grid-cols-1 sm:grid-cols-2 gap-3 w-72 sm:w-[28rem]">
-                  <button
-                    onClick={() => { runCalculation(); setShowDirtyOverlay(false); }}
-                    className="min-h-10 px-3 py-2 bg-endfield-yellow hover:bg-endfield-yellow-glow hover:-translate-y-0.5 text-endfield-black font-bold tracking-wider uppercase transition-all flex items-center justify-center text-sm glow-yellow"
-                  >
-                    <span className="inline-flex items-center gap-2">
-                      <Icon name="calculate" />
-                      {t('calculate')}
-                    </span>
-                  </button>
-                  {lastCalcParamsRef.current && (
-                    <button
-                      onClick={() => {
-                        setParams({ ...lastCalcParamsRef.current });
-                        setParamsDirty(false);
-                        setShowDirtyOverlay(false);
-                      }}
-                      className="min-h-10 px-3 py-2 border border-endfield-yellow/40 text-endfield-yellow font-bold tracking-wider uppercase hover:bg-endfield-yellow/10 hover:-translate-y-0.5 transition-all flex items-center justify-center text-sm"
-                    >
-                      <span className="inline-flex items-center gap-2">
-                        <Icon name="undo" />
-                        {t('restoreParams')}
-                      </span>
-                    </button>
-                  )}
-                </div>
-                <button
-                  onClick={() => {
-                    setShowDirtyOverlay(false);
-                    setDirtyDismissed(true);
-                  }}
-                  className="text-xs text-endfield-text hover:text-endfield-text-light transition-colors tracking-wider"
-                >
-                  {t('ignoreWarning')}
-                </button>
-              </div>
-            )}
+            <DirtyOverlay
+              show={showDirtyOverlay && paramsDirty}
+              canRestore={!!lastCalcParamsRef.current}
+              onCalculate={() => { runCalculation(); setShowDirtyOverlay(false); }}
+              onRestore={() => {
+                setParams({ ...lastCalcParamsRef.current });
+                setParamsDirty(false);
+                setShowDirtyOverlay(false);
+              }}
+              onDismiss={() => {
+                setShowDirtyOverlay(false);
+                setDirtyDismissed(true);
+              }}
+            />
           </div>
         </div>
 
-        {showPrivacyFooter && (
-          <footer className="shrink-0 relative border-t border-endfield-gray-light bg-endfield-dark px-3 py-2 text-[11px] sm:text-xs text-endfield-text leading-relaxed">
-            <div className="pr-8 text-center">
-              {t('privacyFooterNotice')}
-              {' '}
-              <button
-                type="button"
-                onClick={onOpenPrivacyPolicy}
-                className="text-endfield-yellow hover:text-endfield-yellow-glow underline underline-offset-2 cursor-pointer"
-              >
-                {t('privacyPolicyDetails')}
-              </button>
-              {' '}|{' '}
-              <a
-                href="https://privacy.microsoft.com/privacystatement"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-endfield-yellow hover:text-endfield-yellow-glow underline underline-offset-2"
-              >
-                {t('microsoftPrivacyStatement')}
-              </a>
-              {' '}|{' '}
-              <a
-                href="https://sentry.io/privacy/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-endfield-yellow hover:text-endfield-yellow-glow underline underline-offset-2"
-              >
-                {t('sentryPrivacyStatement')}
-              </a>
-            </div>
-
-            <CloseButton
-              onClick={handleDismissPrivacyFooter}
-              label={t('close')}
-              sizeClass="w-5 h-5"
-              className="absolute right-3 top-1/2 -translate-y-1/2"
-            />
-          </footer>
-        )}
+        <Footer
+          show={showPrivacyFooter}
+          onDismiss={handleDismissPrivacyFooter}
+          onOpenPrivacyPolicy={onOpenPrivacyPolicy}
+        />
 
         <ShareModal
           show={shareModalOpen}
