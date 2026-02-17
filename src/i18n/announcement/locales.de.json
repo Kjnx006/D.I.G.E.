@@ -89,7 +89,7 @@
           "Eingangsquelle, thermischer Knoten und Recycling-Ausgang zeigen keine Richtungspfeile mehr.",
           "Verbesserte Anordnung der Blueprint-Legende und Bedienung.",
           "Blueprint-Modus unterstützt Vergrößerung: Mausrad scrollen oder mit zwei Fingern zoomen, dann ziehen um andere Bereiche anzuzeigen.",
-          "Laut Spieler-Feedback und Tests könnte der aktuelle Spielserver nach dem Offline-Gehen Berechnungen für Förderbänder und förderbandbasierte Geräte (z. B. Logistikbrücken und Item-Eingangspunkte) vereinfachen. Dadurch können auf Förderband-Verteilrouten Durchflussabbrüche oder Stillstand auftreten. Wir können diese Aussage nicht verifizieren, da wir die Server-Implementierung nicht mit dem offiziellen Spielteam abstimmen können. Deshalb haben wir die Funktion \"Förderbänder ausschließen\" (standardmäßig aktiviert) hinzugefügt, die Förderbänder und zugehörige Geräte aus dem Blueprint-Design entfernt. Wenn Ihre Linie online normal läuft, offline aber Stromausfall oder Überlauf zeigt, kann diese Funktion zur Minderung des Problems helfen."
+          "Option « Förderbänder ausschließen » (Standard) zur Minderung von Offline-Durchflussproblemen."
         ]
       },
       {
