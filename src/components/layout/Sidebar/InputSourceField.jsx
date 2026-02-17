@@ -1,6 +1,7 @@
 import { useI18n } from '../../../i18n';
 import Icon from '../../ui/Icon';
 import { INPUT_SOURCES, INPUT_SOURCE_OPTIONS, DEFAULT_INPUT_SOURCE_ID } from '../../../utils/constants';
+import SidebarSection from './SidebarSection';
 
 export default function InputSourceField({ params, onChange, locale, onShowInputWarning }) {
   const { t } = useI18n();
@@ -10,11 +11,7 @@ export default function InputSourceField({ params, onChange, locale, onShowInput
   const getInputSourceName = (source) => source?.name?.[locale] || source?.name?.en || '';
 
   return (
-    <fieldset className="space-y-2 border-none p-0 m-0">
-      <legend className="text-sm font-bold text-endfield-text uppercase tracking-widest flex items-center gap-2 p-0">
-        <Icon name="input" className="text-endfield-yellow" />
-        {t('inputSource')}
-      </legend>
+    <SidebarSection icon="input" title={t('inputSource')} className="space-y-2">
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
         {INPUT_SOURCE_OPTIONS.map((source) => (
           <button
@@ -49,6 +46,6 @@ export default function InputSourceField({ params, onChange, locale, onShowInput
           </button>
         )}
       </div>
-    </fieldset>
+    </SidebarSection>
   );
 }

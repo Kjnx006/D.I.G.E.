@@ -10,6 +10,9 @@ import {
 } from '../../../utils/announcement';
 import Icon from '../../ui/Icon';
 import Modal from '../../ui/Modal';
+import Button from '../../ui/Button';
+import ModalHeader from '../../ui/ModalHeader';
+import UnreadDot from '../../ui/UnreadDot';
 import AnnouncementBody from './AnnouncementBody';
 import ChangelogBody from './ChangelogBody';
 
@@ -97,98 +100,95 @@ export default function Announcement({
       ariaLabelledby="announcement-modal-title"
       contentClassName="max-w-xl h-[90vh]"
     >
-        <div className="flex items-center gap-2 mb-4 pb-3 border-b border-endfield-gray-light">
-          <Icon name={isAnnouncement ? 'campaign' : 'history'} className="text-endfield-yellow" />
-          <h2 id="announcement-modal-title" className="text-base font-bold text-endfield-text-light uppercase tracking-wider">
-            {isAnnouncement ? t('announcement') : t('changelog')}
-          </h2>
-        </div>
+      <ModalHeader
+        id="announcement-modal-title"
+        icon={isAnnouncement ? 'campaign' : 'history'}
+        title={isAnnouncement ? t('announcement') : t('changelog')}
+        className="mb-4"
+      />
 
-        <div className="grid grid-cols-2 gap-2 mb-4">
-          <button
-            type="button"
-            onClick={() => {
-              setActiveTab('announcement');
-              if (announcementUnread) {
-                setAnnouncementUnread(false);
-                localStorage.setItem(ANNOUNCEMENT_VIEWED_KEY, ANNOUNCEMENT_ID);
-              }
-            }}
-            className={`relative h-9 border text-sm tracking-wider transition-colors ${
-              isAnnouncement
-                ? 'text-endfield-yellow border-endfield-yellow bg-endfield-yellow/10'
-                : 'text-endfield-text-light border-endfield-gray-light hover:border-endfield-text'
-            }`}
-          >
-            {t('announcement')}
-            {announcementUnread && (
-              <span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-red-500 rounded-full animate-pulse" />
-            )}
-          </button>
-          <button
-            type="button"
-            onClick={() => {
-              setActiveTab('changelog');
-              if (changelogUnread) {
-                setChangelogUnread(false);
-                localStorage.setItem(CHANGELOG_VIEWED_KEY, CHANGELOG_ID);
-              }
-            }}
-            className={`relative h-9 border text-sm tracking-wider transition-colors ${
-              !isAnnouncement
-                ? 'text-endfield-yellow border-endfield-yellow bg-endfield-yellow/10'
-                : 'text-endfield-text-light border-endfield-gray-light hover:border-endfield-text'
-            }`}
-          >
-            {t('changelog')}
-            {changelogUnread && (
-              <span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-red-500 rounded-full animate-pulse" />
-            )}
-          </button>
-        </div>
-
-        <div className="text-sm text-endfield-text-light leading-relaxed mb-6 overflow-y-auto scrollbar-gutter-stable flex-1 pr-2">
-          {isAnnouncement ? (
-            <AnnouncementBody blocks={announcementBlocks} />
-          ) : (
-            <ChangelogBody sections={changelogSections} />
-          )}
-        </div>
-
-        <label className="flex items-center gap-3 mb-4 cursor-pointer select-none group">
-          <div className="relative w-4 h-4 border border-endfield-gray-light group-hover:border-endfield-yellow transition-colors flex items-center justify-center">
-            <input
-              type="checkbox"
-              checked={dontShowAgain}
-              onChange={(e) => setDontShowAgain(e.target.checked)}
-              className="absolute inset-0 opacity-0 cursor-pointer"
-            />
-            {dontShowAgain && (
-              <Icon name="check" className="text-endfield-yellow" />
-            )}
-          </div>
-          <span className="text-sm text-endfield-text group-hover:text-endfield-text-light transition-colors">{t('dontShowAgain')}</span>
-        </label>
-
-        {locale === 'zh' && (
-          <a
-            href={QQ_GROUP_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="mb-4 flex w-full items-center justify-center gap-2 h-10 bg-endfield-gray/60 border border-endfield-yellow/30 hover:border-endfield-yellow transition-colors text-endfield-yellow text-sm"
-          >
-            <Icon name="group" />
-            <span>{t('joinQQGroup')}</span>
-          </a>
-        )}
-
+      <div className="grid grid-cols-2 gap-2 mb-4">
         <button
           type="button"
-          onClick={handleClose}
-          className="shrink-0 w-full h-10 min-h-10 bg-endfield-yellow hover:bg-endfield-yellow-glow text-endfield-black font-bold tracking-wider transition-all flex items-center justify-center gap-2 text-sm"
+          onClick={() => {
+            setActiveTab('announcement');
+            if (announcementUnread) {
+              setAnnouncementUnread(false);
+              localStorage.setItem(ANNOUNCEMENT_VIEWED_KEY, ANNOUNCEMENT_ID);
+            }
+          }}
+          className={`relative h-9 border text-sm tracking-wider transition-colors ${
+            isAnnouncement
+              ? 'text-endfield-yellow border-endfield-yellow bg-endfield-yellow/10'
+              : 'text-endfield-text-light border-endfield-gray-light hover:border-endfield-text'
+          }`}
         >
-          {t('understood')}
+          {t('announcement')}
+          {announcementUnread && <UnreadDot />}
         </button>
+        <button
+          type="button"
+          onClick={() => {
+            setActiveTab('changelog');
+            if (changelogUnread) {
+              setChangelogUnread(false);
+              localStorage.setItem(CHANGELOG_VIEWED_KEY, CHANGELOG_ID);
+            }
+          }}
+          className={`relative h-9 border text-sm tracking-wider transition-colors ${
+            !isAnnouncement
+              ? 'text-endfield-yellow border-endfield-yellow bg-endfield-yellow/10'
+              : 'text-endfield-text-light border-endfield-gray-light hover:border-endfield-text'
+          }`}
+        >
+          {t('changelog')}
+          {changelogUnread && <UnreadDot />}
+        </button>
+      </div>
+
+      <div className="text-sm text-endfield-text-light leading-relaxed mb-6 overflow-y-auto scrollbar-gutter-stable flex-1 pr-2">
+        {isAnnouncement ? (
+          <AnnouncementBody blocks={announcementBlocks} />
+        ) : (
+          <ChangelogBody sections={changelogSections} />
+        )}
+      </div>
+
+      <label className="flex items-center gap-3 mb-4 cursor-pointer select-none group">
+        <div className="relative w-4 h-4 border border-endfield-gray-light group-hover:border-endfield-yellow transition-colors flex items-center justify-center">
+          <input
+            type="checkbox"
+            checked={dontShowAgain}
+            onChange={(e) => setDontShowAgain(e.target.checked)}
+            className="absolute inset-0 opacity-0 cursor-pointer"
+          />
+          {dontShowAgain && (
+            <Icon name="check" className="text-endfield-yellow" />
+          )}
+        </div>
+        <span className="text-sm text-endfield-text group-hover:text-endfield-text-light transition-colors">{t('dontShowAgain')}</span>
+      </label>
+
+      {locale === 'zh' && (
+        <a
+          href={QQ_GROUP_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="mb-4 flex w-full items-center justify-center gap-2 h-10 bg-endfield-gray/60 border border-endfield-yellow/30 hover:border-endfield-yellow transition-colors text-endfield-yellow text-sm"
+        >
+          <Icon name="group" />
+          <span>{t('joinQQGroup')}</span>
+        </a>
+      )}
+
+      <Button
+        type="button"
+        onClick={handleClose}
+        variant="primary"
+        fullWidth
+      >
+        {t('understood')}
+      </Button>
     </Modal>
   );
 }

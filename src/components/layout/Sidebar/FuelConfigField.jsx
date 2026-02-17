@@ -1,7 +1,7 @@
 import { useI18n } from '../../../i18n';
-import Icon from '../../ui/Icon';
 import Select from '../../ui/Select';
 import { FUEL_OPTIONS, SECONDARY_FUEL_OPTIONS } from '../../../utils/constants';
+import SidebarSection from './SidebarSection';
 
 export default function FuelConfigField({ params, onChange, locale }) {
   const { t } = useI18n();
@@ -22,12 +22,7 @@ export default function FuelConfigField({ params, onChange, locale }) {
   const secondaryFuel = SECONDARY_FUEL_OPTIONS.find((f) => f.id === params.secondaryFuelId);
 
   return (
-    <fieldset className="space-y-4 border-none p-0 m-0">
-      <legend className="text-sm font-bold text-endfield-text uppercase tracking-widest flex items-center gap-2 p-0">
-        <Icon name="local_gas_station" className="text-endfield-yellow" />
-        {t('fuelConfig')}
-      </legend>
-
+    <SidebarSection icon="local_gas_station" title={t('fuelConfig')} className="space-y-4">
       <div className="space-y-2">
         <label id="primary-fuel-label" className="text-sm text-endfield-text">{t('primaryFuel')}</label>
         <Select
@@ -61,6 +56,6 @@ export default function FuelConfigField({ params, onChange, locale }) {
           </p>
         )}
       </div>
-    </fieldset>
+    </SidebarSection>
   );
 }

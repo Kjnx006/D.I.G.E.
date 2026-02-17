@@ -1,28 +1,40 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useI18n } from '../../../i18n';
 import {
+  buildEndfieldBlueprintPng,
+  buildEndfieldCompleteImage,
   downloadEndfieldBlueprint,
-  downloadEndfieldBlueprintPng,
   downloadEndfieldBlueprintZip,
 } from '../../../utils/endfieldBlueprint';
+import {
+  FUEL_OPTIONS,
+  INPUT_SOURCE_OPTIONS,
+  SECONDARY_FUEL_OPTIONS,
+} from '../../../utils/constants';
+import { buildShareUrl } from '../../../utils/shareParams';
 import Icon from '../../ui/Icon';
-import Modal from '../../ui/Modal';
 import SimpleBranch from './SimpleBranch';
 import BlueprintBranch from './BlueprintBranch';
 import BlueprintLegend from './BlueprintLegend';
 import SimpleLegend from './SimpleLegend';
 import DiagramConfig from './DiagramConfig';
+import ImagePreviewModal from '../../ui/ImagePreview/ImagePreviewModal';
+import BlueprintExportModal from './BlueprintExportModal';
 
 const BLUEPRINT_ZOOM_MIN = 1;
 const BLUEPRINT_ZOOM_MAX = 3;
 
-export default function SolutionDiagram({ solution }) {
+export default function SolutionDiagram({ solution, params }) {
   const { t, locale } = useI18n();
   const [mode, setMode] = useState('blueprint');
   const [blueprintZoom, setBlueprintZoom] = useState(1);
   const [exportModalOpen, setExportModalOpen] = useState(false);
+  const [imagePreviewOpen, setImagePreviewOpen] = useState(false);
+  const [imagePreviewBlob, setImagePreviewBlob] = useState(null);
+  const [imagePreviewFileName, setImagePreviewFileName] = useState('');
+  const [imagePreviewTitle, setImagePreviewTitle] = useState('');
+  const [preparingCompleteImage, setPreparingCompleteImage] = useState(false);
   const pinchRef = useRef({ initialDistance: 0, initialZoom: 1 });
-  const blueprintContainerRef = useRef(null);
 
   const clampZoom = useCallback(
     (z) => Math.max(BLUEPRINT_ZOOM_MIN, Math.min(BLUEPRINT_ZOOM_MAX, z)),
@@ -78,9 +90,27 @@ export default function SolutionDiagram({ solution }) {
     setExportModalOpen(false);
   }, []);
 
+  const handleCloseImagePreview = useCallback(() => {
+    setImagePreviewOpen(false);
+    setImagePreviewBlob(null);
+    setImagePreviewFileName('');
+    setImagePreviewTitle('');
+  }, []);
+
   useEffect(() => {
     if (mode !== 'blueprint') setBlueprintZoom(1);
   }, [mode]);
+
+  const openImagePreview = useCallback(
+    ({ blob, fileName, title }) => {
+      if (!blob) return;
+      setImagePreviewBlob(blob);
+      setImagePreviewFileName(fileName || '');
+      setImagePreviewTitle(title || t('completeImagePreviewTitle'));
+      setImagePreviewOpen(true);
+    },
+    [t],
+  );
 
   if (!solution) {
     return (
@@ -126,15 +156,21 @@ export default function SolutionDiagram({ solution }) {
           Number.isFinite(denominator) && denominator > 0 ? denominator : 'unknown';
         const power = Number(branch.power);
         const powerToken = `${Number.isFinite(power) ? Math.round(power) : 'unknown'}w`;
-        await downloadEndfieldBlueprintPng(branch, {
+        const { fileName, blob } = await buildEndfieldBlueprintPng(branch, {
           filename: `dige_branch_${branchIndex + 1}_1_${safeDenominator}_${powerToken}.png`,
           branchLabel: `${t('branch')} ${branchIndex + 1}`,
         });
+        openImagePreview({
+          blob,
+          fileName,
+          title: `${t('branch')} ${branchIndex + 1} PNG`,
+        });
+        setExportModalOpen(false);
       } catch (error) {
         console.error('Blueprint PNG export failed:', error);
       }
     },
-    [oscillating, t],
+    [openImagePreview, oscillating, t],
   );
 
   const handleExportAllBranchesZip = useCallback(async () => {
@@ -149,12 +185,97 @@ export default function SolutionDiagram({ solution }) {
       await downloadEndfieldBlueprintZip(oscillating, {
         filename: `dige_branches_all_${oscillating.length}_${powerToken}.zip`,
         includePng: true,
+        includeParams: false,
+        includePreciseChart: false,
       });
       setExportModalOpen(false);
     } catch (error) {
       console.error('Blueprint zip export failed:', error);
     }
   }, [oscillating]);
+
+  const handleExportCompleteImage = useCallback(async () => {
+    if (!Array.isArray(oscillating) || oscillating.length === 0) return;
+    try {
+      setPreparingCompleteImage(true);
+      const getLocalizedName = (option) => option?.name?.[locale] || option?.name?.en || option?.id || '-';
+      const primaryFuelNameMap = Object.fromEntries(
+        FUEL_OPTIONS.map((option) => [option.id, getLocalizedName(option)]),
+      );
+      const secondaryFuelNameMap = Object.fromEntries(
+        SECONDARY_FUEL_OPTIONS.map((option) => [option.id, getLocalizedName(option)]),
+      );
+      const inputSourceNameMap = Object.fromEntries(
+        INPUT_SOURCE_OPTIONS.map((option) => [option.id, getLocalizedName(option)]),
+      );
+      const totalPower = oscillating.reduce((sum, branch) => {
+        const branchPower = Number(branch?.power);
+        return sum + (Number.isFinite(branchPower) ? branchPower : 0);
+      }, 0);
+      const powerToken = `${Math.round(totalPower)}w`;
+      const shareUrl = buildShareUrl(params);
+
+      const { fileName, blob } = await buildEndfieldCompleteImage(oscillating, {
+        filename: `dige_export_full_${oscillating.length}_${powerToken}.png`,
+        params,
+        shareUrl,
+        solution,
+        targetPower: Number(params?.targetPower),
+        chartLabels: {
+          currentPower: t('currentPower'),
+          targetPowerLine: t('targetPowerLine'),
+          batteryLevel: t('batteryLevel'),
+          minBatteryPercent: t('minBatteryPercent'),
+          branch: t('branch'),
+          burnStateShort: t('burnStateShort'),
+          powerAxis: t('powerAxis'),
+          batteryAxis: t('batteryAxis'),
+          stateOn: t('stateOn'),
+          stateOff: t('stateOff'),
+        },
+        completeLabels: {
+          title: t('completeExportImageTitle'),
+          exportTime: t('exportTime'),
+          parameters: t('constraints'),
+          summary: t('summary'),
+          branches: t('solutionDiagram'),
+          chart: t('cycleChart'),
+          targetPower: t('targetPower'),
+          minBatteryPercent: t('minBatteryPercent'),
+          maxWaste: t('maxWaste'),
+          maxBranches: t('maxBranches'),
+          excludeBelt: t('excludeBelt'),
+          primaryFuel: t('primaryFuel'),
+          secondaryFuel: t('secondaryFuel'),
+          inputSource: t('inputSource'),
+          actualPower: t('actualPower'),
+          cyclePeriod: t('cyclePeriod'),
+          variance: t('variance'),
+          minBattery: t('minBatteryShort'),
+          branchCount: t('branchesShort'),
+          totalSplitters: t('legendBlueprintS'),
+          branch: t('branch'),
+          stateOn: t('stateOn'),
+          stateOff: t('stateOff'),
+          excludeBeltOn: t('enabled'),
+          excludeBeltOff: t('disabled'),
+          primaryFuelNameMap,
+          secondaryFuelNameMap,
+          inputSourceNameMap,
+        },
+      });
+      openImagePreview({
+        blob,
+        fileName,
+        title: t('completeImagePreviewTitle'),
+      });
+      setExportModalOpen(false);
+    } catch (error) {
+      console.error('Blueprint complete image export failed:', error);
+    } finally {
+      setPreparingCompleteImage(false);
+    }
+  }, [locale, openImagePreview, oscillating, params, solution, t]);
 
   return (
     <div className="space-y-2 sm:space-y-3 notranslate" translate="no">
@@ -234,7 +355,6 @@ export default function SolutionDiagram({ solution }) {
           </div>
 
           <div
-            ref={blueprintContainerRef}
             className={`flex gap-3 p-2 sm:p-3 ${
               mode === 'simple' ? 'flex-col' : 'flex-wrap justify-center'
             }`}
@@ -298,87 +418,25 @@ export default function SolutionDiagram({ solution }) {
         </div>
       )}
 
-      {oscillating && oscillating.length > 0 && (
-        <Modal
-          show={exportModalOpen}
-          onClose={handleCloseExportModal}
-          ariaLabelledby="export-blueprint-title"
-          title={
-            <>
-              <Icon name="download" className="text-endfield-yellow" />
-              <h2
-                id="export-blueprint-title"
-                className="text-base font-bold text-endfield-text-light uppercase tracking-wider"
-              >
-                {t('exportBlueprintJson')}
-              </h2>
-            </>
-          }
-          contentClassName="max-w-md"
-        >
-          <div className="space-y-3">
-            <p className="text-xs text-endfield-text/70">{t('selectExportBranch')}</p>
+      <BlueprintExportModal
+        show={Boolean(oscillating && oscillating.length > 0 && exportModalOpen)}
+        t={t}
+        branches={oscillating}
+        onClose={handleCloseExportModal}
+        onExportJson={handleExportSingleBranch}
+        onExportPng={handleExportSingleBranchPng}
+        onExportAllZip={handleExportAllBranchesZip}
+        onExportCompleteImage={handleExportCompleteImage}
+        preparingCompleteImage={preparingCompleteImage}
+      />
 
-            <div className="max-h-72 overflow-y-auto space-y-2">
-              {oscillating.map((branch, idx) => (
-                <div
-                  key={idx}
-                  className="w-full border border-endfield-gray-light bg-endfield-gray/40 px-3 py-2 flex items-center gap-2 transition-colors hover:border-endfield-yellow/70 hover:bg-endfield-gray/70"
-                >
-                  <div className="min-w-0 flex-1">
-                    <div className="text-sm font-semibold text-endfield-text-light">
-                      {t('branch')} {idx + 1}
-                    </div>
-                    <div className="text-xs text-endfield-text/80">
-                      1/{branch.denominator} | {branch.power.toFixed(0)}w
-                    </div>
-                  </div>
-                  <div className="ml-auto flex shrink-0 items-center gap-2">
-                    <button
-                      type="button"
-                      onClick={() => handleExportSingleBranch(idx)}
-                      className="inline-flex items-center gap-1 px-2 py-1 text-xs border border-endfield-gray-light text-endfield-text-light bg-endfield-gray/80 hover:text-endfield-yellow hover:border-endfield-yellow transition-colors"
-                      title="JSON"
-                      aria-label="JSON"
-                    >
-                      <Icon name="download" className="w-4 h-4" />
-                      JSON
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => void handleExportSingleBranchPng(idx)}
-                      className="inline-flex items-center gap-1 px-2 py-1 text-xs border border-endfield-gray-light text-endfield-text-light bg-endfield-gray/80 hover:text-endfield-yellow hover:border-endfield-yellow transition-colors"
-                      title="PNG"
-                      aria-label="PNG"
-                    >
-                      <Icon name="image" className="w-4 h-4" />
-                      PNG
-                    </button>
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1">
-              <button
-                type="button"
-                onClick={() => void handleExportAllBranchesZip()}
-                className="h-10 bg-endfield-yellow hover:bg-endfield-yellow-glow text-endfield-black font-bold tracking-wider transition-all flex items-center justify-center gap-2 text-sm"
-              >
-                <Icon name="folder_zip" className="w-4 h-4" />
-                {t('downloadAllBranchesZip')}
-              </button>
-              <button
-                type="button"
-                onClick={handleCloseExportModal}
-                className="h-10 w-full bg-endfield-gray hover:border-endfield-yellow border border-endfield-gray-light text-endfield-text-light font-bold tracking-wider transition-all flex items-center justify-center gap-2 text-sm"
-              >
-                {t('close')}
-              </button>
-            </div>
-          </div>
-        </Modal>
-      )}
+      <ImagePreviewModal
+        show={imagePreviewOpen}
+        onClose={handleCloseImagePreview}
+        blob={imagePreviewBlob}
+        fileName={imagePreviewFileName}
+        title={imagePreviewTitle}
+      />
     </div>
   );
 }

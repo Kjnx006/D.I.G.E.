@@ -1,16 +1,13 @@
 import { useI18n } from '../../../i18n';
 import Icon from '../../ui/Icon';
 import { PARAM_LIMITS } from '../../../utils/constants';
+import SidebarSection from './SidebarSection';
 
 export default function TargetPowerField({ value, onChange, onCalculate, onRandom }) {
   const { t } = useI18n();
 
   return (
-    <fieldset className="space-y-4 border-none p-0 m-0">
-      <legend className="text-sm font-bold text-endfield-text uppercase tracking-widest flex items-center gap-2 p-0">
-        <Icon name="target" className="text-endfield-yellow" />
-        {t('targetPower')}
-      </legend>
+    <SidebarSection icon="target" title={t('targetPower')} className="space-y-4">
       <div className="space-y-2">
         <div className="flex justify-between">
           <label htmlFor="target-power-input" className="text-sm text-endfield-text">{t('power')} (w)</label>
@@ -38,6 +35,6 @@ export default function TargetPowerField({ value, onChange, onCalculate, onRando
           </button>
         </div>
       </div>
-    </fieldset>
+    </SidebarSection>
   );
 }

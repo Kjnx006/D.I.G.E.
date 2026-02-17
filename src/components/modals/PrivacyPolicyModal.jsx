@@ -1,6 +1,7 @@
 import { useI18n } from '../../i18n';
-import Icon from '../ui/Icon';
 import Modal from '../ui/Modal';
+import Button from '../ui/Button';
+import ModalHeader from '../ui/ModalHeader';
 
 export default function PrivacyPolicyModal({ show, onClose, closeOnBackdrop = false }) {
   const { t } = useI18n();
@@ -14,15 +15,12 @@ export default function PrivacyPolicyModal({ show, onClose, closeOnBackdrop = fa
       closeOnBackdrop={closeOnBackdrop}
       ariaLabelledby="privacy-policy-modal-title"
       title={
-        <>
-          <Icon name="policy" className="text-endfield-yellow" />
-          <h2
-            id="privacy-policy-modal-title"
-            className="text-base font-bold text-endfield-text-light uppercase tracking-wider"
-          >
-            {t('privacyPolicyTitle')}
-          </h2>
-        </>
+        <ModalHeader
+          id="privacy-policy-modal-title"
+          icon="policy"
+          title={t('privacyPolicyTitle')}
+          bordered={false}
+        />
       }
       contentClassName="max-w-2xl max-h-[90vh]"
     >
@@ -50,12 +48,13 @@ export default function PrivacyPolicyModal({ show, onClose, closeOnBackdrop = fa
         </p>
       </div>
 
-      <button
+      <Button
         onClick={onClose}
-        className="shrink-0 w-full h-10 min-h-10 bg-endfield-yellow hover:bg-endfield-yellow-glow text-endfield-black font-bold tracking-wider transition-all flex items-center justify-center gap-2 text-sm"
+        variant="primary"
+        fullWidth
       >
         {t('close')}
-      </button>
+      </Button>
     </Modal>
   );
 }

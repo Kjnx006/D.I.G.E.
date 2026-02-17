@@ -28,7 +28,14 @@ const TARGET_SECONDS_PER_POINT = 4;
 const MAX_CHART_POINTS = 1000;
 const MIN_VISIBLE_SECONDS = TARGET_SECONDS_PER_POINT * 20;
 
-export default function SolutionChart({ solution, targetPower, batteryCapacity, hideHoverDetails = false, preciseValues = false }) {
+export default function SolutionChart({
+  solution,
+  targetPower,
+  minBatteryThreshold,
+  batteryCapacity,
+  hideHoverDetails = false,
+  preciseValues = false,
+}) {
   const { t } = useI18n();
   const chartRef = useRef(null);
   const interactionRef = useRef({
@@ -179,6 +186,15 @@ export default function SolutionChart({ solution, targetPower, batteryCapacity, 
   const powerPoints = xValues.map((x, i) => ({ x, y: powerData[i] ?? null }));
   const targetPoints = xValues.map((x) => ({ x, y: targetPower }));
   const batteryPoints = xValues.map((x, i) => ({ x, y: batteryPercent[i] }));
+  const minBatteryThresholdValue = Number.isFinite(minBatteryThreshold)
+    ? Math.min(100, Math.max(0, Number(minBatteryThreshold)))
+    : null;
+  const minBatteryThresholdPoints = minBatteryThresholdValue === null
+    ? []
+    : xValues.map((x) => ({ x, y: minBatteryThresholdValue }));
+  const minBatteryThresholdLabel = minBatteryThresholdValue === null
+    ? t('minBatteryPercent')
+    : `${t('minBatteryPercent')} (${minBatteryThresholdValue.toFixed(0)}%)`;
   const burnStateDatasets = burnStateData.map((series, idx) => ({
     label: `${t('branch')} ${idx + 1} ${t('burnStateShort')}`,
     data: xValues.map((x, i) => ({ x, y: series[i] > 0 ? idx + 1 : null })),
@@ -226,9 +242,30 @@ export default function SolutionChart({ solution, targetPower, batteryCapacity, 
         tension: 0.1,
         yAxisID: 'y1',
       },
+      ...(minBatteryThresholdValue === null
+        ? []
+        : [{
+          label: minBatteryThresholdLabel,
+          data: minBatteryThresholdPoints,
+          borderColor: '#ffd166',
+          borderWidth: 1,
+          borderDash: [6, 4],
+          pointRadius: 0,
+          fill: false,
+          yAxisID: 'y1',
+        }]),
       ...burnStateDatasets,
     ]
-  }), [t, powerPoints, targetPoints, batteryPoints, burnStateDatasets]);
+  }), [
+    t,
+    powerPoints,
+    targetPoints,
+    batteryPoints,
+    minBatteryThresholdLabel,
+    minBatteryThresholdPoints,
+    minBatteryThresholdValue,
+    burnStateDatasets,
+  ]);
 
   const options = {
     responsive: true,

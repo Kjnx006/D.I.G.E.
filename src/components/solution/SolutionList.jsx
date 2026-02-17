@@ -66,6 +66,7 @@ export default function SolutionList({ solutions, selectedIndex, onSelectSolutio
             <ChartSection
               solution={selectedSolution}
               targetPower={params.targetPower}
+              minBatteryThreshold={params.minBatteryPercent}
               preciseValues={preciseValues}
               setPreciseValues={setPreciseValues}
               hideHoverDetails={hideHoverDetails}
@@ -98,7 +99,7 @@ export default function SolutionList({ solutions, selectedIndex, onSelectSolutio
             expandLabel={t('expandSection')}
             collapseLabel={t('collapseSection')}
           >
-            <SolutionDiagram solution={selectedSolution} />
+            <SolutionDiagram solution={selectedSolution} params={params} />
           </CollapsibleSection>
         </div>
       </div>

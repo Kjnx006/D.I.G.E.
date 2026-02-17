@@ -2,6 +2,8 @@ import { useEffect, useRef } from 'react';
 import { useI18n } from '../../i18n';
 import Icon from '../ui/Icon';
 import Modal from '../ui/Modal';
+import Button from '../ui/Button';
+import ModalHeader from '../ui/ModalHeader';
 
 export default function ShareModal({
   show,
@@ -45,15 +47,11 @@ export default function ShareModal({
       ariaLabelledby="share-modal-title"
       contentClassName="!p-4 sm:!p-5 max-w-xl gap-2.5"
     >
-      <div className="flex items-center gap-2 pb-3 border-b border-endfield-gray-light">
-        <Icon name="share" className="text-endfield-yellow" />
-        <h2
-          id="share-modal-title"
-          className="text-base font-bold text-endfield-text-light uppercase tracking-wider"
-        >
-          {t('shareLinkTitle')}
-        </h2>
-      </div>
+      <ModalHeader
+        id="share-modal-title"
+        icon="share"
+        title={t('shareLinkTitle')}
+      />
 
       <div className="space-y-2">
         <div
@@ -71,18 +69,19 @@ export default function ShareModal({
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-        <button
+        <Button
           onClick={onCopy}
-          className="h-10 bg-endfield-yellow hover:bg-endfield-yellow-glow text-endfield-black font-bold tracking-wider transition-all flex items-center justify-center gap-2 text-sm"
+          variant="primary"
         >
           <Icon name="content_copy" />
           {t('copyLink')}
-        </button>
+        </Button>
 
-        <button
+        <Button
           onClick={onShare}
           disabled={!canShare}
-          className={`h-10 border border-endfield-gray-light transition-all flex items-center justify-center gap-2 text-sm ${
+          variant="none"
+          className={`border border-endfield-gray-light ${
             canShare
               ? 'bg-endfield-gray hover:border-endfield-yellow text-endfield-text-light hover:text-endfield-yellow'
               : 'bg-endfield-gray/40 text-endfield-text/40 cursor-not-allowed'
@@ -90,17 +89,18 @@ export default function ShareModal({
         >
           <Icon name="ios_share" />
           {t('shareSystem')}
-        </button>
+        </Button>
       </div>
 
       {!canShare && <p className="text-xs text-endfield-text/60">{t('shareUnavailable')}</p>}
 
-      <button
+      <Button
         onClick={onClose}
-        className="shrink-0 w-full h-10 min-h-10 bg-endfield-gray hover:border-endfield-yellow border border-endfield-gray-light text-endfield-text-light font-bold tracking-wider transition-all flex items-center justify-center gap-2 text-sm"
+        variant="secondary"
+        fullWidth
       >
         {t('close')}
-      </button>
+      </Button>
     </Modal>
   );
 }

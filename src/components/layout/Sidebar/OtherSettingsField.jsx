@@ -1,17 +1,14 @@
 import { useI18n } from '../../../i18n';
 import Icon from '../../ui/Icon';
 import Toggle from '../../ui/Toggle';
+import SidebarSection from './SidebarSection';
 
 export default function OtherSettingsField({ params, onChange, onShowExcludeBeltWarning }) {
   const { t } = useI18n();
   const excludeBelt = params.exclude_belt !== false;
 
   return (
-    <fieldset className="space-y-2 border-none p-0 m-0">
-      <legend className="text-sm font-bold text-endfield-text uppercase tracking-widest flex items-center gap-2 p-0">
-        <Icon name="settings" className="text-endfield-yellow" />
-        {t('otherSettings')}
-      </legend>
+    <SidebarSection icon="settings" title={t('otherSettings')} className="space-y-2">
       <div className="space-y-2">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-1.5">
@@ -34,6 +31,6 @@ export default function OtherSettingsField({ params, onChange, onShowExcludeBelt
           />
         </div>
       </div>
-    </fieldset>
+    </SidebarSection>
   );
 }

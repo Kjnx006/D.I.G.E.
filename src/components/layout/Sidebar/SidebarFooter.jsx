@@ -2,6 +2,8 @@ import { useEffect, useRef, useState } from 'react';
 import { useI18n } from '../../../i18n';
 import { hasUnreadAnnouncementOrChangelog } from '../../modals/Announcement';
 import Icon from '../../ui/Icon';
+import Button from '../../ui/Button';
+import UnreadDot from '../../ui/UnreadDot';
 
 export default function SidebarFooter({
   collapsed,
@@ -66,14 +68,16 @@ export default function SidebarFooter({
   return (
     <>
       {/* 桌面端计算按钮 */}
-      <button
+      <Button
         ref={calcButtonRef}
         onClick={() => onCalculate?.()}
-        className="hidden md:flex w-full mt-4 h-10 bg-endfield-yellow hover:bg-endfield-yellow-glow hover:-translate-y-0.5 text-endfield-black font-bold tracking-wider uppercase transition-all items-center justify-center gap-2 text-sm glow-yellow shrink-0"
+        variant="primary"
+        fullWidth
+        className="hidden md:flex mt-4 hover:-translate-y-0.5 uppercase glow-yellow shrink-0"
       >
         <Icon name="calculate" />
         {t('calculate')}
-      </button>
+      </Button>
 
       {/* 移动端：常见问题、隐私声明、公告、GitHub、语言切换按钮 */}
       <div className="md:hidden mt-4 pt-4 border-t border-endfield-gray-light space-y-3">
@@ -106,9 +110,7 @@ export default function SidebarFooter({
         >
           <Icon name="campaign" />
           <span className="text-sm">{t('announcement')}</span>
-          {hasUnreadAnnouncementOrChangelog() && (
-            <span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-red-500 rounded-full animate-pulse" />
-          )}
+          {hasUnreadAnnouncementOrChangelog() && <UnreadDot />}
         </button>
         {locale === 'zh' && (
           <a

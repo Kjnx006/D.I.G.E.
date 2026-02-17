@@ -3,6 +3,8 @@ import { QRCodeSVG } from 'qrcode.react';
 import { useI18n } from '../../i18n';
 import { hasUnreadAnnouncementOrChangelog } from '../modals/Announcement';
 import Icon from '../ui/Icon';
+import Button from '../ui/Button';
+import UnreadDot from '../ui/UnreadDot';
 import HeaderMoreMenu from './HeaderMoreMenu';
 
 const BTN_ICON = 'h-9 w-9 sm:h-10 sm:w-10 bg-endfield-gray border border-endfield-gray-light hover:border-endfield-yellow transition-colors flex items-center justify-center text-endfield-text-light hover:text-endfield-yellow';
@@ -60,9 +62,7 @@ export default function Header({ onCalculate, onShare, onShowStatus, sidebarColl
           aria-expanded={!sidebarCollapsed}
         >
           <Icon name={sidebarCollapsed ? 'menu' : 'close'} />
-          {hasUnreadAnnouncementOrChangelog() && (
-            <span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-red-500 rounded-full animate-pulse" aria-hidden="true" />
-          )}
+          {hasUnreadAnnouncementOrChangelog() && <UnreadDot />}
         </button>
 
         <button
@@ -148,9 +148,7 @@ export default function Header({ onCalculate, onShare, onShowStatus, sidebarColl
           aria-label={t('announcement')}
         >
           <Icon name="campaign" />
-          {hasUnreadAnnouncementOrChangelog() && (
-            <span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-red-500 rounded-full animate-pulse" />
-          )}
+          {hasUnreadAnnouncementOrChangelog() && <UnreadDot />}
         </button>
 
         {locale === 'zh' && (
@@ -271,14 +269,15 @@ export default function Header({ onCalculate, onShare, onShowStatus, sidebarColl
           )}
         </nav>
 
-        <button
+        <Button
           onClick={() => onCalculate()}
-          className="md:hidden h-9 px-3 bg-endfield-yellow hover:bg-endfield-yellow-glow hover:-translate-y-0.5 text-endfield-black font-bold tracking-wider uppercase transition-all flex items-center gap-1.5 text-sm glow-yellow"
+          variant="primary"
+          className="md:hidden h-9 min-h-9 px-3 hover:-translate-y-0.5 uppercase glow-yellow"
           aria-label={t('calculate')}
         >
           <Icon name="calculate" />
           <span>{t('calculate')}</span>
-        </button>
+        </Button>
       </div>
     </header>
   );

@@ -84,7 +84,8 @@
         "defaultOpen": true,
         "items": [
           "Added blueprint export with single-branch download and all-branches ZIP download.",
-          "Improved modal interactions: important warnings now require explicit button confirmation to close."
+          "Improved modal interactions: important warnings now require explicit button confirmation to close.",
+          "Added complete export image preview and a minimum battery threshold line in cycle charts."
         ]
       },
       {

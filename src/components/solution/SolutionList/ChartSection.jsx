@@ -4,7 +4,15 @@ import { CONSTANTS } from '../../../utils/constants';
 import SolutionChart from '../SolutionChart';
 import Toggle from '../../ui/Toggle';
 
-export default function ChartSection({ solution, targetPower, preciseValues, setPreciseValues, hideHoverDetails, setHideHoverDetails }) {
+export default function ChartSection({
+  solution,
+  targetPower,
+  minBatteryThreshold,
+  preciseValues,
+  setPreciseValues,
+  hideHoverDetails,
+  setHideHoverDetails,
+}) {
   const { t } = useI18n();
   const chartHeaderRef = useRef(null);
   const chartControlsRef = useRef(null);
@@ -79,6 +87,7 @@ export default function ChartSection({ solution, targetPower, preciseValues, set
       <SolutionChart
         solution={solution}
         targetPower={targetPower}
+        minBatteryThreshold={minBatteryThreshold}
         batteryCapacity={CONSTANTS.BATTERY_CAPACITY}
         hideHoverDetails={hideHoverDetails}
         preciseValues={preciseValues}
