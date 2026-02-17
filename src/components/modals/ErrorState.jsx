@@ -20,7 +20,7 @@ export default function ErrorState({ show, onDismiss }) {
         </p>
         <button
           onClick={onDismiss}
-          className="w-full h-10 bg-red-600/90 hover:bg-red-500 text-white font-bold tracking-wider transition-all flex items-center justify-center gap-2 text-sm"
+          className="shrink-0 w-full h-10 min-h-10 bg-red-600/90 hover:bg-red-500 text-white font-bold tracking-wider transition-all flex items-center justify-center gap-2 text-sm"
         >
           {t('dismiss')}
         </button>

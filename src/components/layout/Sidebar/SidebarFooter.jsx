@@ -8,6 +8,7 @@ export default function SidebarFooter({
   onCalculate,
   onOpenAnnouncement,
   onOpenPrivacyPolicy,
+  onOpenQA,
   onClose,
   locale,
   calcButtonRef,
@@ -74,8 +75,18 @@ export default function SidebarFooter({
         {t('calculate')}
       </button>
 
-      {/* 移动端：公告、GitHub、语言切换按钮 */}
+      {/* 移动端：常见问题、隐私声明、公告、GitHub、语言切换按钮 */}
       <div className="md:hidden mt-4 pt-4 border-t border-endfield-gray-light space-y-3">
+        <button
+          onClick={() => {
+            onOpenQA?.();
+            onClose?.();
+          }}
+          className="w-full h-10 bg-endfield-gray border border-endfield-gray-light hover:border-endfield-yellow transition-colors flex items-center justify-center gap-2 text-endfield-text-light hover:text-endfield-yellow"
+        >
+          <Icon name="help_center" />
+          <span className="text-sm">{t('qa')}</span>
+        </button>
         <button
           onClick={() => {
             onOpenPrivacyPolicy?.();

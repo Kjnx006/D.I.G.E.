@@ -7,6 +7,7 @@ import LoadingOverlay from './components/overlays/LoadingOverlay';
 import ErrorState from './components/modals/ErrorState';
 import Announcement, { shouldShowAnnouncement } from './components/modals/Announcement';
 import PrivacyPolicyModal from './components/modals/PrivacyPolicyModal';
+import QAModal from './components/modals/QAModal';
 import ShareModal from './components/modals/ShareModal';
 import ShareStatusToast from './components/overlays/ShareStatusToast';
 import DirtyOverlay from './components/overlays/DirtyOverlay';
@@ -36,7 +37,7 @@ const getInitialParams = () => {
   return sharedParams ? { ...DEFAULT_PARAMS, ...sharedParams } : DEFAULT_PARAMS;
 };
 
-function AppContent({ onOpenAnnouncement, onOpenPrivacyPolicy }) {
+function AppContent({ onOpenAnnouncement, onOpenPrivacyPolicy, onOpenQA }) {
   const { t } = useI18n();
   const [params, setParams] = useState(getInitialParams);
   const [shareStatusMessage, setShareStatusMessage] = useState('');
@@ -223,6 +224,7 @@ function AppContent({ onOpenAnnouncement, onOpenPrivacyPolicy }) {
           onToggleSidebar={() => setSidebarCollapsed(!sidebarCollapsed)}
           onOpenAnnouncement={onOpenAnnouncement}
           onOpenPrivacyPolicy={onOpenPrivacyPolicy}
+          onOpenQA={onOpenQA}
         />
 
         <ShareStatusToast message={shareStatusMessage} visible={shareStatusVisible} />
@@ -237,6 +239,7 @@ function AppContent({ onOpenAnnouncement, onOpenPrivacyPolicy }) {
             onRandomCalculate={handleRandomCalculate}
             onOpenAnnouncement={onOpenAnnouncement}
             onOpenPrivacyPolicy={onOpenPrivacyPolicy}
+            onOpenQA={onOpenQA}
           />
 
           <div
@@ -294,6 +297,7 @@ function App() {
   const [showAnnouncement, setShowAnnouncement] = useState(() => shouldShowAnnouncement());
   const [announcementInitialTab, setAnnouncementInitialTab] = useState('announcement');
   const [showPrivacyPolicy, setShowPrivacyPolicy] = useState(false);
+  const [showQA, setShowQA] = useState(false);
 
   const openAnnouncement = (initialTab = 'announcement') => {
     setAnnouncementInitialTab(initialTab);
@@ -305,9 +309,11 @@ function App() {
       <AppContent
         onOpenAnnouncement={openAnnouncement}
         onOpenPrivacyPolicy={() => setShowPrivacyPolicy(true)}
+        onOpenQA={() => setShowQA(true)}
       />
       <Announcement show={showAnnouncement} initialTab={announcementInitialTab} onClose={() => setShowAnnouncement(false)} />
       <PrivacyPolicyModal show={showPrivacyPolicy} onClose={() => setShowPrivacyPolicy(false)} />
+      <QAModal show={showQA} onClose={() => setShowQA(false)} />
     </I18nProvider>
   );
 }

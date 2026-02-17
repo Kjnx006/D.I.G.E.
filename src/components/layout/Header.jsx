@@ -3,26 +3,30 @@ import { QRCodeSVG } from 'qrcode.react';
 import { useI18n } from '../../i18n';
 import { hasUnreadAnnouncementOrChangelog } from '../modals/Announcement';
 import Icon from '../ui/Icon';
+import HeaderMoreMenu from './HeaderMoreMenu';
+
+const BTN_ICON = 'h-9 w-9 sm:h-10 sm:w-10 bg-endfield-gray border border-endfield-gray-light hover:border-endfield-yellow transition-colors flex items-center justify-center text-endfield-text-light hover:text-endfield-yellow';
 
 const QQ_GROUP_URL = 'https://qm.qq.com/q/zL6wp3emTQ';
 const QQ_GROUP_NUMBER = '1084531249';
 
-export default function Header({ onCalculate, onShare, onShowStatus, sidebarCollapsed, onToggleSidebar, onOpenAnnouncement, onOpenPrivacyPolicy }) {
+export default function Header({ onCalculate, onShare, onShowStatus, sidebarCollapsed, onToggleSidebar, onOpenAnnouncement, onOpenPrivacyPolicy, onOpenQA }) {
   const { t, locale, changeLocale, languageOptions } = useI18n();
   const [showLangMenu, setShowLangMenu] = useState(false);
+  const [showMoreMenu, setShowMoreMenu] = useState(false);
   const [showQrPopover, setShowQrPopover] = useState(false);
   const [qrExiting, setQrExiting] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
   const langMenuRef = useRef(null);
+  const moreMenuRef = useRef(null);
   const qrTimerRef = useRef(null);
 
   const currentLang = languageOptions.find(l => l.code === locale);
 
   useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (langMenuRef.current && !langMenuRef.current.contains(event.target)) {
-        setShowLangMenu(false);
-      }
+    const handleClickOutside = (e) => {
+      if (langMenuRef.current && !langMenuRef.current.contains(e.target)) setShowLangMenu(false);
+      if (moreMenuRef.current && !moreMenuRef.current.contains(e.target)) setShowMoreMenu(false);
     };
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
@@ -114,9 +118,10 @@ export default function Header({ onCalculate, onShare, onShowStatus, sidebarColl
       </div>
 
       <div className="flex items-center gap-2 sm:gap-3">
+        {/* 宽屏：独立图标 */}
         <button
           onClick={onOpenPrivacyPolicy}
-          className="hidden md:flex h-9 w-9 sm:h-10 sm:w-10 bg-endfield-gray border border-endfield-gray-light hover:border-endfield-yellow transition-colors items-center justify-center text-endfield-text-light hover:text-endfield-yellow"
+          className={`hidden lg:flex ${BTN_ICON}`}
           title={t('privacyPolicyDetails')}
           aria-label={t('privacyPolicyDetails')}
         >
@@ -124,17 +129,21 @@ export default function Header({ onCalculate, onShare, onShowStatus, sidebarColl
         </button>
 
         <button
-          onClick={onShare}
-          className="h-9 w-9 sm:h-10 sm:w-10 bg-endfield-gray border border-endfield-gray-light hover:border-endfield-yellow transition-colors flex items-center justify-center text-endfield-text-light hover:text-endfield-yellow"
-          title={t('share')}
-          aria-label={t('share')}
+          onClick={onOpenQA}
+          className={`hidden lg:flex ${BTN_ICON}`}
+          title={t('qa')}
+          aria-label={t('qa')}
         >
+          <Icon name="help_center" />
+        </button>
+
+        <button onClick={onShare} className={BTN_ICON} title={t('share')} aria-label={t('share')}>
           <Icon name="share" />
         </button>
 
         <button
           onClick={() => onOpenAnnouncement('announcement')}
-          className="relative hidden md:flex h-10 w-10 bg-endfield-gray border border-endfield-gray-light hover:border-endfield-yellow transition-colors items-center justify-center text-endfield-text-light hover:text-endfield-yellow"
+          className={`relative hidden md:flex ${BTN_ICON}`}
           title={t('announcement')}
           aria-label={t('announcement')}
         >
@@ -201,14 +210,35 @@ export default function Header({ onCalculate, onShare, onShowStatus, sidebarColl
           href="https://github.com/djkcyl/D.I.G.E."
           target="_blank"
           rel="noopener noreferrer"
-          className="hidden md:flex h-10 w-10 bg-endfield-gray border border-endfield-gray-light hover:border-endfield-yellow transition-colors items-center justify-center text-endfield-text-light hover:text-endfield-yellow"
+          className={`hidden lg:flex ${BTN_ICON}`}
           title="GitHub"
           aria-label="GitHub 项目页面"
         >
           <Icon icon="mdi:github" />
         </a>
 
-        <nav className="relative hidden md:block" ref={langMenuRef} aria-label="语言切换">
+        {/* 窄屏（md~lg）：更多下拉菜单（最右），移动端不显示 */}
+        <nav className="relative hidden md:block lg:hidden order-last" ref={moreMenuRef} aria-label={t('moreMenu')}>
+          <button
+            onClick={() => setShowMoreMenu(!showMoreMenu)}
+            className={BTN_ICON}
+            title={t('moreMenu')}
+            aria-label={t('moreMenu')}
+            aria-expanded={showMoreMenu}
+            aria-haspopup="menu"
+          >
+            <Icon name="more_vert" />
+          </button>
+          {showMoreMenu && (
+            <HeaderMoreMenu
+              onClose={() => setShowMoreMenu(false)}
+              onOpenPrivacyPolicy={onOpenPrivacyPolicy}
+              onOpenQA={onOpenQA}
+            />
+          )}
+        </nav>
+
+        <nav className="relative hidden lg:block" ref={langMenuRef} aria-label="语言切换">
           <button
             onClick={() => setShowLangMenu(!showLangMenu)}
             className="h-10 px-3 bg-endfield-gray border border-endfield-gray-light hover:border-endfield-yellow transition-colors flex items-center gap-2 text-sm text-endfield-text-light"

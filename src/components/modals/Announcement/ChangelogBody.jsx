@@ -1,4 +1,4 @@
-import ChangelogSection from './ChangelogSection';
+import ExpandableCard from '../../ui/ExpandableCard';
 
 const ListStyle = 'list-disc list-inside space-y-1 text-endfield-text';
 
@@ -6,7 +6,7 @@ export default function ChangelogBody({ sections = [] }) {
   return (
     <div className="space-y-2">
       {sections.map((section, index) => (
-        <ChangelogSection
+        <ExpandableCard
           key={`${section.version}-${index}`}
           version={section.version}
           title={section.title}
@@ -17,7 +17,7 @@ export default function ChangelogBody({ sections = [] }) {
               <li key={`${section.version}-${itemIndex}`}>{item}</li>
             ))}
           </ul>
-        </ChangelogSection>
+        </ExpandableCard>
       ))}
     </div>
   );

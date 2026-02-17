@@ -89,7 +89,10 @@
           "Input source, thermal output, and recycle output no longer show direction arrows.",
           "Improved blueprint legend layout and interaction.",
           "Blueprint mode supports zooming in for a closer look; scroll the mouse wheel or pinch with two fingers to zoom, then drag to view different areas.",
-          "Added \"Exclude conveyors\" option (default on) to mitigate offline flow issues."
+          "Added \"Exclude conveyors\" option (default on) to mitigate offline flow issues.",
+          "Added FAQ (Q&A) page, accessible from the top or left menu.",
+          "On smaller screens, some top icons are grouped into a \"More\" menu for a cleaner look.",
+          "Fixed buttons being squeezed or distorted at the bottom of some popups."
         ]
       },
       {

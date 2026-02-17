@@ -1,0 +1,17 @@
+{
+  "items": [
+    {"question":"Was bedeutet Zielleistung?","answer":"Zielleistung ist die gewünschte Leistungsabgabe (in kW) für Ihr Thermal-Pool-System. Das Tool berechnet automatisch die optimale Brennstoffkonfiguration, Verzweigungsstufen und Speicheranzahl."},
+    {"question":"Wofür sind die Einschränkungen? Warum wird keine Lösung gefunden?","answer":"Einschränkungen steuern die Plangenerierung. Höherer Mindestbatteriestand, niedrigere Redundanzgrenze oder weniger Zweige machen sie strenger und können gültige Lösungen verhindern. Versuchen Sie, sie zu lockern."},
+    {"question":"Was ist der Unterschied zwischen Primär- und Sekundärbrennstoff?","answer":"Primärbrennstoff ist der Hauptbrennstoff für die Verbrennung; Sekundärbrennstoff ist optional und kann mit Primärbrennstoff kombiniert werden, um den Plan zu optimieren."},
+    {"question":"Wofür ist Sekundärbrennstoff?","answer":"In einigen Fällen ist das theoretische Optimum von hocheffizientem Brennstoff schlechter als von niedrigeffizientem. In den meisten Fällen reicht Primärbrennstoff allein."},
+    {"question":"Warum hatte meine Sekundärbrennstoff-Auswahl keine Wirkung?","answer":"Die Effizienz ist niedriger als beim Primärbrennstoff, die Lösung wurde daher herausgefiltert."},
+    {"question":"Wie wähle ich die Eingabequelle (Lager / Verpackungseinheit)?","answer":"Lager-Modus geht davon aus, dass Brennstoff direkt aus dem Lager kommt; Verpackungsmodus erfordert volle Verpackungsleistung (0,1/s) pro Zweig, sonst entspricht die Simulation nicht der Realität."},
+    {"question":"Wenn Einzel- und Mehrzweig-Pläne ähnliche Verluste haben, was soll ich wählen?","answer":"Bevorzugen Sie einen Zweig, es sei denn, mehrere Zweige haben einen klaren Vorteil. Ein Zweig hat kürzere Zyklen, glattere Wellenformen, keine Phasenprobleme, kleineren Platzbedarf und bessere Stabilität."},
+    {"question":"Muss ich den Plan neu generieren, wenn ich mehr Verbraucher hinzufüge?","answer":"Ja."},
+    {"question":"Gibt es eine vorgeschriebene Reihenfolge für die Geräteplatzierung?","answer":"Die aktuelle Berechnung verlangt keine bestimmte Reihenfolge."},
+    {"question":"Kann der Zusammenführer (Rückführleitung) von mehreren Zweigen gemeinsam genutzt werden?","answer":"Ja, wenn er innerhalb eines Zyklus nicht verstopft."},
+    {"question":"Können 2-/3-Wege-Splitter von mehreren Zweigen gemeinsam genutzt werden?","answer":"Ja, aber das kann zu Phasenverschiebung mit der Simulation führen. Normalerweise kann der Mindestbatteriestand höher als erwartet sein; in einigen Fällen niedriger. Beobachten Sie mindestens einen vollen Zyklus, um Stromausfälle zu vermeiden."},
+    {"question":"Werden neue Karten/Brennstoffe unterstützt?","answer":"Ja. Wir erwarten die Unterstützung am Tag des Spiel-Updates."},
+    {"question":"Warum fällt der Strom aus, nachdem ich offline gehe?","answer":"Laut Spielerberichten und Tests kann der Server die Berechnung von Förderbändern und zugehörigen Geräten (Logistikbrücke, Objekteingang) offline vereinfachen, was zu Stopps bei Förderbandrouten führt. Wir können das nicht bestätigen. Die Option « Förderbänder ausschließen » wurde hinzugefügt, um Förderbänder und zugehörige Geräte aus dem Blueprint zu entfernen. Bei Stromausfällen oder Überlauf offline trotz normalem Betrieb online probieren Sie diese Option."}
+  ]
+}

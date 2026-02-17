@@ -24,6 +24,7 @@ export default function Sidebar({
   onRandomCalculate,
   onOpenAnnouncement,
   onOpenPrivacyPolicy,
+  onOpenQA,
 }) {
   const { t, locale } = useI18n();
   const [showInputWarning, setShowInputWarning] = useState(false);
@@ -140,6 +141,7 @@ export default function Sidebar({
             onCalculate={onCalculate}
             onOpenAnnouncement={onOpenAnnouncement}
             onOpenPrivacyPolicy={onOpenPrivacyPolicy}
+            onOpenQA={onOpenQA}
             onClose={onClose}
             locale={locale}
             calcButtonRef={calcButtonRef}

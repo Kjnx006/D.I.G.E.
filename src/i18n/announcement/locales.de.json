@@ -89,7 +89,10 @@
           "Eingangsquelle, thermischer Knoten und Recycling-Ausgang zeigen keine Richtungspfeile mehr.",
           "Verbesserte Anordnung der Blueprint-Legende und Bedienung.",
           "Blueprint-Modus unterstützt Vergrößerung: Mausrad scrollen oder mit zwei Fingern zoomen, dann ziehen um andere Bereiche anzuzeigen.",
-          "Option « Förderbänder ausschließen » (Standard) zur Minderung von Offline-Durchflussproblemen."
+          "Option « Förderbänder ausschließen » (Standard) zur Minderung von Offline-Durchflussproblemen.",
+          "FAQ-Seite (Q&A) hinzugefügt, erreichbar über die obere Leiste oder das linke Menü.",
+          "Auf kleineren Bildschirmen werden einige Icons oben in ein „Mehr“-Menü zusammengefasst.",
+          "Behebt das Zusammendrücken von Buttons am unteren Rand einiger Fenster."
         ]
       },
       {

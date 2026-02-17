@@ -1,8 +1,15 @@
 import { useState } from 'react';
-import { useI18n } from '../../../i18n';
-import Icon from '../../ui/Icon';
+import { useI18n } from '../../i18n';
+import Icon from './Icon';
 
-export default function ChangelogSection({ version, title, defaultOpen = false, children }) {
+/**
+ * 可展开/折叠的卡片区块，用于 FAQ、更新日志等
+ * @param {string} title - 标题（点击展开的文案）
+ * @param {string} [version] - 备用标题，当 title 为空时使用
+ * @param {boolean} [defaultOpen] - 是否默认展开
+ * @param {ReactNode} children - 展开后显示的内容
+ */
+export default function ExpandableCard({ title, version, defaultOpen = false, children }) {
   const [open, setOpen] = useState(defaultOpen);
   const { t } = useI18n();
 
@@ -23,7 +30,7 @@ export default function ChangelogSection({ version, title, defaultOpen = false, 
       >
         <Icon
           name="chevron_right"
-          className={`text-sm leading-none transition-transform ${
+          className={`text-sm leading-none shrink-0 transition-transform ${
             open ? 'rotate-90 text-endfield-yellow' : 'text-endfield-text/50'
           }`}
         />

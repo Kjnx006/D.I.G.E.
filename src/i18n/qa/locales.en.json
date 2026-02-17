@@ -1,0 +1,17 @@
+{
+  "items": [
+    {"question":"What does target power mean?","answer":"Target power is the desired power output (in kW) for your thermal pool system. The tool will automatically calculate the optimal fuel configuration, splitter levels, and storage count based on this target."},
+    {"question":"What do constraints do? Why is no solution found?","answer":"Constraints tune how solutions are generated. Higher minimum battery, lower redundancy limit, or fewer max branches make constraints stricter and may prevent valid solutions. Try relaxing these limits."},
+    {"question":"What is the difference between primary and secondary fuel?","answer":"Primary fuel is the main fuel type required for combustion; secondary fuel is optional and can be combined with primary fuel to optimize the plan."},
+    {"question":"What is secondary fuel for?","answer":"In some cases, high-efficiency fuel's theoretical optimum is worse than low-efficiency fuel. In most cases, primary fuel alone is sufficient."},
+    {"question":"Why did my secondary fuel selection have no effect?","answer":"Its efficiency is lower than primary fuel, so the solution was filtered out."},
+    {"question":"How do I choose input source (Warehouse / Packaging Machine)?","answer":"Warehouse mode assumes fuel comes directly from storage; Packaging Machine mode requires each oscillating branch to have full-speed packer output (0.1/s), otherwise the simulation may not match reality."},
+    {"question":"When single-branch and multi-branch solutions have similar waste, which should I choose?","answer":"Prefer single-branch unless multi-branch has a clear advantage. Single-branch has shorter cycles, smoother waveforms, no phase issues, smaller footprint, and better resilience."},
+    {"question":"If I add more power consumers, do I need to regenerate the plan?","answer":"Yes."},
+    {"question":"Is there a required order for placing devices?","answer":"The current calculation does not require any specific order."},
+    {"question":"Can the merger (recycle line) be shared across multiple branches?","answer":"Yes, if it doesn't back up within one cycle."},
+    {"question":"Can 2-way/3-way splitters be shared across multiple branches?","answer":"Yes, but this can cause phase mismatch with the simulation. Usually the minimum battery may be higher than expected; in some cases it may be lower. Observe at least one full cycle to ensure no blackout."},
+    {"question":"Will new maps/fuels be supported in the future?","answer":"Yes. We expect to support them on the same day as the game update."},
+    {"question":"Why does power go out after I go offline?","answer":"Based on player feedback and testing, the game server may simplify conveyor and conveyor-related device (e.g. logistics bridge, item inlet) calculations when players go offline, causing conveyor-based split routes to stall or stop. We cannot confirm this. We added the \"Exclude conveyors\" option to remove conveyors and related devices from blueprint design. If you experience blackouts or overflow when offline despite normal operation online, try this option."}
+  ]
+}
