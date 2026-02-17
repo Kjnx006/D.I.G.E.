@@ -88,7 +88,8 @@
           "Blueprint mode now uses icons for conveyors, splitters, mergers, etc., for a clearer view.",
           "Input source, thermal output, and recycle output no longer show direction arrows.",
           "Improved blueprint legend layout and interaction.",
-          "Blueprint mode supports zooming in for a closer look; scroll the mouse wheel or pinch with two fingers to zoom, then drag to view different areas."
+          "Blueprint mode supports zooming in for a closer look; scroll the mouse wheel or pinch with two fingers to zoom, then drag to view different areas.",
+          "According to player feedback and tests, the game server may simplify calculations for conveyors and conveyor-based devices (such as logistics bridges and item access points) after players go offline, which can cause conveyor-based split routes to stall. We cannot confirm whether this is accurate, since we cannot verify the server implementation with the game officials. Therefore, we added the \"Exclude Belts\" feature (enabled by default) to remove conveyors and related devices from blueprint designs. If your line works online but shows power loss or overflow after going offline, try this feature to mitigate the issue."
         ]
       },
       {

@@ -88,7 +88,8 @@
           "Le mode Blueprint affiche désormais les convoyeurs, séparateurs, convergeurs en icônes pour plus de clarté.",
           "La source d'entrée, le nœud thermique et la sortie de recyclage n'affichent plus les flèches de direction.",
           "Amélioration de la disposition de la légende Blueprint et de l'expérience utilisateur.",
-          "Le mode Blueprint permet de zoomer pour mieux voir : faites défiler la molette ou pincez avec deux doigts pour zoomer, puis glissez pour afficher d'autres zones."
+          "Le mode Blueprint permet de zoomer pour mieux voir : faites défiler la molette ou pincez avec deux doigts pour zoomer, puis glissez pour afficher d'autres zones.",
+          "D'après les retours et tests de joueurs, le serveur du jeu pourrait simplifier, après passage hors ligne, les calculs liés aux convoyeurs et aux équipements qui en dépendent (comme les ponts logistiques et les points d'entrée d'objets), ce qui peut provoquer des coupures de flux ou l'arrêt des routes de répartition basées sur convoyeurs. Nous ne pouvons pas confirmer cette hypothèse, car nous ne pouvons pas vérifier l'implémentation serveur auprès de l'équipe officielle du jeu. Nous avons donc ajouté la fonction \"Exclure les convoyeurs\" (activée par défaut), qui retire les convoyeurs et équipements associés des plans. Si votre ligne fonctionne en ligne mais présente des coupures d'alimentation ou des débordements hors ligne, essayez cette option pour atténuer le problème."
         ]
       },
       {

@@ -605,10 +605,11 @@ export default function SolutionDiagram({ solution }) {
     return fuel.name[locale] || fuel.name.en;
   };
 
-  const { baseConfig, baseFuel, oscillating, oscillatingFuel, inputSourceId } = solution;
+  const { baseConfig, baseFuel, oscillating, oscillatingFuel, inputSourceId, exclude_belt } = solution;
   const baseFuelData = baseFuel || solution.fuel;
   const oscFuelData = oscillatingFuel || solution.fuel;
   const showPackerWarning = inputSourceId === 'packer';
+  const showExcludeBeltWarning = exclude_belt === false;
 
   return (
     <div className="space-y-2 sm:space-y-3 notranslate" translate="no">
@@ -616,6 +617,13 @@ export default function SolutionDiagram({ solution }) {
         <div className="p-2.5 bg-red-900/20 border border-red-900/50 text-sm text-red-300 flex items-center gap-2">
           <Icon name="warning" />
           <span>{t('inputWarningPacker')}</span>
+        </div>
+      )}
+
+      {showExcludeBeltWarning && (
+        <div className="p-2.5 bg-red-900/20 border border-red-900/50 text-sm text-red-300 flex items-center gap-2">
+          <Icon name="warning" />
+          <span>{t('excludeBeltWarning')}</span>
         </div>
       )}
 
