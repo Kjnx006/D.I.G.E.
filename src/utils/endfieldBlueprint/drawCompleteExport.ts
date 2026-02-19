@@ -26,6 +26,8 @@ import {
   wrapTextLines,
 } from './drawUtils';
 
+const DEFAULT_COMPLETE_EXPORT_WEBSITE = 'https://dige.aunly.cn';
+
 function getExportTargetPower(
   solution: SolutionResult | null | undefined,
   options: { targetPower?: number } = {}
@@ -248,6 +250,7 @@ export interface CompleteExportImageOptions {
   targetPower?: number;
   completeLabels?: Record<string, unknown>;
   shareUrl?: string;
+  websiteUrl?: string;
   chartLabels?: Record<string, string>;
   batteryCapacity?: number;
   fontFamily?: string;
@@ -407,24 +410,34 @@ export async function buildCompleteExportImageBlob(
     Math.max(0, branchRowHeights.length - 1) * branchCardGapY;
 
   const footnoteText = typeof labels.footnote === 'string' ? labels.footnote.trim() : '';
+  const websiteText =
+    typeof options.websiteUrl === 'string' && options.websiteUrl.trim()
+      ? options.websiteUrl.trim()
+      : DEFAULT_COMPLETE_EXPORT_WEBSITE;
   const footnoteFontSize = 18;
+  const footerSectionGap = 6;
   measureContext.font = `500 ${footnoteFontSize}px ${fontFamily}`;
-  const footnoteLinesCount = footnoteText
-    ? wrapTextLines(measureContext, footnoteText, contentWidth - 32).length
-    : 0;
+  const footerSourceTexts = [footnoteText, websiteText].filter((text): text is string =>
+    Boolean(text)
+  );
+  const footerSections = footerSourceTexts.map((text) =>
+    wrapTextLines(measureContext, text, contentWidth - 32)
+  );
   measureContext.font = `500 18px ${fontFamily}`;
   const footnoteLineHeight = footnoteFontSize + 1;
-  const footnoteHeight = footnoteLinesCount > 0 ? footnoteLinesCount * footnoteLineHeight : 0;
-  const footnoteGap = footnoteText ? 12 : 0;
+  const footerHeight =
+    footerSections.reduce((sum, lines) => sum + lines.length * footnoteLineHeight, 0) +
+    Math.max(0, footerSections.length - 1) * footerSectionGap;
+  const footnoteGap = footerSections.length > 0 ? 12 : 0;
 
   let canvasHeight = padding + titleBlockHeight + sectionGap + infoPanelHeight;
   if (chartPanelHeight > 0) {
     canvasHeight += sectionGap + chartPanelHeight;
   }
   canvasHeight += sectionGap + branchesPanelHeight;
-  const footnoteBottomPadding = footnoteText ? 12 : padding;
-  if (footnoteText) {
-    canvasHeight += footnoteGap + footnoteHeight;
+  const footnoteBottomPadding = footerSections.length > 0 ? 12 : padding;
+  if (footerSections.length > 0) {
+    canvasHeight += footnoteGap + footerHeight;
   }
   canvasHeight += footnoteBottomPadding;
   canvasHeight = Math.ceil(canvasHeight);
@@ -544,20 +557,23 @@ export async function buildCompleteExportImageBlob(
   });
   cursorY += branchesPanelHeight;
 
-  if (footnoteText) {
+  if (footerSections.length > 0) {
     cursorY += footnoteGap;
     context.save();
     context.fillStyle = COMPLETE_EXPORT_IMAGE_STYLE.dimTextColor;
     context.font = `500 ${footnoteFontSize}px ${fontFamily}`;
     context.textAlign = 'center';
     context.textBaseline = 'top';
-    const footnoteLines = wrapTextLines(context, footnoteText, contentWidth - 32);
-    const totalTextHeight = footnoteLines.length * footnoteLineHeight;
-    const startY = cursorY + (footnoteHeight - totalTextHeight) / 2;
     const centerX = padding + contentWidth / 2;
-    footnoteLines.forEach((line, i) => {
-      const lineY = startY + i * footnoteLineHeight;
-      context.fillText(line, centerX, lineY);
+    let lineY = cursorY;
+    footerSections.forEach((sectionLines, sectionIndex) => {
+      sectionLines.forEach((line) => {
+        context.fillText(line, centerX, lineY);
+        lineY += footnoteLineHeight;
+      });
+      if (sectionIndex < footerSections.length - 1) {
+        lineY += footerSectionGap;
+      }
     });
     context.restore();
   }
