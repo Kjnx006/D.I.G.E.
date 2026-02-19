@@ -1,6 +1,7 @@
 import {
   FUELS,
   CONSTANTS,
+  PARAM_LIMITS,
   INPUT_SOURCES,
   DEFAULT_INPUT_SOURCE_ID,
   getOscillatingPower,
@@ -186,6 +187,18 @@ function buildSolutionOutput({
   };
 }
 
+function normalizePhaseOffsetCells(value) {
+  const numeric = Number(value);
+  if (!Number.isFinite(numeric)) {
+    return 0;
+  }
+  const rounded = Math.round(numeric);
+  return Math.min(
+    PARAM_LIMITS.MAX_PHASE_OFFSET_CELLS,
+    Math.max(PARAM_LIMITS.MIN_PHASE_OFFSET_CELLS, rounded),
+  );
+}
+
 class PowerCycleSimulator {
   constructor({ targetPower, minBatteryPercent, batteryCapacity, inputInterval }) {
     this.targetPower = targetPower;
@@ -224,8 +237,13 @@ class PowerCycleSimulator {
       return { success: false, reason: 'period_too_long' };
     }
 
-    const numCycles = 3;
-    const totalDuration = period * numCycles;
+    const warmupCycles = 2;
+    const maxPhaseOffset = oscillatingBranches.reduce((maxOffset, branch) => {
+      const offsetSeconds = normalizePhaseOffsetCells(branch.phaseOffsetCells) * CONSTANTS.BELT_INTERVAL;
+      return Math.max(maxOffset, offsetSeconds);
+    }, 0);
+    const warmupDuration = Math.max(period * warmupCycles, maxPhaseOffset + period);
+    const totalDuration = warmupDuration + period;
     const timelineSize = Math.ceil(totalDuration);
 
     const powerTimeline = new Array(timelineSize).fill(0);
@@ -233,9 +251,11 @@ class PowerCycleSimulator {
 
     for (const [branchIndex, branch] of oscillatingBranches.entries()) {
       const inputInterval = this.inputInterval * branch.denominator;
+      const phaseOffsetCells = normalizePhaseOffsetCells(branch.phaseOffsetCells);
+      const branchStartTime = phaseOffsetCells * CONSTANTS.BELT_INTERVAL;
       let lastBurnEnd = 0;
 
-      for (let t = 0; t < totalDuration; t += inputInterval) {
+      for (let t = branchStartTime; t < totalDuration; t += inputInterval) {
         const burnStart = Math.max(t, lastBurnEnd);
         const burnEnd = burnStart + fuel.burnTime;
         lastBurnEnd = burnEnd;
@@ -249,8 +269,9 @@ class PowerCycleSimulator {
       }
     }
 
-    const checkStart = Math.floor(totalDuration - period);
-    const cyclePower = powerTimeline.slice(checkStart, totalDuration);
+    const checkStart = Math.floor(warmupDuration);
+    const checkEnd = Math.floor(totalDuration);
+    const cyclePower = powerTimeline.slice(checkStart, checkEnd);
 
     const minBatteryRequired = (this.batteryCapacity * this.minBatteryPercent) / 100;
     let battery = this.batteryCapacity;
@@ -274,7 +295,7 @@ class PowerCycleSimulator {
     }
 
     const sampleStep = period >= 2000 ? Math.ceil(period / 500) : 1;
-    for (let t = checkStart; t < totalDuration; t += 1) {
+    for (let t = checkStart; t < checkEnd; t += 1) {
       const supply = baseConfig.totalPower + powerTimeline[t];
       battery += supply - this.targetPower;
 
@@ -350,8 +371,17 @@ export class FactoryDesigner {
     this.inputSource = INPUT_SOURCES[inputSourceId] || INPUT_SOURCES[DEFAULT_INPUT_SOURCE_ID];
     this.inputInterval = this.inputSource.interval;
     this.batteryCapacity = CONSTANTS.BATTERY_CAPACITY;
-    this.maxBranches =
-      Number.isInteger(params.maxBranches) && params.maxBranches > 0 ? params.maxBranches : 3;
+    const normalizedMaxBranches = Number.isInteger(params.maxBranches)
+      ? params.maxBranches
+      : PARAM_LIMITS.MAX_BRANCHES;
+    this.maxBranches = Math.min(
+      PARAM_LIMITS.MAX_BRANCHES,
+      Math.max(PARAM_LIMITS.MIN_BRANCHES, normalizedMaxBranches),
+    );
+    this.branchPhaseOffsets = Array.from(
+      { length: this.maxBranches },
+      (_, index) => normalizePhaseOffsetCells(params[`phaseOffsetBranch${index + 1}`]),
+    );
     this.excludeBelt = Boolean(params.exclude_belt ?? params.excludeBelt ?? true);
 
     this.validDenominators = this._generateValidDenominators();
@@ -426,8 +456,11 @@ export class FactoryDesigner {
           continue;
         }
 
-        const branches = combo.map((d) => ({ denominator: d, fuel }));
-        const result = this.simulator.simulateCycle(baseConfig, branches, fuel);
+        const branchConfigs = combo.map((d, i) => ({
+          denominator: d,
+          phaseOffsetCells: this.branchPhaseOffsets[i] ?? 0,
+        }));
+        const result = this.simulator.simulateCycle(baseConfig, branchConfigs, fuel);
 
         if (result.success && result.waste != null && result.waste >= 0 && result.waste <= this.maxWaste) {
           const complexity = combo.map((d) => analyzeSplitterComplexity(d));
@@ -436,9 +469,10 @@ export class FactoryDesigner {
           solutions.push({
             fuel,
             isPrimary,
-            branches: combo.map((d, i) => ({
-              denominator: d,
-              power: getOscillatingPower(fuel, d, this.inputInterval),
+            branches: branchConfigs.map((branchConfig, i) => ({
+              denominator: branchConfig.denominator,
+              phaseOffsetCells: branchConfig.phaseOffsetCells,
+              power: getOscillatingPower(fuel, branchConfig.denominator, this.inputInterval),
               complexity: complexity[i],
               blueprint: buildBranchBlueprint(
                 complexity[i].threeWay,

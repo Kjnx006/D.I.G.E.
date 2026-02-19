@@ -13,6 +13,8 @@
   "blueprintMode": "Blueprint",
   "branch": "Branche",
   "branchesShort": "Branches",
+  "branchPhaseOffset": "Décalage de phase par branche (cases)",
+  "branchPhaseOffsetHint": "Simule les différences de longueur initiale de convoyeur entre branches : 1 case = 2 s, maximum 16 cases par branche.",
   "burnStateShort": "Combustion",
   "calculate": "Calculer",
   "calculating": "Calcul en cours...",

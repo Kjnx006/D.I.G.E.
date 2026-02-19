@@ -13,6 +13,8 @@
   "blueprintMode": "Blueprint",
   "branch": "Branch",
   "branchesShort": "Branches",
+  "branchPhaseOffset": "Branch Phase Offset (cells)",
+  "branchPhaseOffsetHint": "Simulates different starting conveyor lengths per branch; 1 cell = 2 s, up to 16 cells per branch.",
   "burnStateShort": "Burn",
   "calculate": "Calculate",
   "calculating": "Calculating...",

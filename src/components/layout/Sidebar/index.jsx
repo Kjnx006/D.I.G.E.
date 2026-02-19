@@ -45,6 +45,17 @@ export default function Sidebar({
       setParams((prev) => ({ ...prev, [key]: clampNumber(value, PARAM_LIMITS.MIN_BRANCHES, PARAM_LIMITS.MAX_BRANCHES) }));
       return;
     }
+    if (/^phaseOffsetBranch\d+$/.test(key)) {
+      setParams((prev) => ({
+        ...prev,
+        [key]: clampNumber(
+          value,
+          PARAM_LIMITS.MIN_PHASE_OFFSET_CELLS,
+          PARAM_LIMITS.MAX_PHASE_OFFSET_CELLS,
+        ),
+      }));
+      return;
+    }
     if (key === 'minBatteryPercent') {
       setParams((prev) => ({ ...prev, [key]: clampNumber(value, 0, 100) }));
       return;

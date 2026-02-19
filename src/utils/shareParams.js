@@ -12,6 +12,11 @@ const TARGET_POWER_BITS = 15;
 const INPUT_SOURCE_BITS = 2;
 const MAX_BRANCHES_BITS = 3;
 const EXCLUDE_BELT_BITS = 2;
+const PHASE_OFFSET_BITS = 5;
+const PHASE_OFFSET_FIELD_KEYS = Array.from(
+  { length: PARAM_LIMITS.MAX_BRANCHES },
+  (_, index) => `phaseOffsetBranch${index + 1}`,
+);
 
 const toBase52 = (value) => {
   let num = BigInt(value);
@@ -75,7 +80,10 @@ const createNumberField = ({ index, key, bits, min = 0, max, optional = false, m
     optional,
     missingRawValue,
     encode: (value) => {
-      const rounded = Math.round(value);
+      if (optional && (value === undefined || value === null || value === '')) {
+        return missingRawValue;
+      }
+      const rounded = Math.round(Number(value));
       if (!isValidNonNegativeInt(rounded)) return null;
       if (rounded < min || rounded > max) return null;
       if (rounded > maxEncodedValue) return null;
@@ -134,21 +142,37 @@ const createBooleanField = ({ index, key, bits = 2, optional = false, missingRaw
   };
 };
 
-const SHARE_FIELDS = [
-  createOptionField({ index: 0, key: 'primaryFuelId', bits: PRIMARY_FUEL_BITS, options: FUEL_OPTIONS }),
-  createOptionField({ index: 1, key: 'secondaryFuelId', bits: SECONDARY_FUEL_BITS, options: SECONDARY_FUEL_OPTIONS }),
-  createNumberField({ index: 2, key: 'maxWaste', bits: MAX_WASTE_BITS, max: PARAM_LIMITS.MAX_MAX_WASTE }),
-  createNumberField({ index: 3, key: 'minBatteryPercent', bits: MIN_BATTERY_BITS, max: PARAM_LIMITS.MAX_BATTERY_PERCENT }),
-  createNumberField({ index: 4, key: 'targetPower', bits: TARGET_POWER_BITS, max: PARAM_LIMITS.MAX_TARGET_POWER }),
+const assignFieldIndices = (fields) => fields.map((field, index) => ({ ...field, index }));
+const clampMaxBranches = (value) => {
+  const numeric = Math.round(Number(value));
+  if (!Number.isFinite(numeric)) return PARAM_LIMITS.MAX_BRANCHES;
+  return Math.min(
+    PARAM_LIMITS.MAX_BRANCHES,
+    Math.max(PARAM_LIMITS.MIN_BRANCHES, numeric),
+  );
+};
+
+const getPhaseOffsetBranchIndex = (key) => {
+  const match = /^phaseOffsetBranch(\d+)$/.exec(key);
+  if (!match) return null;
+  const index = Number(match[1]);
+  return Number.isInteger(index) && index > 0 ? index : null;
+};
+
+// Keep field order stable for backward compatibility; add new fields only at the end.
+const SHARE_FIELDS = assignFieldIndices([
+  createOptionField({ key: 'primaryFuelId', bits: PRIMARY_FUEL_BITS, options: FUEL_OPTIONS }),
+  createOptionField({ key: 'secondaryFuelId', bits: SECONDARY_FUEL_BITS, options: SECONDARY_FUEL_OPTIONS }),
+  createNumberField({ key: 'maxWaste', bits: MAX_WASTE_BITS, max: PARAM_LIMITS.MAX_MAX_WASTE }),
+  createNumberField({ key: 'minBatteryPercent', bits: MIN_BATTERY_BITS, max: PARAM_LIMITS.MAX_BATTERY_PERCENT }),
+  createNumberField({ key: 'targetPower', bits: TARGET_POWER_BITS, max: PARAM_LIMITS.MAX_TARGET_POWER }),
   createOptionField({
-    index: 5,
     key: 'inputSourceId',
     bits: INPUT_SOURCE_BITS,
     options: INPUT_SOURCE_OPTIONS,
     fallbackIndex: defaultInputIndex,
   }),
   createNumberField({
-    index: 6,
     key: 'maxBranches',
     bits: MAX_BRANCHES_BITS,
     min: PARAM_LIMITS.MIN_BRANCHES,
@@ -157,24 +181,38 @@ const SHARE_FIELDS = [
     missingRawValue: 0,
   }),
   createBooleanField({
-    index: 7,
     key: 'exclude_belt',
     bits: EXCLUDE_BELT_BITS,
     optional: true,
     missingRawValue: 0,
   }),
-];
+  ...PHASE_OFFSET_FIELD_KEYS.map((key) => (
+    createNumberField({
+      key,
+      bits: PHASE_OFFSET_BITS,
+      min: PARAM_LIMITS.MIN_PHASE_OFFSET_CELLS,
+      max: PARAM_LIMITS.MAX_PHASE_OFFSET_CELLS,
+      optional: true,
+      missingRawValue: 0,
+    })
+  )),
+]);
 
 const LAYOUT_FIELDS = [...SHARE_FIELDS].sort((a, b) => a.index - b.index);
 
 export function encodeShareParams(params) {
   if (!params) return null;
+  const activeBranchCount = clampMaxBranches(params.maxBranches);
 
   let packed = 0n;
   let offset = 0n;
 
   for (const field of LAYOUT_FIELDS) {
-    const encodedValue = field.encode(params[field.key]);
+    const phaseOffsetIndex = getPhaseOffsetBranchIndex(field.key);
+    const isInactivePhaseOffset =
+      phaseOffsetIndex != null && phaseOffsetIndex > activeBranchCount;
+    const sourceValue = isInactivePhaseOffset ? field.missingRawValue : params[field.key];
+    const encodedValue = field.encode(sourceValue);
     if (!isValidNonNegativeInt(encodedValue)) return null;
     if (encodedValue > field.maxEncodedValue) return null;
 
@@ -203,6 +241,14 @@ export function decodeShareParams(value) {
     }
 
     decoded[field.key] = decodedValue;
+  }
+
+  const activeBranchCount = clampMaxBranches(decoded.maxBranches);
+  for (const key of PHASE_OFFSET_FIELD_KEYS) {
+    const index = getPhaseOffsetBranchIndex(key);
+    if (index != null && index > activeBranchCount) {
+      delete decoded[key];
+    }
   }
 
   return decoded;

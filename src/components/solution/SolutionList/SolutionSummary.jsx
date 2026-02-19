@@ -6,6 +6,12 @@ export default function SolutionSummary({ solution }) {
 
   if (!solution) return null;
 
+  const phaseOffsetSummary = Array.isArray(solution.oscillating) && solution.oscillating.length > 0
+    ? solution.oscillating
+      .map((branch, index) => `#${index + 1}:${Math.max(0, Math.round(Number(branch?.phaseOffsetCells) || 0))}`)
+      .join(', ')
+    : null;
+
   return (
     <div className="grid grid-cols-2 sm:flex sm:flex-wrap gap-2 sm:gap-4 text-sm">
       <div className="flex items-center gap-1 sm:gap-2">
@@ -34,6 +40,12 @@ export default function SolutionSummary({ solution }) {
         <span className="text-endfield-text">{t('variance')}:</span>
         <span className="text-endfield-text-light">{solution.variance?.toFixed(2) || '0'}</span>
       </div>
+      {phaseOffsetSummary && (
+        <div className="col-span-2 flex items-center gap-1 sm:gap-2">
+          <span className="text-endfield-text">{t('branchPhaseOffset')}:</span>
+          <span className="text-endfield-text-light">{phaseOffsetSummary}</span>
+        </div>
+      )}
     </div>
   );
 }

@@ -13,6 +13,8 @@
   "blueprintMode": "Режим чертежа",
   "branch": "Ветка",
   "branchesShort": "Ветки",
+  "branchPhaseOffset": "Фазовый сдвиг ветки (ячейки)",
+  "branchPhaseOffsetHint": "Моделирует разницу стартовой длины конвейера по веткам: 1 ячейка = 2 с, максимум 16 ячеек на ветку.",
   "burnStateShort": "Горение",
   "calculate": "Рассчитать",
   "calculating": "Расчёт...",

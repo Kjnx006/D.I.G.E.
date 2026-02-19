@@ -13,6 +13,8 @@
   "blueprintMode": "ブループリント",
   "branch": "ブランチ",
   "branchesShort": "路",
+  "branchPhaseOffset": "分岐位相差（マス）",
+  "branchPhaseOffsetHint": "分岐ごとの開始コンベア長の差を再現します。1マス=2秒、各分岐は最大16マスです。",
   "burnStateShort": "燃焼",
   "calculate": "計算",
   "calculating": "計算中...",

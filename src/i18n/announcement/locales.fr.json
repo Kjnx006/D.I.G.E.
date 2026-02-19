@@ -85,7 +85,8 @@
         "items": [
           "Ajout de l'export blueprint avec téléchargement par branche et téléchargement de toutes les branches en ZIP.",
           "Amélioration des interactions de modales : les alertes importantes nécessitent désormais une confirmation explicite par bouton pour être fermées.",
-          "Ajout de la prévisualisation de l’image d’export complète et d’une ligne de seuil minimal de batterie sur le graphique de cycle."
+          "Ajout de la prévisualisation de l’image d’export complète et d’une ligne de seuil minimal de batterie sur le graphique de cycle.",
+          "Ajout du paramètre « Décalage de phase par branche (cases) » : chaque branche peut être réglée indépendamment de 0 à 16 cases pour simuler des longueurs de convoyeur initiales différentes."
         ]
       },
       {

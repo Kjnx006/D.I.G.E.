@@ -85,7 +85,8 @@
         "items": [
           "Added blueprint export with single-branch download and all-branches ZIP download.",
           "Improved modal interactions: important warnings now require explicit button confirmation to close.",
-          "Added complete export image preview and a minimum battery threshold line in cycle charts."
+          "Added complete export image preview and a minimum battery threshold line in cycle charts.",
+          "Added \"Branch Phase Offset (cells)\" with independent 0-16 cell settings per branch to simulate different starting conveyor lengths."
         ]
       },
       {

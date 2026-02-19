@@ -13,6 +13,8 @@
   "blueprintMode": "블루프린트",
   "branch": "브랜치",
   "branchesShort": "경로",
+  "branchPhaseOffset": "분기 위상차(칸)",
+  "branchPhaseOffsetHint": "분기별 시작 컨베이어 길이 차이를 시뮬레이션합니다. 1칸=2초, 분기당 최대 16칸.",
   "burnStateShort": "연소",
   "calculate": "계산",
   "calculating": "계산 중...",

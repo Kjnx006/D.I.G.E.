@@ -85,7 +85,8 @@
         "items": [
           "Blueprint-Export hinzugefügt: einzelne Zweige und alle Zweige als ZIP können direkt heruntergeladen werden.",
           "Modal-Interaktionen verbessert: wichtige Warnhinweise lassen sich nur noch nach ausdrücklicher Bestätigung per Schaltfläche schließen.",
-          "Vorschau für das vollständige Exportbild hinzugefügt und im Zyklusdiagramm eine Mindestbatterie-Schwellenlinie ergänzt."
+          "Vorschau für das vollständige Exportbild hinzugefügt und im Zyklusdiagramm eine Mindestbatterie-Schwellenlinie ergänzt.",
+          "Neue Einstellung „Phasenversatz pro Zweig (Felder)“: Pro Zweig lassen sich 0-16 Felder separat festlegen, um unterschiedliche Start-Förderbandlängen zu simulieren."
         ]
       },
       {

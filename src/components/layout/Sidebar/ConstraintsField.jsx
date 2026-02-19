@@ -11,6 +11,16 @@ export default function ConstraintsField({ params, onChange, onCalculate }) {
     onChange('minBatteryPercent', clamped);
   };
 
+  const visibleBranchCount = Math.max(
+    PARAM_LIMITS.MIN_BRANCHES,
+    Math.min(PARAM_LIMITS.MAX_BRANCHES, params.maxBranches ?? PARAM_LIMITS.MAX_BRANCHES),
+  );
+
+  const phaseOffsetBranchKeys = Array.from(
+    { length: visibleBranchCount },
+    (_, index) => `phaseOffsetBranch${index + 1}`,
+  );
+
   return (
     <SidebarSection icon="tune" title={t('constraints')} className="space-y-4">
       <div className="space-y-2">
@@ -71,6 +81,31 @@ export default function ConstraintsField({ params, onChange, onCalculate }) {
         rightSlot={<span className="text-sm text-endfield-text-light" aria-live="polite">{params.maxBranches ?? 3}</span>}
         ticks={Array.from({ length: PARAM_LIMITS.MAX_BRANCHES }, (_, i) => i + 1)}
       />
+
+      <div className="space-y-2">
+        <div className="text-sm text-endfield-text">{t('branchPhaseOffset')}</div>
+        <p className="text-xs text-endfield-text/70">{t('branchPhaseOffsetHint')}</p>
+        <div className="space-y-3">
+          {phaseOffsetBranchKeys.map((key, index) => (
+            <RangeField
+              key={key}
+              id={`phase-offset-branch-${index + 1}`}
+              label={`${t('branch')} ${index + 1}`}
+              value={params[key] ?? 0}
+              min={PARAM_LIMITS.MIN_PHASE_OFFSET_CELLS}
+              max={PARAM_LIMITS.MAX_PHASE_OFFSET_CELLS}
+              step={1}
+              onChange={(nextValue) => onChange(key, nextValue)}
+              ariaLabel={`${t('branch')} ${index + 1} ${t('branchPhaseOffset')}`}
+              rightSlot={(
+                <span className="text-sm text-endfield-text-light" aria-live="polite">
+                  {params[key] ?? 0}
+                </span>
+              )}
+            />
+          ))}
+        </div>
+      </div>
     </SidebarSection>
   );
 }

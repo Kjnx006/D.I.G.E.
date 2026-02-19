@@ -30,6 +30,7 @@ export default function SolutionDiagram({ solution, params }) {
   const [blueprintZoom, setBlueprintZoom] = useState(1);
   const [exportModalOpen, setExportModalOpen] = useState(false);
   const [imagePreviewOpen, setImagePreviewOpen] = useState(false);
+  const [resumeExportModalOnPreviewClose, setResumeExportModalOnPreviewClose] = useState(false);
   const [imagePreviewBlob, setImagePreviewBlob] = useState(null);
   const [imagePreviewFileName, setImagePreviewFileName] = useState('');
   const [imagePreviewTitle, setImagePreviewTitle] = useState('');
@@ -88,6 +89,7 @@ export default function SolutionDiagram({ solution, params }) {
 
   const handleCloseExportModal = useCallback(() => {
     setExportModalOpen(false);
+    setResumeExportModalOnPreviewClose(false);
   }, []);
 
   const handleCloseImagePreview = useCallback(() => {
@@ -95,7 +97,11 @@ export default function SolutionDiagram({ solution, params }) {
     setImagePreviewBlob(null);
     setImagePreviewFileName('');
     setImagePreviewTitle('');
-  }, []);
+    if (resumeExportModalOnPreviewClose) {
+      setExportModalOpen(true);
+      setResumeExportModalOnPreviewClose(false);
+    }
+  }, [resumeExportModalOnPreviewClose]);
 
   useEffect(() => {
     if (mode !== 'blueprint') setBlueprintZoom(1);
@@ -165,6 +171,7 @@ export default function SolutionDiagram({ solution, params }) {
           fileName,
           title: `${t('branch')} ${branchIndex + 1} PNG`,
         });
+        setResumeExportModalOnPreviewClose(true);
         setExportModalOpen(false);
       } catch (error) {
         console.error('Blueprint PNG export failed:', error);
@@ -244,6 +251,7 @@ export default function SolutionDiagram({ solution, params }) {
           minBatteryPercent: t('minBatteryPercent'),
           maxWaste: t('maxWaste'),
           maxBranches: t('maxBranches'),
+          branchPhaseOffset: t('branchPhaseOffset'),
           excludeBelt: t('excludeBelt'),
           primaryFuel: t('primaryFuel'),
           secondaryFuel: t('secondaryFuel'),
@@ -269,6 +277,7 @@ export default function SolutionDiagram({ solution, params }) {
         fileName,
         title: t('completeImagePreviewTitle'),
       });
+      setResumeExportModalOnPreviewClose(true);
       setExportModalOpen(false);
     } catch (error) {
       console.error('Blueprint complete image export failed:', error);

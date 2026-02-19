@@ -13,6 +13,8 @@
   "blueprintMode": "蓝图模式",
   "branch": "分支",
   "branchesShort": "路",
+  "branchPhaseOffset": "分支相位差（格）",
+  "branchPhaseOffsetHint": "用于模拟分支起始传送带长度差异；1 格 = 2 秒，单分支最大 16 格。",
   "burnStateShort": "燃烧",
   "calculate": "计算",
   "calculating": "计算中...",

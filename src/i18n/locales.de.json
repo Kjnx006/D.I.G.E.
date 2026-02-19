@@ -13,6 +13,8 @@
   "blueprintMode": "Blueprint",
   "branch": "Zweig",
   "branchesShort": "Zweige",
+  "branchPhaseOffset": "Phasenversatz pro Zweig (Felder)",
+  "branchPhaseOffsetHint": "Simuliert unterschiedliche Start-Förderbandlängen je Zweig: 1 Feld = 2 s, maximal 16 Felder pro Zweig.",
   "burnStateShort": "Brennen",
   "calculate": "Berechnen",
   "calculating": "Berechne...",

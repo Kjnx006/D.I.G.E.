@@ -12,7 +12,7 @@ import {
   Title,
   Tooltip,
 } from 'chart.js';
-import { CONSTANTS, formatTime } from './constants';
+import { CONSTANTS, PARAM_LIMITS, formatTime } from './constants';
 
 const DEFAULT_BLUEPRINT_ICON = Object.freeze({
   icon: 'blueprint_default_icon',
@@ -67,6 +67,7 @@ const BRANCH_PNG_STYLE = Object.freeze({
   headerGap: 6,
   gridPadding: 8,
   cellSize: 40,
+  exportPixelRatio: 2,
   fontFamilyFallback: '"Frex Sans GB VF", "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif',
 });
 
@@ -194,6 +195,8 @@ function collectBlueprintParts(blueprint) {
     splitters: [],
     topConvergers: [],
     bottomConvergers: [],
+    topLaneConvergers: [],
+    bottomLaneConvergers: [],
     topBelts: [],
     bottomBelts: [],
     thermalCol: null,
@@ -222,6 +225,8 @@ function collectBlueprintParts(blueprint) {
         case 'converger':
           if (row === 0) parts.topConvergers.push(col);
           if (row === height - 1) parts.bottomConvergers.push(col);
+          if (row === topBeltRow) parts.topLaneConvergers.push(col);
+          if (row === bottomBeltRow) parts.bottomLaneConvergers.push(col);
           break;
         case 'belt':
           if (row === topBeltRow) parts.topBelts.push(col);
@@ -252,6 +257,8 @@ function collectBlueprintParts(blueprint) {
   parts.splitters.sort((a, b) => a - b);
   parts.topConvergers.sort((a, b) => a - b);
   parts.bottomConvergers.sort((a, b) => a - b);
+  parts.topLaneConvergers.sort((a, b) => a - b);
+  parts.bottomLaneConvergers.sort((a, b) => a - b);
   parts.topBelts.sort((a, b) => a - b);
   parts.bottomBelts.sort((a, b) => a - b);
 
@@ -298,6 +305,18 @@ function buildNodesFromBranch(branch) {
   for (const col of parts.bottomConvergers) {
     nodes.push(
       createStructureNode(nodeId++, 'log_converger', col, toGameZ(height - 1, height), 90),
+    );
+  }
+
+  for (const col of parts.topLaneConvergers) {
+    nodes.push(
+      createStructureNode(nodeId++, 'log_converger', col, toGameZ(topBeltRow, height), 180),
+    );
+  }
+
+  for (const col of parts.bottomLaneConvergers) {
+    nodes.push(
+      createStructureNode(nodeId++, 'log_converger', col, toGameZ(bottomBeltRow, height), 0),
     );
   }
 
@@ -464,6 +483,14 @@ function toFiniteOrNull(value) {
   return Number.isFinite(n) ? n : null;
 }
 
+function buildPhaseOffsetParamPayload(params) {
+  const payload = {};
+  for (let i = 1; i <= PARAM_LIMITS.MAX_BRANCHES; i += 1) {
+    payload[`phaseOffsetBranch${i}`] = toFiniteOrNull(params?.[`phaseOffsetBranch${i}`]);
+  }
+  return payload;
+}
+
 function buildExportParamsPayload({
   params,
   solution,
@@ -478,6 +505,7 @@ function buildExportParamsPayload({
       minBatteryPercent: toFiniteOrNull(params.minBatteryPercent),
       maxWaste: toFiniteOrNull(params.maxWaste),
       maxBranches: toFiniteOrNull(params.maxBranches),
+      ...buildPhaseOffsetParamPayload(params),
       exclude_belt:
           typeof params.exclude_belt === 'boolean' ? params.exclude_belt : null,
       primaryFuelId: params.primaryFuelId ?? null,
@@ -491,6 +519,7 @@ function buildExportParamsPayload({
       index: index + 1,
       denominator: Number(branch?.denominator),
       power: roundNumber(branch?.power, 2),
+      phaseOffsetCells: toFiniteOrNull(branch?.phaseOffsetCells),
       fileStem: getIndexedBranchStem(branch, index),
     }))
     : [];
@@ -532,6 +561,7 @@ function getCompleteExportLabels(labels = {}) {
     minBatteryPercent: labels.minBatteryPercent || 'Min Battery (%)',
     maxWaste: labels.maxWaste || 'Max Waste',
     maxBranches: labels.maxBranches || 'Max Branches',
+    branchPhaseOffset: labels.branchPhaseOffset || 'Branch Phase Offset (cells)',
     excludeBelt: labels.excludeBelt || 'Exclude Belts',
     primaryFuel: labels.primaryFuel || 'Primary Fuel',
     secondaryFuel: labels.secondaryFuel || 'Secondary Fuel',
@@ -630,6 +660,16 @@ function buildCompleteInfoSections(payload, labels) {
         ? labels.excludeBeltOn
         : labels.excludeBeltOff
       : formatExportValue(params.exclude_belt);
+  const branchPhaseOffsetValues =
+    Array.isArray(payload?.branches) && payload.branches.length > 0
+      ? payload.branches
+        .map((branch, index) => {
+          const rawOffset = toFiniteOrNull(branch?.phaseOffsetCells);
+          const offset = rawOffset == null ? 0 : Math.max(0, Math.round(rawOffset));
+          return `${labels.branch} ${index + 1}: ${offset}`;
+        })
+        .join(' | ')
+      : '-';
 
   return {
     parameters: [
@@ -637,6 +677,7 @@ function buildCompleteInfoSections(payload, labels) {
       { label: labels.minBatteryPercent, value: `${formatExportValue(params.minBatteryPercent)}%` },
       { label: labels.maxWaste, value: formatExportValue(params.maxWaste) },
       { label: labels.maxBranches, value: formatExportValue(params.maxBranches) },
+      { label: labels.branchPhaseOffset, value: branchPhaseOffsetValues },
       { label: labels.excludeBelt, value: excludeBeltValue },
       {
         label: labels.primaryFuel,
@@ -1170,14 +1211,10 @@ async function buildBranchPngBlob(branch, options = {}) {
   const canvasWidth = frameX * 2 + frameWidth;
   const canvasHeight = outerPadding + headerHeight + headerGap + frameHeight + outerPadding;
 
-  const pixelRatio = Math.max(
-    1,
-    Number.isFinite(options.pixelRatio)
-      ? options.pixelRatio
-      : typeof window !== 'undefined'
-        ? window.devicePixelRatio || 1
-        : 1,
-  );
+  const resolvedPixelRatio = Number.isFinite(options.pixelRatio)
+    ? Number(options.pixelRatio)
+    : BRANCH_PNG_STYLE.exportPixelRatio;
+  const pixelRatio = Math.max(1, Math.min(4, resolvedPixelRatio));
 
   const canvas = document.createElement('canvas');
   canvas.width = Math.max(1, Math.round(canvasWidth * pixelRatio));
