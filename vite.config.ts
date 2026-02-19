@@ -79,6 +79,8 @@ export default defineConfig({
           if (id.includes('i18n') && (id.includes('locales') || id.endsWith('.json')))
             return 'i18n';
           if (id.includes('node_modules')) {
+            if (id.includes('@sentry/') || id.includes('react-microsoft-clarity'))
+              return 'monitoring';
             if (
               (id.includes('node_modules/react/') || id.includes('node_modules/react-dom/')) &&
               !id.includes('react-chartjs') &&
@@ -87,7 +89,6 @@ export default defineConfig({
               return 'core';
             if (id.includes('chart.js') || id.includes('react-chartjs')) return 'vendor';
             if (id.includes('@iconify/react')) return 'vendor';
-            if (id.includes('@sentry/react')) return 'vendor';
             if (id.includes('qrcode.react')) return 'vendor';
           }
         },
