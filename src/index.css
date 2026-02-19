@@ -9,7 +9,7 @@ html {
 }
 
 body {
-  font-family: "Frex Sans GB VF";
+  font-family: "Frex Sans GB VF", sans-serif;
   font-weight: normal;
   text-autospace: normal;
 }
@@ -63,7 +63,7 @@ button {
   position: relative;
 }
 .endfield-accent::before {
-  content: '';
+  content: "";
   position: absolute;
   left: 0;
   top: 0;
@@ -74,7 +74,9 @@ button {
 
 /* Yellow glow effect */
 .glow-yellow {
-  box-shadow: 0 0 20px rgba(255, 250, 0, 0.3), 0 0 40px rgba(255, 250, 0, 0.1);
+  box-shadow:
+    0 0 20px rgba(255, 250, 0, 0.3),
+    0 0 40px rgba(255, 250, 0, 0.1);
 }
 
 /* Input styling */
@@ -150,7 +152,7 @@ select:focus {
   position: relative;
 }
 .corner-mark::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: 0;
@@ -160,7 +162,7 @@ select:focus {
   border-top: 2px solid #fffa00;
 }
 .corner-mark::after {
-  content: '';
+  content: "";
   position: absolute;
   bottom: 0;
   right: 0;
@@ -186,7 +188,8 @@ select:focus {
 
 /* 黄色发光闪烁动画 */
 @keyframes pulse-glow {
-  0%, 100% {
+  0%,
+  100% {
     filter: drop-shadow(0 0 4px rgba(255, 250, 0, 0.4));
   }
   50% {
@@ -198,8 +201,14 @@ select:focus {
 }
 
 @keyframes qr-enter {
-  from { opacity: 0; transform: scale(0.95) translateY(4px); }
-  to { opacity: 1; transform: scale(1) translateY(0); }
+  from {
+    opacity: 0;
+    transform: scale(0.95) translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
 }
 .animate-qr-enter {
   animation: qr-enter 0.2s ease-out;

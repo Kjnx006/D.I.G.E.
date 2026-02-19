@@ -1,17 +1,53 @@
 {
   "items": [
-    {"question":"Que signifie la puissance cible ?","answer":"La puissance cible est la puissance de sortie souhaitée (en kW) pour votre système de pool thermique. L'outil calcule automatiquement la configuration optimale de carburant, les niveaux de répartition et le nombre de stockages."},
-    {"question":"À quoi servent les contraintes ? Pourquoi aucune solution n'est trouvée ?","answer":"Les contraintes ajustent la génération des plans. Plus le niveau minimum de batterie est élevé, plus la limite de redondance est basse ou moins il y a de branches, plus les contraintes sont strictes et peuvent empêcher des solutions valides. Essayez de les assouplir."},
-    {"question":"Quelle est la différence entre carburant principal et secondaire ?","answer":"Le carburant principal est le type principal requis pour la combustion ; le carburant secondaire est optionnel et peut être combiné avec le principal pour optimiser le plan."},
-    {"question":"À quoi sert le carburant secondaire ?","answer":"Dans certains cas, l'optimum théorique d'un carburant à haute efficacité est inférieur à un carburant à faible efficacité. Dans la plupart des cas, le carburant principal seul suffit."},
-    {"question":"Pourquoi ma sélection de carburant secondaire n'a-t-elle pas d'effet ?","answer":"Son efficacité est inférieure au carburant principal, la solution a donc été filtrée."},
-    {"question":"Comment choisir la source d'entrée (Entrepôt / Emballeuse) ?","answer":"Le mode Entrepôt suppose que le carburant provient directement du stockage ; le mode Emballeuse nécessite une sortie emballeuse à pleine vitesse (0,1/s) par branche oscillante, sinon la simulation ne correspondra pas à la réalité."},
-    {"question":"Quand les pertes sont similaires entre une branche et plusieurs branches, que choisir ?","answer":"Préférez une seule branche sauf si plusieurs branches offrent un avantage net. Une branche a des cycles plus courts, des formes d'onde plus stables, pas de problèmes de phase, une empreinte plus petite et une meilleure résilience."},
-    {"question":"Si j'ajoute des consommateurs, dois-je régénérer le plan ?","answer":"Oui."},
-    {"question":"Y a-t-il un ordre requis pour placer les appareils ?","answer":"Le calcul actuel n'impose aucun ordre."},
-    {"question":"Le converger (ligne de recyclage) peut-il être partagé entre plusieurs branches ?","answer":"Oui, s'il ne se bloque pas pendant un cycle."},
-    {"question":"Les séparateurs 2/3 voies peuvent-ils être partagés entre plusieurs branches ?","answer":"Oui, mais cela peut provoquer un décalage de phase avec la simulation. En général, le niveau minimum de batterie peut être plus élevé que prévu ; dans certains cas, plus bas. Observez au moins un cycle complet pour éviter les coupures."},
-    {"question":"Les nouvelles cartes/carburants seront-ils supportés ?","answer":"Oui. Nous prévoyons le support le jour de la mise à jour du jeu."},
-    {"question":"Pourquoi la puissance s'arrête-t-elle après ma déconnexion ?","answer":"D'après les retours et tests, le serveur peut simplifier le calcul des convoyeurs et appareils associés (pont logistique, entrée d'objets) en hors ligne, provoquant des arrêts sur les routes de convoyeurs. Nous ne pouvons pas le confirmer. L'option « Exclure les convoyeurs » a été ajoutée pour retirer les convoyeurs et appareils associés du blueprint. Si vous subissez des coupures ou débordements hors ligne malgré un fonctionnement normal en ligne, essayez cette option."}
+    {
+      "question": "Que signifie la puissance cible ?",
+      "answer": "La puissance cible est la puissance de sortie souhaitée (en kW) pour votre système de pool thermique. L'outil calcule automatiquement la configuration optimale de carburant, les niveaux de répartition et le nombre de stockages."
+    },
+    {
+      "question": "À quoi servent les contraintes ? Pourquoi aucune solution n'est trouvée ?",
+      "answer": "Les contraintes ajustent la génération des plans. Plus le niveau minimum de batterie est élevé, plus la limite de redondance est basse ou moins il y a de branches, plus les contraintes sont strictes et peuvent empêcher des solutions valides. Essayez de les assouplir."
+    },
+    {
+      "question": "Quelle est la différence entre carburant principal et secondaire ?",
+      "answer": "Le carburant principal est le type principal requis pour la combustion ; le carburant secondaire est optionnel et peut être combiné avec le principal pour optimiser le plan."
+    },
+    {
+      "question": "À quoi sert le carburant secondaire ?",
+      "answer": "Dans certains cas, l'optimum théorique d'un carburant à haute efficacité est inférieur à un carburant à faible efficacité. Dans la plupart des cas, le carburant principal seul suffit."
+    },
+    {
+      "question": "Pourquoi ma sélection de carburant secondaire n'a-t-elle pas d'effet ?",
+      "answer": "Son efficacité est inférieure au carburant principal, la solution a donc été filtrée."
+    },
+    {
+      "question": "Comment choisir la source d'entrée (Entrepôt / Emballeuse) ?",
+      "answer": "Le mode Entrepôt suppose que le carburant provient directement du stockage ; le mode Emballeuse nécessite une sortie emballeuse à pleine vitesse (0,1/s) par branche oscillante, sinon la simulation ne correspondra pas à la réalité."
+    },
+    {
+      "question": "Quand les pertes sont similaires entre une branche et plusieurs branches, que choisir ?",
+      "answer": "Préférez une seule branche sauf si plusieurs branches offrent un avantage net. Une branche a des cycles plus courts, des formes d'onde plus stables, pas de problèmes de phase, une empreinte plus petite et une meilleure résilience."
+    },
+    { "question": "Si j'ajoute des consommateurs, dois-je régénérer le plan ?", "answer": "Oui." },
+    {
+      "question": "Y a-t-il un ordre requis pour placer les appareils ?",
+      "answer": "Le calcul actuel n'impose aucun ordre."
+    },
+    {
+      "question": "Le converger (ligne de recyclage) peut-il être partagé entre plusieurs branches ?",
+      "answer": "Oui, s'il ne se bloque pas pendant un cycle."
+    },
+    {
+      "question": "Les séparateurs 2/3 voies peuvent-ils être partagés entre plusieurs branches ?",
+      "answer": "Oui, mais cela peut provoquer un décalage de phase avec la simulation. En général, le niveau minimum de batterie peut être plus élevé que prévu ; dans certains cas, plus bas. Observez au moins un cycle complet pour éviter les coupures."
+    },
+    {
+      "question": "Les nouvelles cartes/carburants seront-ils supportés ?",
+      "answer": "Oui. Nous prévoyons le support le jour de la mise à jour du jeu."
+    },
+    {
+      "question": "Pourquoi la puissance s'arrête-t-elle après ma déconnexion ?",
+      "answer": "D'après les retours et tests, le serveur peut simplifier le calcul des convoyeurs et appareils associés (pont logistique, entrée d'objets) en hors ligne, provoquant des arrêts sur les routes de convoyeurs. Nous ne pouvons pas le confirmer. L'option « Exclure les convoyeurs » a été ajoutée pour retirer les convoyeurs et appareils associés du blueprint. Si vous subissez des coupures ou débordements hors ligne malgré un fonctionnement normal en ligne, essayez cette option."
+    }
   ]
 }
