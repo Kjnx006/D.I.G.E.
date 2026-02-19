@@ -103,6 +103,7 @@
   "minBatteryShort": "最低",
   "moreMenu": "その他",
   "noChartData": "チャートデータがありません",
+  "noOscillatingBranchHint": "この構成では振動発電の分岐は不要です",
   "noSolutionData": "ソリューションデータなし",
   "noSolutionFound": "解決策が見つかりません",
   "openGithubProjectPage": "GitHub プロジェクトページを開く",

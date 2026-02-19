@@ -72,6 +72,7 @@ function AppContent({ onOpenAnnouncement, onOpenPrivacyPolicy, onOpenQA }: AppCo
   const [showDirtyOverlay, setShowDirtyOverlay] = useState(false);
   const [dirtyDismissed, setDirtyDismissed] = useState(false);
   const lastCalcParamsRef = useRef<CalcParams | null>(null);
+  const hasAutoCalculatedRef = useRef(false);
 
   const setParamsWithDirty = useCallback((updater: React.SetStateAction<CalcParams>) => {
     setParams(updater);
@@ -223,7 +224,11 @@ function AppContent({ onOpenAnnouncement, onOpenPrivacyPolicy, onOpenQA }: AppCo
   }, [params, runCalculation]);
 
   useEffect(() => {
-    const timer = setTimeout(runCalculation, 300);
+    if (hasAutoCalculatedRef.current) return;
+    hasAutoCalculatedRef.current = true;
+    const timer = setTimeout(() => {
+      runCalculation();
+    }, 300);
     return () => clearTimeout(timer);
   }, [runCalculation]);
 

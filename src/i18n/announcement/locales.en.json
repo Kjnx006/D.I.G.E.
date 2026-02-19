@@ -86,7 +86,9 @@
           "This release focuses on internal refactoring and stability improvements; core features and workflows remain the same.",
           "Keyboard usability is improved: the language menu, More menu, and image preview now support more complete keyboard navigation.",
           "The complete export image now includes a source footnote, making shared screenshots easier to attribute.",
-          "Several labels are now more consistent and localized across languages (for example JSON/PNG format labels and zoom controls)."
+          "Several labels are now more consistent and localized across languages (for example JSON/PNG format labels and zoom controls).",
+          "Fixed an issue where some parameter sets could show duplicate solutions with inaccurate presentation.",
+          "Improved chart and diagram display for base-only solutions to avoid blank states and keep layout consistent."
         ]
       },
       {

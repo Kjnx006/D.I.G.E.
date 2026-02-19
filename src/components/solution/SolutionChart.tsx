@@ -70,9 +70,22 @@ export default function SolutionChart({
 
   const hasData = !!(solution && sourceBatteryLog && sourceBatteryLog.length > 0);
 
-  let batteryData = sourceBatteryLog || [];
-  let powerData = sourcePowerLog || [];
-  let burnStateData = sourceBurnStateLog || [];
+  let batteryData = sourceBatteryLog ? [...sourceBatteryLog] : [];
+  let powerData = sourcePowerLog ? [...sourcePowerLog] : [];
+  let burnStateData = sourceBurnStateLog ? sourceBurnStateLog.map((series) => [...series]) : [];
+
+  // For base-only/direct solutions we may have a single sample.
+  // Duplicate it so the chart renders a visible horizontal segment.
+  if (batteryData.length === 1) {
+    const batteryValue = batteryData[0] ?? 0;
+    const powerValue = powerData[0] ?? 0;
+    batteryData = [batteryValue, batteryValue];
+    powerData = [powerValue, powerValue];
+    burnStateData = burnStateData.map((series) => {
+      const state = series[0] ?? 0;
+      return [state, state];
+    });
+  }
 
   const rawBatteryData = batteryData;
   const rawPowerData = powerData;

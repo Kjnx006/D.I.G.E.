@@ -103,6 +103,7 @@
   "minBatteryShort": "Мин. заряд",
   "moreMenu": "Ещё",
   "noChartData": "Нет данных для графика",
+  "noOscillatingBranchHint": "Для этой схемы осциллирующие ветки не требуются",
   "noSolutionData": "Нет данных о решении",
   "noSolutionFound": "Решение не найдено",
   "openGithubProjectPage": "Открыть страницу проекта на GitHub",

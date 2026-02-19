@@ -172,11 +172,11 @@ function buildSolutionOutput({
       minBatteryPercent: 100,
       branchCount: 0,
       totalSplitters: 0,
-      batteryLog: [batteryCapacity],
-      powerLog: [baseConfig.totalPower],
+      batteryLog: [batteryCapacity, batteryCapacity],
+      powerLog: [baseConfig.totalPower, baseConfig.totalPower],
       burnStateLog: [],
-      preciseBatteryLog: [batteryCapacity],
-      precisePowerLog: [baseConfig.totalPower],
+      preciseBatteryLog: [batteryCapacity, batteryCapacity],
+      precisePowerLog: [baseConfig.totalPower, baseConfig.totalPower],
       preciseBurnStateLog: [],
       fuelConsumption: {
         base: {
@@ -523,6 +523,38 @@ export class FactoryDesigner {
     return denominators.sort((a, b) => a - b);
   }
 
+  _getDirectBaseConfigs(): Array<{ generators: number; totalPower: number; belts: number }> {
+    const inputSpeed = this.inputInterval > 0 ? 1 / this.inputInterval : 0;
+    const gensPerBelt = inputSpeed * this.primaryFuel.burnTime;
+    const minGenerators = Math.max(
+      0,
+      Math.ceil((this.targetPower - CONSTANTS.BASE_POWER) / this.primaryFuel.power)
+    );
+    const maxGenerators = Math.max(
+      0,
+      Math.floor((this.targetPower + this.maxWaste - CONSTANTS.BASE_POWER) / this.primaryFuel.power)
+    );
+
+    if (maxGenerators < minGenerators) {
+      return [];
+    }
+
+    const configs: Array<{ generators: number; totalPower: number; belts: number }> = [];
+    for (let generators = minGenerators; generators <= maxGenerators; generators += 1) {
+      const totalPower = CONSTANTS.BASE_POWER + generators * this.primaryFuel.power;
+      const waste = totalPower - this.targetPower;
+      if (waste < 0 || waste > this.maxWaste) {
+        continue;
+      }
+      configs.push({
+        generators,
+        totalPower,
+        belts: gensPerBelt > 0 ? Math.ceil(generators / gensPerBelt) : 0,
+      });
+    }
+    return configs;
+  }
+
   calculateBasePower(): { generators: number; totalPower: number; belts: number } {
     const inputSpeed = this.inputInterval > 0 ? 1 / this.inputInterval : 0;
     const gensPerBelt = inputSpeed * this.primaryFuel.burnTime;
@@ -565,8 +597,16 @@ export class FactoryDesigner {
     }
 
     const solutions: OscillatingSolutionInput[] = [];
+    const effectiveDenominators = this.validDenominators.filter((d) => {
+      const branchPower = getOscillatingPower(fuel, d, this.inputInterval);
+      return branchPower < fuel.power;
+    });
+    if (effectiveDenominators.length === 0) {
+      return solutions;
+    }
+
     for (let r = 1; r <= this.maxBranches; r += 1) {
-      const combinations = this._getCombinations(this.validDenominators, r);
+      const combinations = this._getCombinations(effectiveDenominators, r);
 
       for (const combo of combinations) {
         const theoryPower = combo.reduce(
@@ -630,38 +670,57 @@ export class FactoryDesigner {
     return solutions;
   }
 
+  _buildSolutionSignature(solution: OscillatingSolutionInput): string {
+    const round = (value: number, digits: number): number => {
+      const factor = 10 ** digits;
+      return Math.round(value * factor) / factor;
+    };
+
+    return [
+      solution.fuel.id,
+      solution.isPrimary ? 'primary' : 'secondary',
+      solution.branchCount,
+      round(solution.avgPower, 1),
+      round(solution.waste, 1),
+      round(solution.variance, 2),
+      round(solution.minBatteryPercent, 1),
+    ].join('|');
+  }
+
   solve(): SolutionResult[] {
     const baseConfig = this.calculateBasePower();
+    const directBaseOutputs = this._getDirectBaseConfigs().map((directBaseConfig) => {
+      const baseFuelPerSec =
+        directBaseConfig.generators > 0
+          ? directBaseConfig.generators / this.primaryFuel.burnTime
+          : 0;
+      return buildSolutionOutput({
+        baseConfig: directBaseConfig,
+        primaryFuel: this.primaryFuel,
+        targetPower: this.targetPower,
+        inputInterval: this.inputInterval,
+        inputSourceId: this.inputSource.id,
+        excludeBelt: this.excludeBelt,
+        batteryCapacity: this.batteryCapacity,
+        baseFuelPerSec,
+        solution: null,
+        oscillatingFuelPerSec: 0,
+      });
+    });
 
-    if (baseConfig.totalPower >= this.targetPower) {
-      const waste = baseConfig.totalPower - this.targetPower;
-      if (waste <= this.maxWaste) {
-        const baseFuelPerSec =
-          baseConfig.generators > 0 ? baseConfig.generators / this.primaryFuel.burnTime : 0;
-        return [
-          buildSolutionOutput({
-            baseConfig,
-            primaryFuel: this.primaryFuel,
-            targetPower: this.targetPower,
-            inputInterval: this.inputInterval,
-            inputSourceId: this.inputSource.id,
-            excludeBelt: this.excludeBelt,
-            batteryCapacity: this.batteryCapacity,
-            baseFuelPerSec,
-            solution: null,
-            oscillatingFuelPerSec: 0,
-          }),
-        ];
+    const allOscillatingSolutions: OscillatingSolutionInput[] = [];
+    if (baseConfig.totalPower < this.targetPower) {
+      allOscillatingSolutions.push(
+        ...this.calculateOscillatingPlans(this.primaryFuel, baseConfig, true)
+      );
+      if (this.secondaryFuel) {
+        allOscillatingSolutions.push(
+          ...this.calculateOscillatingPlans(this.secondaryFuel, baseConfig, false)
+        );
       }
     }
 
-    const allSolutions: OscillatingSolutionInput[] = [];
-    allSolutions.push(...this.calculateOscillatingPlans(this.primaryFuel, baseConfig, true));
-    if (this.secondaryFuel) {
-      allSolutions.push(...this.calculateOscillatingPlans(this.secondaryFuel, baseConfig, false));
-    }
-
-    allSolutions.sort((a, b) => {
+    allOscillatingSolutions.sort((a, b) => {
       const keyA = [
         a.branchCount,
         Math.round(a.variance * 10) / 10,
@@ -682,8 +741,19 @@ export class FactoryDesigner {
       return 0;
     });
 
-    const outputs: SolutionResult[] = [];
-    for (const solution of allSolutions.slice(0, 5)) {
+    const uniqueSolutions: OscillatingSolutionInput[] = [];
+    const seenSignatures = new Set<string>();
+    for (const solution of allOscillatingSolutions) {
+      const signature = this._buildSolutionSignature(solution);
+      if (seenSignatures.has(signature)) {
+        continue;
+      }
+      seenSignatures.add(signature);
+      uniqueSolutions.push(solution);
+    }
+
+    const outputs: SolutionResult[] = [...directBaseOutputs];
+    for (const solution of uniqueSolutions) {
       const baseFuelPerSec =
         baseConfig.generators > 0 ? baseConfig.generators / this.primaryFuel.burnTime : 0;
       const oscillatingFuelPerSec = solution.branches
@@ -710,6 +780,27 @@ export class FactoryDesigner {
       );
     }
 
-    return outputs;
+    outputs.sort((a, b) => {
+      const keyA = [
+        a.branchCount,
+        Math.round(a.variance * 10) / 10,
+        Math.round(a.waste * 10) / 10,
+        a.isPrimary ? 0 : 1,
+      ];
+      const keyB = [
+        b.branchCount,
+        Math.round(b.variance * 10) / 10,
+        Math.round(b.waste * 10) / 10,
+        b.isPrimary ? 0 : 1,
+      ];
+      for (let i = 0; i < keyA.length; i += 1) {
+        if (keyA[i] !== keyB[i]) {
+          return keyA[i] - keyB[i];
+        }
+      }
+      return 0;
+    });
+
+    return outputs.slice(0, 5);
   }
 }

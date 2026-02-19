@@ -132,8 +132,8 @@ export default function SolutionDiagram({ solution, params }: SolutionDiagramPro
   const exclude_belt = solution?.exclude_belt;
   const showPackerWarning = inputSourceId === 'packer';
   const showExcludeBeltWarning = exclude_belt === false;
-  const canExportBlueprint =
-    mode === 'blueprint' && Array.isArray(oscillating) && oscillating.length > 0;
+  const hasOscillating = Array.isArray(oscillating) && oscillating.length > 0;
+  const canExportBlueprint = mode === 'blueprint' && hasOscillating;
 
   const handleExportSingleBranch = useCallback(
     (branchIndex: number) => {
@@ -317,66 +317,83 @@ export default function SolutionDiagram({ solution, params }: SolutionDiagramPro
 
       <DiagramConfig solution={solution} locale={locale} />
 
-      {oscillating && oscillating.length > 0 && (
-        <div className="border border-endfield-gray-light bg-endfield-gray/30">
-          <div className="flex flex-wrap items-center gap-2 p-3 border-b border-endfield-gray-light bg-endfield-gray/50">
-            <Icon name="electric_bolt" className="text-endfield-yellow" />
-            <span className="text-sm text-endfield-text uppercase">{t('oscillatingShort')}:</span>
-            <span className="text-sm font-bold text-endfield-text-light">{oscillating.length}</span>
-            <span className="text-sm text-endfield-text">
-              x{' '}
-              {oscillatingFuel
-                ? oscillatingFuel.name?.[locale] || oscillatingFuel.name?.en
-                : (solution.fuel as { name?: Record<string, string> })?.name?.[locale] ||
-                  (solution.fuel as { name?: Record<string, string> })?.name?.en}
-            </span>
-            <span className="text-sm text-endfield-text">=</span>
-            <span className="text-sm font-bold text-endfield-yellow">
-              {oscillating.reduce((sum, b) => sum + b.power, 0).toFixed(0)}w
-            </span>
-            <span className="text-xs text-endfield-text/70">
-              ({oscillating.map((b) => `${b.power.toFixed(0)}w`).join(' + ')})
-            </span>
-            <div className="ml-auto flex items-center gap-2">
-              {canExportBlueprint && (
-                <button
-                  type="button"
-                  onClick={handleOpenExportModal}
-                  className="inline-flex items-center gap-1.5 px-2 py-1 text-xs border border-endfield-gray-light text-endfield-text-light bg-endfield-gray/80 hover:text-endfield-yellow hover:border-endfield-yellow transition-colors"
-                  title={t('exportBlueprintJson')}
-                  aria-label={t('exportBlueprintJson')}
-                >
-                  <Icon name="download" className="w-4 h-4" />
-                  <span>{t('exportBlueprintJson')}</span>
-                </button>
-              )}
-              <div className="inline-flex border border-endfield-gray-light bg-endfield-gray/80">
-                <button
-                  type="button"
-                  onClick={() => setMode('blueprint')}
-                  className={`px-2 py-1 text-xs transition-colors ${
-                    mode === 'blueprint'
+      <div className="border border-endfield-gray-light bg-endfield-gray/30">
+        <div className="flex flex-wrap items-center gap-2 p-3 border-b border-endfield-gray-light bg-endfield-gray/50">
+          <Icon name="electric_bolt" className="text-endfield-yellow" />
+          <span className="text-sm text-endfield-text uppercase">{t('oscillatingShort')}:</span>
+          <span className="text-sm font-bold text-endfield-text-light">
+            {hasOscillating ? oscillating.length : 0}
+          </span>
+          {hasOscillating ? (
+            <>
+              <span className="text-sm text-endfield-text">
+                x{' '}
+                {oscillatingFuel
+                  ? oscillatingFuel.name?.[locale] || oscillatingFuel.name?.en
+                  : (solution.fuel as { name?: Record<string, string> })?.name?.[locale] ||
+                    (solution.fuel as { name?: Record<string, string> })?.name?.en}
+              </span>
+              <span className="text-sm text-endfield-text">=</span>
+              <span className="text-sm font-bold text-endfield-yellow">
+                {oscillating.reduce((sum, b) => sum + b.power, 0).toFixed(0)}w
+              </span>
+              <span className="text-xs text-endfield-text/70">
+                ({oscillating.map((b) => `${b.power.toFixed(0)}w`).join(' + ')})
+              </span>
+            </>
+          ) : (
+            <>
+              <span className="text-sm text-endfield-text">=</span>
+              <span className="text-sm font-bold text-endfield-yellow">0w</span>
+            </>
+          )}
+          <div className="ml-auto flex items-center gap-2">
+            {canExportBlueprint && (
+              <button
+                type="button"
+                onClick={handleOpenExportModal}
+                className="inline-flex items-center gap-1.5 px-2 py-1 text-xs border border-endfield-gray-light text-endfield-text-light bg-endfield-gray/80 hover:text-endfield-yellow hover:border-endfield-yellow transition-colors"
+                title={t('exportBlueprintJson')}
+                aria-label={t('exportBlueprintJson')}
+              >
+                <Icon name="download" className="w-4 h-4" />
+                <span>{t('exportBlueprintJson')}</span>
+              </button>
+            )}
+            <div className="inline-flex border border-endfield-gray-light bg-endfield-gray/80">
+              <button
+                type="button"
+                disabled={!hasOscillating}
+                onClick={() => setMode('blueprint')}
+                className={`px-2 py-1 text-xs transition-colors ${
+                  !hasOscillating
+                    ? 'text-endfield-text/40 cursor-not-allowed'
+                    : mode === 'blueprint'
                       ? 'text-endfield-yellow bg-endfield-yellow/10'
                       : 'text-endfield-text-light hover:text-endfield-yellow'
-                  }`}
-                >
-                  {t('blueprintMode')}
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setMode('simple')}
-                  className={`px-2 py-1 text-xs border-l border-endfield-gray-light transition-colors ${
-                    mode === 'simple'
+                }`}
+              >
+                {t('blueprintMode')}
+              </button>
+              <button
+                type="button"
+                disabled={!hasOscillating}
+                onClick={() => setMode('simple')}
+                className={`px-2 py-1 text-xs border-l border-endfield-gray-light transition-colors ${
+                  !hasOscillating
+                    ? 'text-endfield-text/40 cursor-not-allowed'
+                    : mode === 'simple'
                       ? 'text-endfield-yellow bg-endfield-yellow/10'
                       : 'text-endfield-text-light hover:text-endfield-yellow'
-                  }`}
-                >
-                  {t('simpleMode')}
-                </button>
-              </div>
+                }`}
+              >
+                {t('simpleMode')}
+              </button>
             </div>
           </div>
+        </div>
 
+        {hasOscillating ? (
           <div
             className={`flex gap-3 p-2 sm:p-3 ${
               mode === 'simple' ? 'flex-col' : 'flex-wrap justify-center'
@@ -403,10 +420,14 @@ export default function SolutionDiagram({ solution, params }: SolutionDiagramPro
               </div>
             ))}
           </div>
-        </div>
-      )}
+        ) : (
+          <div className="p-2 sm:p-3 text-xs text-endfield-text/70">
+            {t('noOscillatingBranchHint')}
+          </div>
+        )}
+      </div>
 
-      {oscillating && oscillating.length > 0 && (
+      {hasOscillating && (
         <div className="border border-endfield-gray-light bg-endfield-gray/20 p-3 sm:p-4 space-y-4">
           <div>
             <div className="flex items-center justify-between gap-2 mb-2">
@@ -442,7 +463,7 @@ export default function SolutionDiagram({ solution, params }: SolutionDiagramPro
       )}
 
       <BlueprintExportModal
-        show={Boolean(oscillating && oscillating.length > 0 && exportModalOpen)}
+        show={Boolean(hasOscillating && exportModalOpen)}
         t={t}
         branches={oscillating ?? []}
         onClose={handleCloseExportModal}

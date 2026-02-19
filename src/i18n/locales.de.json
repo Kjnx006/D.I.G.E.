@@ -103,6 +103,7 @@
   "minBatteryShort": "Min. Batt.",
   "moreMenu": "Mehr",
   "noChartData": "Keine Diagrammdaten verfügbar",
+  "noOscillatingBranchHint": "Für diese Lösung sind keine oszillierenden Zweige erforderlich",
   "noSolutionData": "Keine Lösungsdaten",
   "noSolutionFound": "Keine Lösung gefunden",
   "openGithubProjectPage": "GitHub-Projektseite öffnen",

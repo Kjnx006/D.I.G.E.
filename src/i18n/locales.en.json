@@ -103,6 +103,7 @@
   "minBatteryShort": "Min Batt",
   "moreMenu": "More",
   "noChartData": "No chart data available",
+  "noOscillatingBranchHint": "No oscillating branch is needed for this solution",
   "noSolutionData": "No solution data",
   "noSolutionFound": "No solution found",
   "openGithubProjectPage": "Open GitHub project homepage",

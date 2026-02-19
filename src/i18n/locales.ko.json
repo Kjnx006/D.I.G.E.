@@ -103,6 +103,7 @@
   "minBatteryShort": "최소",
   "moreMenu": "더보기",
   "noChartData": "차트 데이터 없음",
+  "noOscillatingBranchHint": "이 구성에서는 진동 발전 분기가 필요하지 않습니다",
   "noSolutionData": "솔루션 데이터 없음",
   "noSolutionFound": "해결책을 찾을 수 없습니다",
   "openGithubProjectPage": "GitHub 프로젝트 페이지 열기",

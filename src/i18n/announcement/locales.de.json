@@ -86,7 +86,9 @@
           "Dieses Update konzentriert sich vor allem auf interne Überarbeitung und Stabilitätsverbesserungen; die Kernfunktionen und der Ablauf bleiben unverändert.",
           "Die Tastaturbedienung wurde verbessert: Sprachmenü, Mehr-Menü und Bildvorschau unterstützen nun vollständigere Tastaturnavigation.",
           "Am unteren Rand des vollständigen Exportbilds wurde ein Quellenhinweis ergänzt, damit geteilte Bilder leichter zugeordnet werden können.",
-          "Mehrere UI-Beschriftungen wurden vereinheitlicht und lokalisiert, unter anderem für JSON/PNG und Zoom-Steuerungen."
+          "Mehrere UI-Beschriftungen wurden vereinheitlicht und lokalisiert, unter anderem für JSON/PNG und Zoom-Steuerungen.",
+          "Ein Problem wurde behoben, bei dem bei bestimmten Parametern doppelte Lösungen mit ungenauer Darstellung angezeigt wurden.",
+          "Die Diagramm- und Ablaufansicht für reine Basisstrom-Lösungen wurde verbessert, um leere Bereiche zu vermeiden und das Layout zu vereinheitlichen."
         ]
       },
       {

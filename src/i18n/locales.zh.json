@@ -103,6 +103,7 @@
   "minBatteryShort": "最低电量",
   "moreMenu": "更多",
   "noChartData": "暂无图表数据",
+  "noOscillatingBranchHint": "当前方案无需震荡发电分支",
   "noSolutionData": "暂无方案数据",
   "noSolutionFound": "未找到解决方案",
   "openGithubProjectPage": "打开 GitHub 项目主页",
