@@ -79,9 +79,20 @@
   "changelog": {
     "sections": [
       {
+        "version": "v1.10.0",
+        "title": "v1.10.0 Updates",
+        "defaultOpen": true,
+        "items": [
+          "This release focuses on internal refactoring and stability improvements; core features and workflows remain the same.",
+          "Keyboard usability is improved: the language menu, More menu, and image preview now support more complete keyboard navigation.",
+          "The complete export image now includes a source footnote, making shared screenshots easier to attribute.",
+          "Several labels are now more consistent and localized across languages (for example JSON/PNG format labels and zoom controls)."
+        ]
+      },
+      {
         "version": "v1.9.0",
         "title": "v1.9.0 Updates",
-        "defaultOpen": true,
+        "defaultOpen": false,
         "items": [
           "Added blueprint export with single-branch download and all-branches ZIP download.",
           "Improved modal interactions: important warnings now require explicit button confirmation to close.",

@@ -79,9 +79,20 @@
   "changelog": {
     "sections": [
       {
+        "version": "v1.10.0",
+        "title": "v1.10.0 Mises à jour",
+        "defaultOpen": true,
+        "items": [
+          "Cette version se concentre surtout sur une refonte interne et des améliorations de stabilité ; les fonctions principales et le flux d'utilisation restent inchangés.",
+          "Navigation clavier améliorée : le menu des langues, le menu « Plus » et l'aperçu d'image prennent en charge un parcours clavier plus complet.",
+          "Une mention de source a été ajoutée en bas de l'image d'export complet, pour faciliter l'attribution lors du partage.",
+          "Plusieurs libellés d'interface ont été harmonisés et localisés, notamment pour JSON/PNG et les commandes de zoom."
+        ]
+      },
+      {
         "version": "v1.9.0",
         "title": "v1.9.0 Mises à jour",
-        "defaultOpen": true,
+        "defaultOpen": false,
         "items": [
           "Ajout de l'export blueprint avec téléchargement par branche et téléchargement de toutes les branches en ZIP.",
           "Amélioration des interactions de modales : les alertes importantes nécessitent désormais une confirmation explicite par bouton pour être fermées.",
