@@ -348,18 +348,6 @@ export default function SolutionDiagram({ solution, params }: SolutionDiagramPro
             </>
           )}
           <div className="ml-auto flex items-center gap-2">
-            {canExportBlueprint && (
-              <button
-                type="button"
-                onClick={handleOpenExportModal}
-                className="inline-flex items-center gap-1.5 px-2 py-1 text-xs border border-endfield-gray-light text-endfield-text-light bg-endfield-gray/80 hover:text-endfield-yellow hover:border-endfield-yellow transition-colors"
-                title={t('exportBlueprintJson')}
-                aria-label={t('exportBlueprintJson')}
-              >
-                <Icon name="download" className="w-4 h-4" />
-                <span>{t('exportBlueprintJson')}</span>
-              </button>
-            )}
             <div className="inline-flex border border-endfield-gray-light bg-endfield-gray/80">
               <button
                 type="button"
@@ -394,31 +382,48 @@ export default function SolutionDiagram({ solution, params }: SolutionDiagramPro
         </div>
 
         {hasOscillating ? (
-          <div
-            className={`flex gap-3 p-2 sm:p-3 ${
-              mode === 'simple' ? 'flex-col' : 'flex-wrap justify-center'
-            }`}
-          >
-            {oscillating.map((branch, idx) => (
-              <div
-                key={`${branch.denominator}-${branch.power}-${branch.phaseOffsetCells ?? 0}-${idx}`}
-                className={mode === 'simple' ? 'w-full' : 'min-w-[min(100%,360px)]'}
-                style={mode === 'blueprint' ? { zoom: blueprintZoom } : undefined}
-              >
-                {mode === 'simple' ? (
-                  <SimpleBranch branch={branch as { denominator: number; power: number }} t={t} />
-                ) : (
-                  <BlueprintBranch
-                    branch={branch}
-                    zoom={blueprintZoom}
-                    onWheelZoom={handleBlueprintWheel}
-                    onTouchStart={handleBlueprintTouchStart}
-                    onTouchMove={handleBlueprintTouchMove}
-                    onTouchEnd={handleBlueprintTouchEnd}
-                  />
-                )}
+          <div className="relative">
+            {canExportBlueprint && (
+              <div className="absolute bottom-2 right-2 z-10">
+                <button
+                  type="button"
+                  onClick={handleOpenExportModal}
+                  className="inline-flex items-center gap-1.5 px-2 py-1 text-xs border border-endfield-gray-light text-endfield-text-light bg-endfield-gray/90 hover:text-endfield-yellow hover:border-endfield-yellow transition-colors"
+                  title={t('exportBlueprintJson')}
+                  aria-label={t('exportBlueprintJson')}
+                >
+                  <Icon name="download" className="w-4 h-4" />
+                  <span className="hidden sm:inline">{t('exportBlueprintJson')}</span>
+                </button>
               </div>
-            ))}
+            )}
+
+            <div
+              className={`flex gap-3 p-2 sm:p-3 ${
+                mode === 'simple' ? 'flex-col' : 'flex-wrap justify-center'
+              }`}
+            >
+              {oscillating.map((branch, idx) => (
+                <div
+                  key={`${branch.denominator}-${branch.power}-${branch.phaseOffsetCells ?? 0}-${idx}`}
+                  className={mode === 'simple' ? 'w-full' : 'min-w-[min(100%,360px)]'}
+                  style={mode === 'blueprint' ? { zoom: blueprintZoom } : undefined}
+                >
+                  {mode === 'simple' ? (
+                    <SimpleBranch branch={branch as { denominator: number; power: number }} t={t} />
+                  ) : (
+                    <BlueprintBranch
+                      branch={branch}
+                      zoom={blueprintZoom}
+                      onWheelZoom={handleBlueprintWheel}
+                      onTouchStart={handleBlueprintTouchStart}
+                      onTouchMove={handleBlueprintTouchMove}
+                      onTouchEnd={handleBlueprintTouchEnd}
+                    />
+                  )}
+                </div>
+              ))}
+            </div>
           </div>
         ) : (
           <div className="p-2 sm:p-3 text-xs text-endfield-text/70">
