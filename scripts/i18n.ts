@@ -7,6 +7,7 @@ import * as ts from 'typescript';
 const ROOT = process.cwd();
 const SRC_DIR = path.join(ROOT, 'src');
 const LOCALES_DIR = path.join(SRC_DIR, 'i18n');
+const ANNOUNCEMENT_LOCALES_DIR = path.join(LOCALES_DIR, 'announcement');
 
 const SOURCE_LOCALE = 'zh';
 const TARGET_LOCALES = ['en', 'ja', 'ko', 'ru', 'fr', 'de'];
@@ -45,6 +46,70 @@ async function readAllLocaleData(): Promise<Record<string, Record<string, string
     out[locale] = await readLocaleFile(locale);
   }
   return out;
+}
+
+type ChangelogSectionLike = {
+  version?: string;
+  items?: string[];
+  [key: string]: unknown;
+};
+
+type AnnouncementLocaleFile = {
+  changelog?: {
+    sections?: ChangelogSectionLike[];
+    [key: string]: unknown;
+  };
+  [key: string]: unknown;
+};
+
+function getAnnouncementLocaleFilePath(locale: string): string {
+  return path.join(ANNOUNCEMENT_LOCALES_DIR, `locales.${locale}.json`);
+}
+
+async function readAnnouncementLocaleFile(locale: string): Promise<AnnouncementLocaleFile> {
+  const filePath = getAnnouncementLocaleFilePath(locale);
+  const text = await fs.readFile(filePath, 'utf8');
+  const sanitized = text.replace(/^\uFEFF/, '');
+  return JSON.parse(sanitized) as AnnouncementLocaleFile;
+}
+
+async function writeAnnouncementLocaleFile(
+  locale: string,
+  data: AnnouncementLocaleFile
+): Promise<void> {
+  const filePath = getAnnouncementLocaleFilePath(locale);
+  await fs.writeFile(filePath, `${JSON.stringify(data, null, 2)}\n`, 'utf8');
+}
+
+function parseLocaleFlagArgs(args: string[]): Record<string, string> {
+  const translations: Record<string, string> = {};
+
+  let i = 0;
+  while (i < args.length) {
+    const arg = args[i];
+    if (arg === '--') {
+      i++;
+      continue;
+    }
+
+    const localeMatch = arg.match(/^--(\w+)$/);
+    if (!localeMatch || !ALL_LOCALES.includes(localeMatch[1])) {
+      console.error(`Error: unknown argument "${arg}"`);
+      process.exit(1);
+    }
+
+    const locale = localeMatch[1];
+    i++;
+    if (i >= args.length) {
+      console.error(`Error: missing value for --${locale}`);
+      process.exit(1);
+    }
+
+    translations[locale] = args[i];
+    i++;
+  }
+
+  return translations;
 }
 
 // ─── Translate: check/add/delete/generate/apply ─────────────────────────────
@@ -414,6 +479,123 @@ async function runTranslateCommand(args: string[]): Promise<void> {
 }
 
 // ─── Prune Command ───────────────────────────────────────────────────────────
+
+function printChangelogUsage(): void {
+  console.log(`
+Changelog Commands
+==================
+
+  pnpm run i18n changelog append <version> --zh "..." --en "..." --ja "..." --ko "..." --ru "..." --fr "..." --de "..."
+    Append one changelog item to an existing section in src/i18n/announcement/locales.*.json
+`);
+}
+
+async function appendChangelogItem(version: string | undefined, args: string[]): Promise<void> {
+  if (!isNonEmptyString(version)) {
+    console.error('Error: changelog version is required.');
+    console.error(
+      'Usage: pnpm run i18n changelog append <version> --zh "..." --en "..." --ja "..." --ko "..." --ru "..." --fr "..." --de "..."'
+    );
+    process.exit(1);
+  }
+
+  const translations = parseLocaleFlagArgs(args);
+  const missingLocales = getMissingLocales(translations);
+  if (missingLocales.length > 0) {
+    console.error(
+      `Error: missing translations for locales: ${missingLocales.map((l) => `--${l}`).join(' ')}`
+    );
+    process.exit(1);
+  }
+
+  const localeData: Record<string, AnnouncementLocaleFile> = {};
+  for (const locale of ALL_LOCALES) {
+    localeData[locale] = await readAnnouncementLocaleFile(locale);
+  }
+
+  const sourceSections = localeData[SOURCE_LOCALE]?.changelog?.sections;
+  const availableVersions = Array.isArray(sourceSections)
+    ? sourceSections
+        .map((section) => section.version)
+        .filter((item): item is string => typeof item === 'string' && item.length > 0)
+    : [];
+
+  for (const locale of ALL_LOCALES) {
+    const sections = localeData[locale]?.changelog?.sections;
+    if (!Array.isArray(sections)) {
+      console.error(`Error: changelog.sections is missing or invalid in locale "${locale}".`);
+      process.exit(1);
+    }
+
+    const section = sections.find((item) => item?.version === version);
+    if (!section) {
+      console.error(`Error: version "${version}" was not found in locale "${locale}".`);
+      if (availableVersions.length > 0) {
+        console.error(`Available versions in ${SOURCE_LOCALE}: ${availableVersions.join(', ')}`);
+      }
+      process.exit(1);
+    }
+
+    if (!Array.isArray(section.items)) {
+      console.error(
+        `Error: changelog section "${version}" has invalid items in locale "${locale}".`
+      );
+      process.exit(1);
+    }
+  }
+
+  console.log('');
+  let appendedCount = 0;
+
+  for (const locale of ALL_LOCALES) {
+    const section = localeData[locale].changelog?.sections?.find(
+      (item) => item?.version === version
+    );
+    if (!section || !Array.isArray(section.items)) continue;
+
+    const nextItem = translations[locale].trim();
+    if (section.items.includes(nextItem)) {
+      console.log(`  SKIP [${locale}] already exists`);
+      continue;
+    }
+
+    section.items.push(nextItem);
+    appendedCount++;
+    console.log(`  APPEND [${locale}] ${nextItem}`);
+  }
+
+  for (const locale of ALL_LOCALES) {
+    await writeAnnouncementLocaleFile(locale, localeData[locale]);
+  }
+
+  console.log('');
+  console.log(`  Done. Appended to version "${version}" across ${ALL_LOCALES.length} locales.`);
+  console.log(`  Updated entries: ${appendedCount}/${ALL_LOCALES.length}`);
+}
+
+async function runChangelogCommand(args: string[]): Promise<void> {
+  if (args.includes('--help') || args.includes('-h')) {
+    printChangelogUsage();
+    return;
+  }
+
+  if (args.length === 0) {
+    printChangelogUsage();
+    return;
+  }
+
+  const [command, ...rest] = args;
+  if (command === 'append') {
+    const version = rest[0];
+    const translationArgs = rest.slice(1);
+    await appendChangelogItem(version, translationArgs);
+    return;
+  }
+
+  console.error(`Error: unknown changelog command "${command}"`);
+  printChangelogUsage();
+  process.exit(1);
+}
 
 type PruneOptions = {
   write: boolean;
@@ -785,6 +967,11 @@ async function main(): Promise<void> {
 
   if (topCommand === 'prune') {
     await runPruneCommand(rest);
+    return;
+  }
+
+  if (topCommand === 'changelog') {
+    await runChangelogCommand(rest);
     return;
   }
 

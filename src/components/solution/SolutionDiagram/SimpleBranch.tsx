@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import Icon from '../../ui/Icon';
 
 function factorDenominator(denominator: number): number[] {
@@ -50,53 +50,54 @@ export interface SimpleBranchProps {
 }
 
 export default function SimpleBranch({ branch, t }: SimpleBranchProps) {
-  const [scrollLeft, setScrollLeft] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
-  const [dragStart, setDragStart] = useState(0);
   const containerRef = useRef<HTMLFieldSetElement>(null);
+  const dragStateRef = useRef({
+    active: false,
+    startClientX: 0,
+    startScrollLeft: 0,
+  });
   const steps = factorDenominator(branch.denominator);
 
-  const handleMouseDown = useCallback(
-    (e: React.MouseEvent) => {
-      if (e.button !== 0) return;
-      setIsDragging(true);
-      setDragStart(e.clientX + scrollLeft);
-      e.preventDefault();
-    },
-    [scrollLeft]
-  );
+  const handleMouseDown = useCallback((e: React.MouseEvent) => {
+    if (e.button !== 0) return;
+    const container = containerRef.current;
+    if (!container) return;
+    dragStateRef.current = {
+      active: true,
+      startClientX: e.clientX,
+      startScrollLeft: container.scrollLeft,
+    };
+    setIsDragging(true);
+    e.preventDefault();
+  }, []);
 
-  const handleMouseMove = useCallback(
-    (e: React.MouseEvent) => {
-      if (!isDragging || !containerRef.current) return;
-      const next = dragStart - e.clientX;
-      containerRef.current.scrollLeft = Math.max(0, next);
-      setScrollLeft(Math.max(0, next));
-    },
-    [isDragging, dragStart]
-  );
-
-  const stopDragging = useCallback(() => setIsDragging(false), []);
-
-  const handleTouchStart = useCallback(
-    (e: React.TouchEvent) => {
-      const touch = e.touches[0];
-      setIsDragging(true);
-      setDragStart(touch.clientX + scrollLeft);
-    },
-    [scrollLeft]
-  );
-
-  const handleTouchMove = useCallback(
-    (e: React.TouchEvent) => {
-      if (!isDragging || !containerRef.current) return;
-      const touch = e.touches[0];
-      const next = dragStart - touch.clientX;
-      containerRef.current.scrollLeft = Math.max(0, next);
-      setScrollLeft(Math.max(0, next));
-    },
-    [isDragging, dragStart]
-  );
+  useEffect(() => {
+    if (!isDragging) return;
+    const handleMouseMove = (event: MouseEvent) => {
+      const container = containerRef.current;
+      const dragState = dragStateRef.current;
+      if (!container || !dragState.active) return;
+      const delta = event.clientX - dragState.startClientX;
+      const maxScrollLeft = Math.max(0, container.scrollWidth - container.clientWidth);
+      const nextScrollLeft = Math.max(
+        0,
+        Math.min(maxScrollLeft, dragState.startScrollLeft - delta)
+      );
+      container.scrollLeft = nextScrollLeft;
+    };
+    const stopDragging = () => {
+      if (!dragStateRef.current.active) return;
+      dragStateRef.current.active = false;
+      setIsDragging(false);
+    };
+    document.addEventListener('mousemove', handleMouseMove);
+    document.addEventListener('mouseup', stopDragging);
+    return () => {
+      document.removeEventListener('mousemove', handleMouseMove);
+      document.removeEventListener('mouseup', stopDragging);
+    };
+  }, [isDragging]);
 
   return (
     <div className="flex items-center gap-1.5 sm:gap-2 py-1 sm:py-2 px-1 sm:px-2">
@@ -105,19 +106,14 @@ export default function SimpleBranch({ branch, t }: SimpleBranchProps) {
       <fieldset
         aria-label={t('solutionPreview')}
         ref={containerRef}
-        className="flex-1 overflow-x-auto overflow-y-visible scrollbar-hide pb-1 touch-pan-x border-0 p-0 m-0"
+        className="flex-1 overflow-x-auto overflow-y-visible scrollbar-hide pb-1 min-w-0 border-0 p-0 m-0"
         style={{
           cursor: isDragging ? 'grabbing' : 'grab',
+          WebkitOverflowScrolling: 'touch',
           scrollbarWidth: 'none',
           msOverflowStyle: 'none',
         }}
         onMouseDown={handleMouseDown}
-        onMouseMove={handleMouseMove}
-        onMouseUp={stopDragging}
-        onMouseLeave={stopDragging}
-        onTouchStart={handleTouchStart}
-        onTouchMove={handleTouchMove}
-        onTouchEnd={stopDragging}
       >
         <div className="inline-flex items-center gap-1 w-max px-1.5 py-1.5 border border-endfield-gray-light bg-endfield-black/30">
           <div className="h-7 sm:h-8 min-w-[44px] px-1.5 bg-endfield-gray border border-endfield-text-light/40 flex items-center justify-center gap-1 text-endfield-text-light shrink-0">

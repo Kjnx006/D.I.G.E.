@@ -1,7 +1,7 @@
 {
   "name": "factory-designer",
   "private": true,
-  "version": "1.10.1",
+  "version": "1.10.2",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -11,6 +11,7 @@
     "i18n": "tsx scripts/i18n.ts",
     "i18n:prune": "tsx scripts/i18n.ts prune",
     "i18n:translate": "tsx scripts/i18n.ts translate",
+    "i18n:changelog": "tsx scripts/i18n.ts changelog",
     "lint": "biome check .",
     "lint:fix": "biome check --write .",
     "format": "biome format --write ."

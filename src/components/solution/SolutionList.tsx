@@ -56,16 +56,16 @@ export default function SolutionList({
 
   return (
     <div className="flex-1 flex flex-col overflow-hidden notranslate" translate="no">
-      <div className="shrink-0 p-2 sm:p-4 border-b border-endfield-gray-light bg-endfield-dark/50">
-        <SolutionSelector
-          solutions={solutions}
-          selectedIndex={selectedIndex}
-          onSelectSolution={onSelectSolution}
-        />
-        <SolutionSummary solution={selectedSolution} />
-      </div>
-
       <div className="flex-1 overflow-auto scrollbar-gutter-stable">
+        <div className="p-2 sm:p-4 border-b border-endfield-gray-light bg-endfield-dark/50 md:sticky md:top-0 md:z-20 md:bg-endfield-dark/80 md:backdrop-blur-[6px] md:shadow-[0_4px_12px_rgba(0,0,0,0.28)]">
+          <SolutionSelector
+            solutions={solutions}
+            selectedIndex={selectedIndex}
+            onSelectSolution={onSelectSolution}
+          />
+          <SolutionSummary solution={selectedSolution} />
+        </div>
+
         <div
           className={`${collapsedSections.chart ? 'px-2 sm:px-4 pt-2 sm:pt-4 pb-2 sm:pb-3' : 'p-2 sm:p-4'} border-b border-endfield-gray-light`}
         >

@@ -88,7 +88,9 @@
           "Am unteren Rand des vollständigen Exportbilds wurde ein Quellenhinweis ergänzt, damit geteilte Bilder leichter zugeordnet werden können.",
           "Mehrere UI-Beschriftungen wurden vereinheitlicht und lokalisiert, unter anderem für JSON/PNG und Zoom-Steuerungen.",
           "Ein Problem wurde behoben, bei dem bei bestimmten Parametern doppelte Lösungen mit ungenauer Darstellung angezeigt wurden.",
-          "Die Diagramm- und Ablaufansicht für reine Basisstrom-Lösungen wurde verbessert, um leere Bereiche zu vermeiden und das Layout zu vereinheitlichen."
+          "Die Diagramm- und Ablaufansicht für reine Basisstrom-Lösungen wurde verbessert, um leere Bereiche zu vermeiden und das Layout zu vereinheitlichen.",
+          "Ein Problem wurde behoben, durch das sich das Diagramm im einfachen Modus auf Mobilgeraten nicht horizontal wischen lies.",
+          "Die Losungsubersicht scrollt auf Mobilgeraten jetzt mit dem Inhalt, bleibt auf dem Desktop aber oben fixiert und ist besser lesbar."
         ]
       },
       {

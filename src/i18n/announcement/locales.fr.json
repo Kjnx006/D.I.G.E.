@@ -88,7 +88,9 @@
           "Une mention de source a été ajoutée en bas de l'image d'export complet, pour faciliter l'attribution lors du partage.",
           "Plusieurs libellés d'interface ont été harmonisés et localisés, notamment pour JSON/PNG et les commandes de zoom.",
           "Correction d’un problème où certains paramètres pouvaient afficher des solutions en double avec un affichage inexact.",
-          "Amélioration de l’affichage des graphiques et du schéma pour les solutions en génération de base uniquement, afin d’éviter les zones vides et d’uniformiser la mise en page."
+          "Amélioration de l’affichage des graphiques et du schéma pour les solutions en génération de base uniquement, afin d’éviter les zones vides et d’uniformiser la mise en page.",
+          "Correction d un probleme empechant le defilement horizontal du schema en mode simplifie sur mobile.",
+          "Le resume de solution defile desormais avec le contenu sur mobile, tout en restant epingle en haut sur PC avec une meilleure lisibilite."
         ]
       },
       {
