@@ -26,5 +26,5 @@ export const languageOptions = [
   { code: 'ru', nativeName: 'Русский', i18nKey: 'langRussian', flag: '🇷🇺' },
   { code: 'fr', nativeName: 'Français', i18nKey: 'langFrench', flag: '🇫🇷' },
   { code: 'de', nativeName: 'Deutsch', i18nKey: 'langGerman', flag: '🇩🇪' },
-  { code: 'id', nativeName: 'Bahasa Indonesia', i18nKey: 'language', flag: '🇮🇩' },
+  { code: 'id', nativeName: 'Bahasa Indonesia', i18nKey: 'langIndonesian', flag: '🇮🇩' },
 ];
