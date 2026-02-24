@@ -7,6 +7,7 @@ export interface FuelName {
   ru: string;
   fr: string;
   de: string;
+  id: string;
   [key: string]: string;
 }
 
@@ -29,6 +30,7 @@ export const FUELS: Record<string, Fuel> = {
       ru: 'Ориджиниевая руда',
       fr: "Minerai d'Originium",
       de: 'Originium-Erz',
+      id: 'Bijih Originium',
     },
     power: 50, // w
     burnTime: 8, // s
@@ -44,6 +46,7 @@ export const FUELS: Record<string, Fuel> = {
       ru: 'Батарея МЕ Долины',
       fr: 'Batterie Vallée (faible)',
       de: 'NK Tal-Batterie',
+      id: 'Baterai KR Lembah',
     },
     power: 220,
     burnTime: 40,
@@ -59,6 +62,7 @@ export const FUELS: Record<string, Fuel> = {
       ru: 'Батарея СЕ Долины',
       fr: 'Batterie Vallée (moy.)',
       de: 'SK Tal-Batterie',
+      id: 'Baterai KS Lembah',
     },
     power: 420,
     burnTime: 40,
@@ -74,6 +78,7 @@ export const FUELS: Record<string, Fuel> = {
       ru: 'Батарея ВЕ Долины',
       fr: 'Batterie Vallée (haute)',
       de: 'HK Tal-Batterie',
+      id: 'Baterai KT Lembah',
     },
     power: 1100,
     burnTime: 40,
@@ -89,6 +94,7 @@ export const FUELS: Record<string, Fuel> = {
       ru: 'Батарея МЕ Улина',
       fr: 'Batterie Wuling (faible)',
       de: 'NK Wuling-Batterie',
+      id: 'Baterai KR Wuling',
     },
     power: 1600,
     burnTime: 40,
@@ -103,7 +109,7 @@ export const FUEL_OPTIONS = Object.values(FUELS);
 export const SECONDARY_FUEL_OPTIONS = [
   {
     id: 'none',
-    name: { en: 'None', zh: '无', ja: 'なし', ko: '없음', ru: 'Нет', fr: 'Aucun', de: 'Keiner' },
+    name: { en: 'None', zh: '无', ja: 'なし', ko: '없음', ru: 'Нет', fr: 'Aucun', de: 'Keiner', id: 'Kosong' },
     power: 0,
     burnTime: 0,
   },
@@ -233,6 +239,7 @@ export const INPUT_SOURCES: Record<string, InputSource> = {
       ru: 'Склад',
       fr: 'Entrepôt',
       de: 'Lager',
+      id: 'Gudang',
     },
     speed: CONSTANTS.BELT_SPEED,
     interval: CONSTANTS.BELT_INTERVAL,
@@ -247,6 +254,7 @@ export const INPUT_SOURCES: Record<string, InputSource> = {
       ru: 'Упаковщик',
       fr: "Unité d'emballage",
       de: 'Verpackungseinheit',
+      id: 'Mesin Pengemas',
     },
     speed: 0.1,
     interval: 10,

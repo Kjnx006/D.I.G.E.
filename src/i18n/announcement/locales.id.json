@@ -1,0 +1,178 @@
+{
+  "announcement": {
+    "blocks": [
+      {
+        "type": "paragraph",
+        "className": "mb-3",
+        "text": "Selamat datang di D.I.G.E. (Dijiang Integrated Generator Efficiency)! Ini adalah alat untuk menghitung solusi pembangkit daya optimal untuk Kolam Termal di Arknights: Endfield."
+      },
+      {
+        "type": "paragraph",
+        "className": "mb-3 text-endfield-yellow/90",
+        "text": "Pembaruan pengembangan: kami terus menyempurnakan algoritma inti dan mengoptimalkan perencanaan. Pembaruan terkait akan dirilis secara bertahap."
+      },
+      {
+        "type": "heading",
+        "text": "Fitur"
+      },
+      {
+        "type": "list",
+        "items": [
+          "Menghitung pembangkit optimal secara otomatis berdasarkan daya target",
+          "Mendukung kombinasi bahan bakar utama dan sekunder",
+          "Visualisasi kurva daya dan level baterai",
+          "Menampilkan konfigurasi splitter dan penyimpanan secara detail"
+        ]
+      },
+      {
+        "type": "heading",
+        "text": "Cara Menggunakan"
+      },
+      {
+        "type": "list",
+        "items": [
+          "Atur daya target di panel kontrol sebelah kiri",
+          "Pilih bahan bakar utama (wajib) dan bahan bakar sekunder (opsional)",
+          "Sesuaikan batas minimum baterai dan batas maksimum limbah",
+          "Klik \"Hitung\" untuk mendapatkan solusi optimal",
+          "Lihat detail dan diagram solusi di sisi kanan"
+        ]
+      },
+      {
+        "type": "paragraph",
+        "className": "mt-4",
+        "segments": [
+          {
+            "text": "Video tutorial: "
+          },
+          {
+            "link": "tutorial",
+            "text": "Bilibili - Tutorial D.I.G.E."
+          }
+        ]
+      },
+      {
+        "type": "paragraph",
+        "className": "mt-4",
+        "segments": [
+          {
+            "text": "Silakan kirim "
+          },
+          {
+            "link": "issues",
+            "text": "laporan masalah"
+          },
+          {
+            "text": " di "
+          },
+          {
+            "link": "github",
+            "text": "GitHub"
+          },
+          {
+            "text": " jika Anda memiliki pertanyaan atau saran."
+          }
+        ]
+      }
+    ]
+  },
+  "changelog": {
+    "sections": [
+      {
+        "version": "v1.10.0",
+        "title": "Pembaruan v1.10.0",
+        "defaultOpen": true,
+        "items": [
+          "Rilis ini berfokus pada refaktor internal dan peningkatan stabilitas; fitur dan alur kerja inti tetap sama.",
+          "Peningkatan penggunaan keyboard: menu bahasa, menu Lainnya, dan pratinjau gambar kini mendukung navigasi keyboard yang lebih lengkap.",
+          "Gambar ekspor lengkap kini menyertakan catatan sumber, sehingga tangkapan layar yang dibagikan lebih mudah diberi atribusi.",
+          "Beberapa label kini lebih konsisten dan terlokalisasi di berbagai bahasa (misalnya label format JSON/PNG dan kontrol zoom).",
+          "Memperbaiki masalah di mana beberapa set parameter dapat menampilkan solusi duplikat dengan tampilan yang kurang akurat.",
+          "Meningkatkan tampilan grafik dan diagram untuk solusi hanya-daya-dasar agar tidak muncul kondisi kosong dan tata letak tetap konsisten.",
+          "Memperbaiki masalah di mana diagram Mode Sederhana tidak dapat digeser secara horizontal di perangkat mobile.",
+          "Ringkasan solusi kini dapat digulir bersama konten di mobile, sementara di desktop tetap menempel dengan lapisan visual yang lebih baik."
+        ]
+      },
+      {
+        "version": "v1.9.0",
+        "title": "Pembaruan v1.9.0",
+        "defaultOpen": false,
+        "items": [
+          "Menambahkan fitur ekspor blueprint dengan unduhan per cabang dan unduhan ZIP untuk semua cabang.",
+          "Meningkatkan interaksi modal: peringatan penting kini memerlukan konfirmasi tombol secara eksplisit untuk menutup.",
+          "Menambahkan pratinjau gambar ekspor lengkap dan garis ambang minimum baterai pada grafik siklus.",
+          "Menambahkan \"Offset Fase Cabang (sel)\" dengan pengaturan independen 0–16 sel per cabang untuk mensimulasikan perbedaan panjang conveyor awal."
+        ]
+      },
+      {
+        "version": "v1.8.0",
+        "title": "Pembaruan v1.8.0",
+        "defaultOpen": false,
+        "items": [
+          "Menambahkan Mode Blueprint untuk tampilan rencana bergaya blueprint.",
+          "Menambahkan pengaturan Maksimal Cabang untuk mengontrol kompleksitas rencana.",
+          "Mode Blueprint kini menggunakan ikon untuk conveyor, splitter, merger, dan lainnya agar tampilan lebih jelas.",
+          "Sumber input, output termal, dan output daur ulang tidak lagi menampilkan panah arah.",
+          "Meningkatkan tata letak dan interaksi legenda blueprint.",
+          "Mode Blueprint mendukung zoom untuk melihat lebih detail; gulir roda mouse atau cubit dengan dua jari untuk memperbesar, lalu geser untuk melihat area lain.",
+          "Menambahkan opsi \"Kecualikan Conveyor\" (aktif secara default) untuk mengurangi masalah aliran saat offline.",
+          "Menambahkan halaman FAQ (Tanya Jawab), dapat diakses dari menu atas atau samping.",
+          "Pada layar kecil, beberapa ikon atas digabungkan ke dalam menu \"Lainnya\" agar tampilan lebih rapi.",
+          "Memperbaiki tombol yang tertekan atau terdistorsi di bagian bawah beberapa popup."
+        ]
+      },
+      {
+        "version": "v1.7.0",
+        "title": "Pembaruan v1.7.0",
+        "defaultOpen": false,
+        "items": [
+          "Memperbarui pustaka ikon untuk tampilan yang lebih konsisten",
+          "Meningkatkan jarak teks campuran CJK dan Latin",
+          "Menyederhanakan menu bahasa agar hanya menampilkan nama asli",
+          "Sidebar lebih lebar untuk mendukung bahasa dengan teks panjang",
+          "Menambahkan petunjuk gulir di bagian bawah sidebar untuk membantu menemukan tombol Hitung",
+          "Pengingat pintar saat parameter diubah tetapi belum dihitung ulang, dengan opsi menghitung, memulihkan, atau menutup",
+          "Berbagai peningkatan interaksi dan animasi tombol",
+          "Menambahkan fitur bergabung grup QQ (khusus Tiongkok)"
+        ]
+      },
+      {
+        "version": "v1.6.0",
+        "title": "Pembaruan v1.6.0",
+        "items": [
+          "Menambahkan dukungan bahasa Rusia, Prancis, dan Jerman",
+          "Pemilih bahasa kini menampilkan nama asli dan terjemahan",
+          "Menyesuaikan nama bahan bakar/baterai/fasilitas agar sesuai dengan istilah resmi dalam game",
+          "Memperbaiki masalah tampilan saat mengganti solusi"
+        ]
+      },
+      {
+        "version": "v1.5.0",
+        "title": "Pembaruan v1.5.0",
+        "items": [
+          "Menambahkan pilihan sumber input: Gudang / Mesin Pengemasan (10 dtk/item)",
+          "Mode Packer kini menampilkan peringatan input"
+        ]
+      },
+      {
+        "version": "v1.4.0",
+        "title": "Pembaruan v1.4.0",
+        "items": [
+          "Meningkatkan akurasi grafik siklus agar lebih selaras dengan siklus pembakaran",
+          "Dataset besar akan disederhanakan secara otomatis; aktifkan \"Nilai Presisi\" untuk melihat detail penuh",
+          "Informasi hover kini menampilkan waktu"
+        ]
+      },
+      {
+        "version": "v1.3.0",
+        "title": "Pembaruan v1.3.0",
+        "items": [
+          "Menambahkan sumbu waktu pada grafik",
+          "Grafik mendukung zoom dengan roda mouse, geser, cubit, dan pan di mobile",
+          "Menambahkan garis status pembakaran baterai per cabang",
+          "Bagian grafik siklus, konsumsi bahan bakar, dan diagram dapat diciutkan"
+        ]
+      }
+    ]
+  }
+}

@@ -1,6 +1,7 @@
 import de from './locales.de.json';
 import en from './locales.en.json';
 import fr from './locales.fr.json';
+import id from './locales.id.json';
 import ja from './locales.ja.json';
 import ko from './locales.ko.json';
 import ru from './locales.ru.json';
@@ -14,6 +15,7 @@ export const locales: Record<string, Record<string, string>> = {
   ru,
   fr,
   de,
+  id,
 };
 
 export const languageOptions = [
@@ -24,4 +26,5 @@ export const languageOptions = [
   { code: 'ru', nativeName: 'Русский', i18nKey: 'langRussian', flag: '🇷🇺' },
   { code: 'fr', nativeName: 'Français', i18nKey: 'langFrench', flag: '🇫🇷' },
   { code: 'de', nativeName: 'Deutsch', i18nKey: 'langGerman', flag: '🇩🇪' },
+  { code: 'id', nativeName: 'Bahasa Indonesia', i18nKey: 'langIndonesian', flag: '🇮🇩' },
 ];
