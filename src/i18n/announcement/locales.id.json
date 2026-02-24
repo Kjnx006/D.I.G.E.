@@ -101,7 +101,7 @@
           "Menambahkan fitur ekspor blueprint dengan unduhan per cabang dan unduhan ZIP untuk semua cabang.",
           "Meningkatkan interaksi modal: peringatan penting kini memerlukan konfirmasi tombol secara eksplisit untuk menutup.",
           "Menambahkan pratinjau gambar ekspor lengkap dan garis ambang minimum baterai pada grafik siklus.",
-          "Menambahkan \"Offset Fase Cabang (sel)\" dengan pengaturan independen 0–16 sel per cabang untuk mensimulasikan perbedaan panjang conveyor awal."
+          "Menambahkan \"Offset Fase Cabang (sel)\" dengan pengaturan independen 0–16 sel per cabang untuk mensimulasikan perbedaan panjang sabuk angkut awal."
         ]
       },
       {
@@ -111,7 +111,7 @@
         "items": [
           "Menambahkan Mode Blueprint untuk tampilan rencana bergaya blueprint.",
           "Menambahkan pengaturan Maksimal Cabang untuk mengontrol kompleksitas rencana.",
-          "Mode Blueprint kini menggunakan ikon untuk conveyor, splitter, merger, dan lainnya agar tampilan lebih jelas.",
+          "Mode Blueprint kini menggunakan ikon untuk sabuk angkut, splitter, merger, dan lainnya agar tampilan lebih jelas.",
           "Sumber input, output termal, dan output daur ulang tidak lagi menampilkan panah arah.",
           "Meningkatkan tata letak dan interaksi legenda blueprint.",
           "Mode Blueprint mendukung zoom untuk melihat lebih detail; gulir roda mouse atau cubit dengan dua jari untuk memperbesar, lalu geser untuk melihat area lain.",

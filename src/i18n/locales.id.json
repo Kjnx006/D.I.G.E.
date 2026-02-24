@@ -16,7 +16,7 @@
   "branch": "Cabang",
   "branchesShort": "Cabang",
   "branchPhaseOffset": "Offset Fase Cabang (sel)",
-  "branchPhaseOffsetHint": "Mensimulasikan perbedaan panjang conveyor awal tiap cabang; 1 sel = 2 detik, hingga 16 sel per cabang.",
+  "branchPhaseOffsetHint": "Mensimulasikan perbedaan panjang sabuk angkut awal tiap cabang; 1 sel = 2 detik, hingga 16 sel per cabang.",
   "burnStateShort": "Pembakaran",
   "calculate": "Hitung",
   "calculating": "Menghitung...",
