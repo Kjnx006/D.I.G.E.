@@ -1,0 +1,56 @@
+{
+  "items": [
+    {
+      "question": "Apa yang dimaksud dengan daya target?",
+      "answer": "Daya target adalah jumlah daya keluaran (dalam kW) yang ingin dicapai oleh sistem thermal pool Anda. Alat ini akan otomatis menghitung konfigurasi bahan bakar, level splitter, dan jumlah penyimpanan yang optimal berdasarkan target tersebut."
+    },
+    {
+      "question": "Apa fungsi batasan? Kenapa tidak ditemukan solusi?",
+      "answer": "Batasan menentukan bagaimana solusi dihasilkan. Minimum baterai yang lebih tinggi, batas redundansi yang lebih rendah, atau jumlah cabang maksimal yang lebih sedikit akan membuat syarat semakin ketat dan bisa menyebabkan tidak ada solusi yang valid. Coba longgarkan batasannya."
+    },
+    {
+      "question": "Apa perbedaan bahan bakar utama dan sekunder?",
+      "answer": "Bahan bakar utama adalah jenis bahan bakar utama yang diperlukan untuk pembakaran; bahan bakar sekunder bersifat opsional dan dapat dikombinasikan dengan bahan bakar utama untuk mengoptimalkan rencana."
+    },
+    {
+      "question": "Apa kegunaan bahan bakar sekunder?",
+      "answer": "Dalam beberapa kasus, nilai optimal teoritis bahan bakar dengan efisiensi tinggi justru lebih buruk dibanding bahan bakar dengan efisiensi rendah. Namun dalam sebagian besar kasus, bahan bakar utama saja sudah cukup."
+    },
+    {
+      "question": "Kenapa pilihan bahan bakar sekunder saya tidak berpengaruh?",
+      "answer": "Efisiensinya lebih rendah daripada bahan bakar utama, sehingga solusinya tersaring dan tidak digunakan."
+    },
+    {
+      "question": "Bagaimana cara memilih sumber input (Gudang / Mesin Pengemas)?",
+      "answer": "Mode Gudang mengasumsikan bahan bakar berasal langsung dari penyimpanan. Mode Mesin Pengemasan mengharuskan setiap cabang osilasi memiliki output packer dengan kecepatan penuh (0,1/dtk); jika tidak, simulasi mungkin tidak sesuai dengan kondisi sebenarnya."
+    },
+    {
+      "question": "Jika solusi satu cabang dan multi cabang memiliki limbah yang mirip, mana yang sebaiknya dipilih?",
+      "answer": "Utamakan satu cabang kecuali multi cabang memiliki keunggulan yang jelas. Satu cabang memiliki siklus lebih pendek, gelombang lebih stabil, tidak ada masalah fase, membutuhkan ruang lebih kecil, dan lebih tahan terhadap gangguan."
+    },
+    {
+      "question": "Jika saya menambah konsumsi daya, apakah perlu membuat ulang rencana?",
+      "answer": "Ya."
+    },
+    {
+      "question": "Apakah ada urutan khusus dalam menempatkan perangkat?",
+      "answer": "Perhitungan saat ini tidak memerlukan urutan penempatan tertentu."
+    },
+    {
+      "question": "Apakah merger (jalur daur ulang) bisa dipakai bersama beberapa cabang?",
+      "answer": "Bisa, selama tidak terjadi penumpukan dalam satu siklus."
+    },
+    {
+      "question": "Apakah splitter 2-jalur/3-jalur bisa dipakai bersama beberapa cabang?",
+      "answer": "Bisa, tetapi hal ini dapat menyebabkan ketidaksesuaian fase dengan simulasi. Biasanya minimum baterai bisa lebih tinggi dari perkiraan; dalam beberapa kasus bisa lebih rendah. Amati setidaknya satu siklus penuh untuk memastikan tidak terjadi pemadaman."
+    },
+    {
+      "question": "Apakah peta atau bahan bakar baru akan didukung ke depannya?",
+      "answer": "Ya. Kami menargetkan dukungan tersedia pada hari yang sama dengan pembaruan game."
+    },
+    {
+      "question": "Kenapa listrik mati setelah saya offline?",
+      "answer": "Berdasarkan masukan dan pengujian pemain, server game mungkin menyederhanakan perhitungan sabuk angkut dan perangkat terkait sabuk angkut (misalnya jembatan logistik, inlet item) saat pemain offline, sehingga jalur pembagian berbasis sabung angkut bisa macet atau berhenti. Kami belum bisa memastikan hal ini sepenuhnya. Karena itu, kami menambahkan opsi \"Kecualikan Conveyor\" untuk menghapus sabuk angkut dan perangkat terkait dari desain blueprint. Jika Anda mengalami pemadaman atau penumpukan saat offline meskipun saat online berjalan normal, coba aktifkan opsi ini."
+    }
+  ]
+}

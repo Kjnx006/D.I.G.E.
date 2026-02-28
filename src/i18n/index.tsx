@@ -17,6 +17,7 @@ const langCodeMap: Record<string, string> = {
   ru: 'ru',
   fr: 'fr',
   de: 'de',
+  id: 'id',
 };
 
 // 从 URL 参数获取语言

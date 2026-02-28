@@ -10,7 +10,7 @@ const LOCALES_DIR = path.join(SRC_DIR, 'i18n');
 const ANNOUNCEMENT_LOCALES_DIR = path.join(LOCALES_DIR, 'announcement');
 
 const SOURCE_LOCALE = 'zh';
-const TARGET_LOCALES = ['en', 'ja', 'ko', 'ru', 'fr', 'de'];
+const TARGET_LOCALES = ['en', 'ja', 'ko', 'ru', 'fr', 'de', 'id'];
 const ALL_LOCALES = [SOURCE_LOCALE, ...TARGET_LOCALES];
 
 // ─── Shared Locale Helpers ───────────────────────────────────────────────────
