@@ -90,7 +90,8 @@
           "Memperbaiki masalah di mana beberapa set parameter dapat menampilkan solusi duplikat dengan tampilan yang kurang akurat.",
           "Meningkatkan tampilan grafik dan diagram untuk solusi hanya-daya-dasar agar tidak muncul kondisi kosong dan tata letak tetap konsisten.",
           "Memperbaiki masalah di mana diagram Mode Sederhana tidak dapat digeser secara horizontal di perangkat mobile.",
-          "Ringkasan solusi kini dapat digulir bersama konten di mobile, sementara di desktop tetap menempel dengan lapisan visual yang lebih baik."
+          "Ringkasan solusi kini dapat digulir bersama konten di mobile, sementara di desktop tetap menempel dengan lapisan visual yang lebih baik.",
+          "Menambahkan Baterai KS Wuling (3200 daya)"
         ]
       },
       {
