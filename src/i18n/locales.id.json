@@ -59,7 +59,7 @@
   "downloadAllBranchesZip": "Unduh Semua Cabang (ZIP)",
   "downloadImage": "Unduh Gambar",
   "enabled": "Aktif",
-  "errorSuggestion": "Coba tingkatkan batas limbah, turunkan batas minimum baterai, atau ganti bahan bakar sekunder.",
+  "errorSuggestion": "Coba tingkatkan batas sisa daya, turunkan batas minimum baterai, atau ganti bahan bakar sekunder.",
   "excludeBelt": "Kecualikan Sabuk Angkut",
   "excludeBeltWarning": "Berdasarkan pengujian beberapa pemain, server game dapat menyederhanakan perhitungan terkait sabuk angkut saat Anda offline. Jika produksi menjadi tidak normal setelah offline, aktifkan \"Kecualikan Sabuk Angkut\" dan bangun ulang jalur produksi tanpa sabuk angkut.",
   "expandSection": "Perluas",
