@@ -50,7 +50,7 @@
     },
     {
       "question": "Kenapa listrik mati setelah saya offline?",
-      "answer": "Berdasarkan masukan dan pengujian pemain, server game mungkin menyederhanakan perhitungan sabuk angkut dan perangkat terkait sabuk angkut (misalnya jembatan logistik, inlet item) saat pemain offline, sehingga jalur pembagian berbasis sabung angkut bisa macet atau berhenti. Kami belum bisa memastikan hal ini sepenuhnya. Karena itu, kami menambahkan opsi \"Kecualikan Conveyor\" untuk menghapus sabuk angkut dan perangkat terkait dari desain blueprint. Jika Anda mengalami pemadaman atau penumpukan saat offline meskipun saat online berjalan normal, coba aktifkan opsi ini."
+      "answer": "Berdasarkan masukan dan pengujian pemain, server game mungkin menyederhanakan perhitungan sabuk angkut dan perangkat terkait sabuk angkut (misalnya jembatan logistik, inlet item) saat pemain offline, sehingga jalur pembagian berbasis sabuk angkut bisa macet atau berhenti. Kami belum bisa memastikan hal ini sepenuhnya. Karena itu, kami menambahkan opsi \"Kecualikan Sabuk Angkut\" untuk menghapus sabuk angkut dan perangkat terkait dari desain blueprint. Jika Anda mengalami pemadaman atau penumpukan saat offline meskipun saat online berjalan normal, coba aktifkan opsi ini."
     }
   ]
 }
