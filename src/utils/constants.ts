@@ -100,6 +100,22 @@ export const FUELS: Record<string, Fuel> = {
     burnTime: 40,
     image: '/fuels/wulingLow.webp',
   },
+  wulingMid: {
+    id: 'wulingMid',
+    name: {
+      en: 'SC Wuling Battery',
+      zh: '中容武陵电池',
+      ja: '中容量武陵バッテリー',
+      ko: '중용량무릉배터리',
+      ru: 'Батарея СЕ Улина',
+      fr: 'Batterie Wuling (moy.)',
+      de: 'SK Wuling-Batterie',
+      id: 'Baterai KS Wuling',
+    },
+    power: 3200,
+    burnTime: 40,
+    image: '',
+  },
 };
 
 // 燃料选项列表（用于下拉菜单）

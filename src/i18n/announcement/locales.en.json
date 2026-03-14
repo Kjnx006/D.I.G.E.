@@ -90,7 +90,8 @@
           "Fixed an issue where some parameter sets could show duplicate solutions with inaccurate presentation.",
           "Improved chart and diagram display for base-only solutions to avoid blank states and keep layout consistent.",
           "Fixed an issue where the Simple mode diagram could not be swiped horizontally on mobile devices.",
-          "The solution summary now scrolls with content on mobile, while staying pinned on desktop with improved visual layering."
+          "The solution summary now scrolls with content on mobile, while staying pinned on desktop with improved visual layering.",
+          "Added SC Wuling Battery (3200 power)"
         ]
       },
       {
