@@ -163,6 +163,8 @@
   "useSecondary": "Using secondary",
   "variance": "Variance",
   "waySplit": "-way",
+  "updateAvailable": "A new version is available. Refresh to get the latest content.",
+  "updateNow": "Refresh",
   "zoomIn": "Zoom in",
   "zoomOut": "Zoom out"
 }

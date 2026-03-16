@@ -163,6 +163,8 @@
   "useSecondary": "使用副燃料",
   "variance": "方差",
   "waySplit": "分",
+  "updateAvailable": "发现新版本，请刷新以获取最新内容",
+  "updateNow": "立即刷新",
   "zoomIn": "放大",
   "zoomOut": "缩小"
 }

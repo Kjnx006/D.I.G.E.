@@ -4,6 +4,7 @@ import App from './App';
 import './index.css';
 import * as Sentry from '@sentry/react';
 import { clarity } from 'react-microsoft-clarity';
+import { initPWA } from './pwa';
 
 const clarityId = import.meta.env.VITE_CLARITY_ID;
 if (clarityId) {
@@ -30,6 +31,8 @@ if (sentryDsn) {
     replaysOnErrorSampleRate,
   });
 }
+
+initPWA();
 
 const rootElement = document.getElementById('root');
 if (!rootElement) {

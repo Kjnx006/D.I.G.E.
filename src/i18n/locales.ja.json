@@ -163,6 +163,8 @@
   "useSecondary": "サブ使用",
   "variance": "分散",
   "waySplit": "分岐",
+  "updateAvailable": "新しいバージョンが利用可能です。最新のコンテンツを取得するにはリフレッシュしてください。",
+  "updateNow": "リフレッシュ",
   "zoomIn": "拡大",
   "zoomOut": "縮小"
 }
