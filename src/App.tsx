@@ -10,6 +10,7 @@ import ShareModal from './components/modals/ShareModal';
 import DirtyOverlay from './components/overlays/DirtyOverlay';
 import LoadingOverlay from './components/overlays/LoadingOverlay';
 import ShareStatusToast from './components/overlays/ShareStatusToast';
+import UpdateToast from './components/overlays/UpdateToast';
 import SolutionList from './components/solution/SolutionList';
 import { I18nProvider, useI18n } from './i18n';
 import type { CalcParams, SolutionResult } from './types/calc';
@@ -353,6 +354,7 @@ function App() {
         closeOnBackdrop={true}
       />
       <QAModal show={showQA} onClose={() => setShowQA(false)} closeOnBackdrop={true} />
+      <UpdateToast />
     </I18nProvider>
   );
 }
