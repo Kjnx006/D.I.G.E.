@@ -114,7 +114,7 @@ export const FUELS: Record<string, Fuel> = {
     },
     power: 3200,
     burnTime: 40,
-    image: '',
+    image: '/fuels/wulingMid.webp',
   },
 };
 
