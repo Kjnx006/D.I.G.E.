@@ -166,5 +166,9 @@
   "updateAvailable": "새 버전을 사용할 수 있습니다. 최신 콘텐츠를 받으려면 새로고침하세요.",
   "updateNow": "새로고침",
   "zoomIn": "확대",
-  "zoomOut": "축소"
+  "zoomOut": "축소",
+  "burnTime": "연소 시간",
+  "editFuelValues": "연료 값 편집",
+  "customFuelSettings": "사용자 지정 연료 설정",
+  "confirm": "확인"
 }

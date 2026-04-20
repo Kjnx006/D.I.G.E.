@@ -6,6 +6,7 @@ import {
   DEFAULT_INPUT_SOURCE_ID,
   FUELS,
   getOscillatingPower,
+  resolveFuel,
   INPUT_SOURCES,
   PARAM_LIMITS,
 } from './constants';
@@ -479,8 +480,11 @@ export class FactoryDesigner {
     this.targetPower = params.targetPower;
     this.minBatteryPercent = params.minBatteryPercent;
     this.maxWaste = params.maxWaste;
-    this.primaryFuel = FUELS[params.primaryFuelId];
-    this.secondaryFuel = params.secondaryFuelId !== 'none' ? FUELS[params.secondaryFuelId] : null;
+    this.primaryFuel = resolveFuel(params.primaryFuelId, params.fuelOverrides);
+    this.secondaryFuel =
+      params.secondaryFuelId !== 'none'
+        ? resolveFuel(params.secondaryFuelId, params.fuelOverrides)
+        : null;
 
     const inputSourceId = params.inputSourceId || DEFAULT_INPUT_SOURCE_ID;
     this.inputSource = INPUT_SOURCES[inputSourceId] || INPUT_SOURCES[DEFAULT_INPUT_SOURCE_ID];

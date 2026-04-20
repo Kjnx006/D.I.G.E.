@@ -166,5 +166,9 @@
   "updateAvailable": "新しいバージョンが利用可能です。最新のコンテンツを取得するにはリフレッシュしてください。",
   "updateNow": "リフレッシュ",
   "zoomIn": "拡大",
-  "zoomOut": "縮小"
+  "zoomOut": "縮小",
+  "burnTime": "燃焼時間",
+  "editFuelValues": "燃料値を編集",
+  "customFuelSettings": "カスタム燃料設定",
+  "confirm": "確認"
 }

@@ -166,5 +166,9 @@
   "updateAvailable": "A new version is available. Refresh to get the latest content.",
   "updateNow": "Refresh",
   "zoomIn": "Zoom in",
-  "zoomOut": "Zoom out"
+  "zoomOut": "Zoom out",
+  "burnTime": "Burn time",
+  "editFuelValues": "Edit fuel values",
+  "customFuelSettings": "Custom Fuel Settings",
+  "confirm": "Confirm"
 }

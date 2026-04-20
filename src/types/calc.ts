@@ -17,6 +17,7 @@ export interface CalcParams {
   phaseOffsetBranch3?: number;
   exclude_belt?: boolean;
   excludeBelt?: boolean;
+  fuelOverrides?: Record<string, { power?: number; burnTime?: number }>;
   [key: string]: unknown;
 }
 

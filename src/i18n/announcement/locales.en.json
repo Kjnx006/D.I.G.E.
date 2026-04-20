@@ -91,7 +91,8 @@
           "Improved chart and diagram display for base-only solutions to avoid blank states and keep layout consistent.",
           "Fixed an issue where the Simple mode diagram could not be swiped horizontally on mobile devices.",
           "The solution summary now scrolls with content on mobile, while staying pinned on desktop with improved visual layering.",
-          "Added SC Wuling Battery (3200 power)"
+          "Added SC Wuling Battery (3200 power)",
+          "Added custom battery values: manually override power and burn time of existing batteries to stay in sync with game updates"
         ]
       },
       {

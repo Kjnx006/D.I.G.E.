@@ -91,7 +91,8 @@
           "Die Diagramm- und Ablaufansicht für reine Basisstrom-Lösungen wurde verbessert, um leere Bereiche zu vermeiden und das Layout zu vereinheitlichen.",
           "Ein Problem wurde behoben, durch das sich das Diagramm im einfachen Modus auf Mobilgeraten nicht horizontal wischen lies.",
           "Die Losungsubersicht scrollt auf Mobilgeraten jetzt mit dem Inhalt, bleibt auf dem Desktop aber oben fixiert und ist besser lesbar.",
-          "SK Wuling-Batterie (3200 Leistung) hinzugefügt"
+          "SK Wuling-Batterie (3200 Leistung) hinzugefügt",
+          "Benutzerdefinierte Batteriewerte hinzugefügt: Leistung und Brenndauer bestehender Batterien manuell anpassen, um mit Spielupdates synchron zu bleiben"
         ]
       },
       {
