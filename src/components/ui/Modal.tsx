@@ -64,7 +64,7 @@ export default function Modal({
     const onKeyDown = (event: KeyboardEvent) => {
       if (!dialog.contains(event.target as Node)) return;
 
-      if (event.key === 'Escape' && closeOnBackdrop) {
+      if (event.key === 'Escape') {
         event.preventDefault();
         onClose();
         return;
@@ -105,7 +105,7 @@ export default function Modal({
         lastFocused.focus();
       }
     };
-  }, [show, closeOnBackdrop, onClose]);
+  }, [show, onClose]);
 
   if (!show) return null;
 

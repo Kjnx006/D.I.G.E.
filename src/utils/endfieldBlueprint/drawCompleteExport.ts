@@ -11,6 +11,7 @@ import {
   buildExportParamsPayload,
   getBranchDenominatorToken,
   getBranchPowerToken,
+  getExportTargetPower,
   toFiniteOrNull,
 } from './blueprintCore';
 import { buildBranchPngBlob } from './drawBranchPng';
@@ -27,22 +28,6 @@ import {
 } from './drawUtils';
 
 const DEFAULT_COMPLETE_EXPORT_WEBSITE = 'https://dige.aunly.cn';
-
-function getExportTargetPower(
-  solution: SolutionResult | null | undefined,
-  options: { targetPower?: number } = {}
-): number {
-  const explicitTarget = Number(options.targetPower);
-  if (Number.isFinite(explicitTarget)) {
-    return explicitTarget;
-  }
-  const avgPower = Number(solution?.avgPower);
-  const waste = Number(solution?.waste);
-  if (Number.isFinite(avgPower) && Number.isFinite(waste)) {
-    return avgPower - waste;
-  }
-  return 0;
-}
 
 interface CompleteExportLabels {
   [key: string]: string | Record<string, string> | null;
@@ -111,11 +96,11 @@ function buildCompleteInfoSections(
     return formatExportValue(value);
   };
   const excludeBeltValue =
-    typeof params.exclude_belt === 'boolean'
-      ? params.exclude_belt
+    typeof params.excludeBelt === 'boolean'
+      ? params.excludeBelt
         ? String(labels.excludeBeltOn ?? '')
         : String(labels.excludeBeltOff ?? '')
-      : formatExportValue(params.exclude_belt);
+      : formatExportValue(params.excludeBelt);
   const branchPhaseOffsetValues =
     branches.length > 0
       ? branches

@@ -19,12 +19,11 @@ if (sentryDsn) {
     dsn: sentryDsn,
     environment: import.meta.env.MODE,
     release: __APP_VERSION__,
-    sendDefaultPii: true,
     integrations: [
       Sentry.replayIntegration({
         maskAllText: false,
         blockAllMedia: false,
-        maskAllInputs: false,
+        maskAllInputs: true,
       }),
     ],
     replaysSessionSampleRate,

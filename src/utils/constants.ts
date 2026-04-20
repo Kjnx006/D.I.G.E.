@@ -146,9 +146,9 @@ export const FUELS: Record<string, Fuel> = {
 export function resolveFuel(
   fuelId: string,
   overrides?: Record<string, { power?: number; burnTime?: number }>
-): Fuel {
+): Fuel | undefined {
   const base = FUELS[fuelId];
-  if (!base) return base;
+  if (!base) return undefined;
   const ov = overrides?.[fuelId];
   if (!ov) return base;
   return {
@@ -169,7 +169,16 @@ export const FUEL_OPTIONS = Object.values(FUELS).filter((f) => f.id !== 'customS
 export const SECONDARY_FUEL_OPTIONS = [
   {
     id: 'none',
-    name: { en: 'None', zh: '无', ja: 'なし', ko: '없음', ru: 'Нет', fr: 'Aucun', de: 'Keiner', id: 'Kosong' },
+    name: {
+      en: 'None',
+      zh: '无',
+      ja: 'なし',
+      ko: '없음',
+      ru: 'Нет',
+      fr: 'Aucun',
+      de: 'Keiner',
+      id: 'Kosong',
+    },
     power: 0,
     burnTime: 0,
   },

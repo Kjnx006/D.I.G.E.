@@ -271,7 +271,7 @@ const SHARE_FIELDS = assignFieldIndices([
     missingRawValue: 0,
   }),
   createBooleanField({
-    key: 'exclude_belt',
+    key: 'excludeBelt',
     bits: EXCLUDE_BELT_BITS,
     optional: true,
     missingRawValue: 0,
@@ -333,7 +333,7 @@ export interface ShareParams {
   targetPower?: number;
   inputSourceId?: string;
   maxBranches?: number;
-  exclude_belt?: boolean;
+  excludeBelt?: boolean;
   fuelOverrides?: Record<string, { power?: number; burnTime?: number }>;
   [key: string]: unknown;
 }
@@ -352,18 +352,20 @@ function flattenOverrides(params: ShareParams): ShareParams {
   const sOv = secondaryId ? ov?.[secondaryId] : undefined;
 
   // 自定义燃料始终编码 override 值
-  const hasPrimary = primaryId && primaryBase && (
-    isCustomFuel(primaryId) ||
-    (pOv &&
-      ((pOv.power !== undefined && pOv.power !== primaryBase.power) ||
-        (pOv.burnTime !== undefined && pOv.burnTime !== primaryBase.burnTime)))
-  );
-  const hasSecondary = secondaryId && secondaryBase && (
-    isCustomFuel(secondaryId) ||
-    (sOv &&
-      ((sOv.power !== undefined && sOv.power !== secondaryBase.power) ||
-        (sOv.burnTime !== undefined && sOv.burnTime !== secondaryBase.burnTime)))
-  );
+  const hasPrimary =
+    primaryId &&
+    primaryBase &&
+    (isCustomFuel(primaryId) ||
+      (pOv &&
+        ((pOv.power !== undefined && pOv.power !== primaryBase.power) ||
+          (pOv.burnTime !== undefined && pOv.burnTime !== primaryBase.burnTime))));
+  const hasSecondary =
+    secondaryId &&
+    secondaryBase &&
+    (isCustomFuel(secondaryId) ||
+      (sOv &&
+        ((sOv.power !== undefined && sOv.power !== secondaryBase.power) ||
+          (sOv.burnTime !== undefined && sOv.burnTime !== secondaryBase.burnTime))));
 
   const flags = (hasPrimary ? 1 : 0) | (hasSecondary ? 2 : 0);
   flat._hasOverrides = flags;
@@ -400,11 +402,11 @@ function unflattenOverrides(decoded: ShareParams): void {
   const primaryId = decoded.primaryFuelId;
   const secondaryId = decoded.secondaryFuelId;
 
-  if ((flags & 1) && primaryId && primaryPower !== undefined && primaryBurn !== undefined) {
+  if (flags & 1 && primaryId && primaryPower !== undefined && primaryBurn !== undefined) {
     overrides[primaryId] = { power: primaryPower, burnTime: primaryBurn };
   }
   if (
-    (flags & 2) &&
+    flags & 2 &&
     secondaryId &&
     secondaryId !== 'none' &&
     secondaryPower !== undefined &&

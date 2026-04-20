@@ -33,7 +33,11 @@ export default function SolutionList({
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
-    setHideHoverDetails(window.matchMedia('(max-width: 768px)').matches);
+    const mql = window.matchMedia('(max-width: 768px)');
+    setHideHoverDetails(mql.matches);
+    const handler = (e: MediaQueryListEvent) => setHideHoverDetails(e.matches);
+    mql.addEventListener('change', handler);
+    return () => mql.removeEventListener('change', handler);
   }, []);
 
   const toggleSection = (key: 'chart' | 'fuel' | 'diagram') => {

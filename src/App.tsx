@@ -14,7 +14,7 @@ import UpdateToast from './components/overlays/UpdateToast';
 import SolutionList from './components/solution/SolutionList';
 import { I18nProvider, useI18n } from './i18n';
 import type { CalcParams, SolutionResult } from './types/calc';
-import { FactoryDesigner } from './utils/FactoryDesigner';
+import type { WorkerResponse } from './utils/factoryDesigner.worker';
 import { buildShareUrl, getShareParamsFromUrl, type ShareParams } from './utils/shareParams';
 
 const getRandomTargetPower = () => Math.floor(Math.random() * 4500) + 500;
@@ -29,7 +29,7 @@ const DEFAULT_PARAMS: CalcParams = {
   phaseOffsetBranch1: 0,
   phaseOffsetBranch2: 0,
   phaseOffsetBranch3: 0,
-  exclude_belt: true,
+  excludeBelt: true,
   primaryFuelId: 'wulingLow',
   secondaryFuelId: 'none',
   inputSourceId: 'warehouse',
@@ -74,6 +74,7 @@ function AppContent({ onOpenAnnouncement, onOpenPrivacyPolicy, onOpenQA }: AppCo
   const [dirtyDismissed, setDirtyDismissed] = useState(false);
   const lastCalcParamsRef = useRef<CalcParams | null>(null);
   const hasAutoCalculatedRef = useRef(false);
+  const workerRef = useRef<Worker | null>(null);
 
   const setParamsWithDirty = useCallback((updater: React.SetStateAction<CalcParams>) => {
     setParams(updater);
@@ -86,12 +87,30 @@ function AppContent({ onOpenAnnouncement, onOpenPrivacyPolicy, onOpenQA }: AppCo
       setIsLoading(true);
       setShowError(false);
 
-      await new Promise((r) => setTimeout(r, 50));
+      const calcParams = overrideParams || params;
+
+      workerRef.current?.terminate();
+
+      const worker = new Worker(new URL('./utils/factoryDesigner.worker.ts', import.meta.url), {
+        type: 'module',
+      });
+      workerRef.current = worker;
 
       try {
-        const calcParams = overrideParams || params;
-        const designer = new FactoryDesigner(calcParams);
-        const results = designer.solve();
+        const results = await new Promise<SolutionResult[]>((resolve, reject) => {
+          worker.onmessage = (event: MessageEvent<WorkerResponse>) => {
+            const data = event.data;
+            if (data.type === 'result') {
+              resolve(data.solutions);
+            } else {
+              reject(new Error(data.message));
+            }
+          };
+          worker.onerror = (error) => {
+            reject(new Error(error.message || 'Worker error'));
+          };
+          worker.postMessage({ type: 'solve', params: calcParams });
+        });
 
         setIsLoading(false);
 
@@ -108,17 +127,25 @@ function AppContent({ onOpenAnnouncement, onOpenPrivacyPolicy, onOpenQA }: AppCo
         setDirtyDismissed(false);
         lastCalcParamsRef.current = { ...calcParams };
       } catch (error) {
-        console.error('Calculation error:', error);
+        console.error('Calculation failed:', error);
         setIsLoading(false);
         setShowError(true);
         setSolutions([]);
-        setParamsDirty(false);
-        setShowDirtyOverlay(false);
-        setDirtyDismissed(false);
+      } finally {
+        worker.terminate();
+        if (workerRef.current === worker) {
+          workerRef.current = null;
+        }
       }
     },
     [params]
   );
+
+  useEffect(() => {
+    return () => {
+      workerRef.current?.terminate();
+    };
+  }, []);
 
   useEffect(() => {
     return () => {
@@ -266,7 +293,7 @@ function AppContent({ onOpenAnnouncement, onOpenPrivacyPolicy, onOpenQA }: AppCo
           onOpenQA={onOpenQA}
         />
 
-        <fieldset
+        <section
           aria-label={t('mainContentArea')}
           className="flex-1 overflow-hidden border-0 p-0 m-0 min-w-0 bg-[radial-gradient(circle_at_85%_20%,rgba(255,250,0,0.08),transparent_40%),repeating-linear-gradient(135deg,rgba(255,250,0,0.04)_0_1px,transparent_1px_14px),linear-gradient(180deg,rgba(255,250,0,0.02),transparent_35%,rgba(255,250,0,0.015))] relative"
           onMouseEnter={() => paramsDirty && !dirtyDismissed && setShowDirtyOverlay(true)}
@@ -302,7 +329,7 @@ function AppContent({ onOpenAnnouncement, onOpenPrivacyPolicy, onOpenQA }: AppCo
               setDirtyDismissed(true);
             }}
           />
-        </fieldset>
+        </section>
       </div>
 
       <Footer

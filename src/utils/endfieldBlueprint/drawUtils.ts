@@ -76,7 +76,10 @@ function loadImageAsset(path: string): Promise<HTMLImageElement> {
   const promise = new Promise<HTMLImageElement>((resolve, reject) => {
     const image = new Image();
     image.onload = () => resolve(image);
-    image.onerror = () => reject(new Error(`Failed to load image asset: ${path}`));
+    image.onerror = () => {
+      imageCache.delete(key);
+      reject(new Error(`Failed to load image asset: ${path}`));
+    };
     image.src = key;
   });
   imageCache.set(key, promise);

@@ -8,10 +8,10 @@ import {
   resolveFuel,
   SECONDARY_FUEL_OPTIONS,
 } from '../../../utils/constants';
+import CustomFuelModal from '../../modals/CustomFuelModal';
 import Icon from '../../ui/Icon';
 import type { SelectOption } from '../../ui/Select';
 import Select from '../../ui/Select';
-import CustomFuelModal from '../../modals/CustomFuelModal';
 import SidebarSection from './SidebarSection';
 
 export interface FuelConfigFieldProps {
@@ -133,7 +133,8 @@ export default function FuelConfigField({ params, onChange, locale }: FuelConfig
 
       {customModalTarget && customModalValues && (
         <CustomFuelModal
-          show={!!customModalTarget}
+          key={customModalTarget}
+          show
           onClose={() => setCustomModalTarget(null)}
           currentValues={{ power: customModalValues.power, burnTime: customModalValues.burnTime }}
           onConfirm={handleCustomConfirm}

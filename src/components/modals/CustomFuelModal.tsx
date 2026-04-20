@@ -43,11 +43,7 @@ export default function CustomFuelModal({
       ariaLabelledby="custom-fuel-modal-title"
       contentClassName="!p-4 sm:!p-5 max-w-sm gap-3"
     >
-      <ModalHeader
-        id="custom-fuel-modal-title"
-        icon="tune"
-        title={t('customFuelSettings')}
-      />
+      <ModalHeader id="custom-fuel-modal-title" icon="tune" title={t('customFuelSettings')} />
 
       <div className="space-y-3">
         <div className="space-y-1">

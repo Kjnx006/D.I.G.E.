@@ -47,11 +47,8 @@ export interface AnnouncementBodyProps {
   blocks?: AnnouncementBlock[];
 }
 
-function blockKey(block: AnnouncementBlock, index: number): string {
-  if (block.type === 'heading' && block.text) return `heading-${block.text}`;
-  if (block.type === 'list') return `list-${index}-${(block.items || []).join('-').slice(0, 40)}`;
-  if (block.type === 'paragraph' && block.text) return `para-${block.text.slice(0, 40)}`;
-  return `block-${index}-${block.type}`;
+function blockKey(_block: AnnouncementBlock, index: number): string {
+  return `block-${index}`;
 }
 
 export default function AnnouncementBody({ blocks = [] }: AnnouncementBodyProps) {

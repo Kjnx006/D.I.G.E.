@@ -123,6 +123,7 @@ export default function BlueprintExportModal({
               void onExportCompleteImage();
             }}
             aria-disabled={preparingCompleteImage}
+            disabled={preparingCompleteImage}
             variant="primary"
             className={`disabled:opacity-100 ${preparingCompleteImage ? 'cursor-wait' : ''}`}
           >
