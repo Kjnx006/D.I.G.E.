@@ -1,7 +1,7 @@
-# AGENTS.md
+# CLAUDE.md
 
-本文档为 AI Agent（Cursor、Copilot、Codex 等）提供项目级开发规范。  
-Agent 在处理本项目代码时 **必须** 遵循以下规则。
+本文档为 Claude Code 提供项目级开发规范。  
+处理本项目代码时 **必须** 遵循以下规则。
 
 ---
 
@@ -17,10 +17,11 @@ Agent 在处理本项目代码时 **必须** 遵循以下规则。
 
 ## i18n 多语言翻译（强制规则）
 
-### 翻译工具
+### 核心原则
 
-项目提供命令行翻译工具 `scripts/i18n.ts`。  
-**任何涉及新增、修改、删除翻译 key 的操作，必须通过此工具完成，禁止手动编辑 locale JSON 文件。**
+- **zh (中文) 是唯一的 source of truth**，所有 key 以 `locales.zh.json` 为基准
+- **每次新增/修改 key，必须同步所有 7 种语言**：zh、en、ja、ko、ru、fr、de
+- **必须使用 `i18n` 命令行工具**，禁止手动逐文件编辑 locale JSON
 
 ### 命令
 
@@ -85,10 +86,10 @@ pnpm run i18n prune --write
 
 ### 禁止事项
 
-- ❌ 手动编辑 `locales.*.json` 文件来添加/修改翻译
-- ❌ 只添加部分语言（必须 7 语言齐全）
-- ❌ 使用嵌套结构
-- ❌ 留下未翻译的占位符（如 `"TODO"`、空字符串）
+- 禁止手动编辑 `locales.*.json` 文件来添加/修改翻译
+- 禁止只添加部分语言（必须 7 语言齐全）
+- 禁止使用嵌套结构
+- 禁止留下未翻译的占位符（如 `"TODO"`、空字符串）
 
 ### 文件结构
 
@@ -183,4 +184,3 @@ changelog 结构：`changelog.sections[].items` 为字符串数组，按版本�
 | 重构 | `refactor(scope): 描述` | `refactor(i18n): merge translate and prune into unified CLI` |
 
 版本发布时 scope 使用 `v1.x.x`。
-
