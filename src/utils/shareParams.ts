@@ -1,7 +1,9 @@
 import {
   DEFAULT_INPUT_SOURCE_ID,
   FUEL_OPTIONS,
+  FUELS,
   INPUT_SOURCE_OPTIONS,
+  isCustomFuel,
   PARAM_LIMITS,
   SECONDARY_FUEL_OPTIONS,
 } from './constants';
@@ -19,6 +21,9 @@ const INPUT_SOURCE_BITS = 2;
 const MAX_BRANCHES_BITS = 3;
 const EXCLUDE_BELT_BITS = 2;
 const PHASE_OFFSET_BITS = 5;
+const HAS_OVERRIDES_BITS = 2;
+const OVERRIDE_POWER_BITS = 15;
+const OVERRIDE_BURN_TIME_BITS = 9;
 const PHASE_OFFSET_FIELD_KEYS = Array.from(
   { length: PARAM_LIMITS.MAX_BRANCHES },
   (_, index) => `phaseOffsetBranch${index + 1}`
@@ -266,7 +271,7 @@ const SHARE_FIELDS = assignFieldIndices([
     missingRawValue: 0,
   }),
   createBooleanField({
-    key: 'exclude_belt',
+    key: 'excludeBelt',
     bits: EXCLUDE_BELT_BITS,
     optional: true,
     missingRawValue: 0,
@@ -281,6 +286,41 @@ const SHARE_FIELDS = assignFieldIndices([
       missingRawValue: 0,
     })
   ),
+  createNumberField({
+    key: '_hasOverrides',
+    bits: HAS_OVERRIDES_BITS,
+    max: 3,
+    optional: true,
+    missingRawValue: 0,
+  }),
+  createNumberField({
+    key: '_primaryPowerOverride',
+    bits: OVERRIDE_POWER_BITS,
+    max: PARAM_LIMITS.MAX_TARGET_POWER,
+    optional: true,
+    missingRawValue: 0,
+  }),
+  createNumberField({
+    key: '_primaryBurnTimeOverride',
+    bits: OVERRIDE_BURN_TIME_BITS,
+    max: PARAM_LIMITS.MAX_BURN_TIME,
+    optional: true,
+    missingRawValue: 0,
+  }),
+  createNumberField({
+    key: '_secondaryPowerOverride',
+    bits: OVERRIDE_POWER_BITS,
+    max: PARAM_LIMITS.MAX_TARGET_POWER,
+    optional: true,
+    missingRawValue: 0,
+  }),
+  createNumberField({
+    key: '_secondaryBurnTimeOverride',
+    bits: OVERRIDE_BURN_TIME_BITS,
+    max: PARAM_LIMITS.MAX_BURN_TIME,
+    optional: true,
+    missingRawValue: 0,
+  }),
 ]);
 
 const LAYOUT_FIELDS = [...SHARE_FIELDS].sort((a, b) => a.index - b.index);
@@ -293,13 +333,97 @@ export interface ShareParams {
   targetPower?: number;
   inputSourceId?: string;
   maxBranches?: number;
-  exclude_belt?: boolean;
+  excludeBelt?: boolean;
+  fuelOverrides?: Record<string, { power?: number; burnTime?: number }>;
   [key: string]: unknown;
+}
+
+/** Flatten fuelOverrides into internal _hasOverrides / _*Override fields */
+function flattenOverrides(params: ShareParams): ShareParams {
+  const flat: ShareParams = { ...params };
+  const ov = params.fuelOverrides;
+
+  const primaryId = params.primaryFuelId;
+  const secondaryId = params.secondaryFuelId;
+  const primaryBase = primaryId ? FUELS[primaryId] : null;
+  const secondaryBase = secondaryId && secondaryId !== 'none' ? FUELS[secondaryId] : null;
+
+  const pOv = primaryId ? ov?.[primaryId] : undefined;
+  const sOv = secondaryId ? ov?.[secondaryId] : undefined;
+
+  // 自定义燃料始终编码 override 值
+  const hasPrimary =
+    primaryId &&
+    primaryBase &&
+    (isCustomFuel(primaryId) ||
+      (pOv &&
+        ((pOv.power !== undefined && pOv.power !== primaryBase.power) ||
+          (pOv.burnTime !== undefined && pOv.burnTime !== primaryBase.burnTime))));
+  const hasSecondary =
+    secondaryId &&
+    secondaryBase &&
+    (isCustomFuel(secondaryId) ||
+      (sOv &&
+        ((sOv.power !== undefined && sOv.power !== secondaryBase.power) ||
+          (sOv.burnTime !== undefined && sOv.burnTime !== secondaryBase.burnTime))));
+
+  const flags = (hasPrimary ? 1 : 0) | (hasSecondary ? 2 : 0);
+  flat._hasOverrides = flags;
+
+  if (hasPrimary && primaryBase) {
+    flat._primaryPowerOverride = pOv?.power ?? primaryBase.power;
+    flat._primaryBurnTimeOverride = pOv?.burnTime ?? primaryBase.burnTime;
+  }
+  if (hasSecondary && secondaryBase) {
+    flat._secondaryPowerOverride = sOv?.power ?? secondaryBase.power;
+    flat._secondaryBurnTimeOverride = sOv?.burnTime ?? secondaryBase.burnTime;
+  }
+
+  return flat;
+}
+
+/** Reconstruct fuelOverrides from internal _hasOverrides / _*Override fields */
+function unflattenOverrides(decoded: ShareParams): void {
+  const flags = Number(decoded._hasOverrides) || 0;
+  delete decoded._hasOverrides;
+
+  const primaryPower = decoded._primaryPowerOverride as number | undefined;
+  const primaryBurn = decoded._primaryBurnTimeOverride as number | undefined;
+  const secondaryPower = decoded._secondaryPowerOverride as number | undefined;
+  const secondaryBurn = decoded._secondaryBurnTimeOverride as number | undefined;
+  delete decoded._primaryPowerOverride;
+  delete decoded._primaryBurnTimeOverride;
+  delete decoded._secondaryPowerOverride;
+  delete decoded._secondaryBurnTimeOverride;
+
+  if (flags === 0) return;
+
+  const overrides: Record<string, { power?: number; burnTime?: number }> = {};
+  const primaryId = decoded.primaryFuelId;
+  const secondaryId = decoded.secondaryFuelId;
+
+  if (flags & 1 && primaryId && primaryPower !== undefined && primaryBurn !== undefined) {
+    overrides[primaryId] = { power: primaryPower, burnTime: primaryBurn };
+  }
+  if (
+    flags & 2 &&
+    secondaryId &&
+    secondaryId !== 'none' &&
+    secondaryPower !== undefined &&
+    secondaryBurn !== undefined
+  ) {
+    overrides[secondaryId] = { power: secondaryPower, burnTime: secondaryBurn };
+  }
+
+  if (Object.keys(overrides).length > 0) {
+    decoded.fuelOverrides = overrides;
+  }
 }
 
 export function encodeShareParams(params: ShareParams | null): string | null {
   if (!params) return null;
-  const activeBranchCount = clampMaxBranches(params.maxBranches);
+  const flat = flattenOverrides(params);
+  const activeBranchCount = clampMaxBranches(flat.maxBranches);
 
   let packed = 0n;
   let offset = 0n;
@@ -307,7 +431,7 @@ export function encodeShareParams(params: ShareParams | null): string | null {
   for (const field of LAYOUT_FIELDS) {
     const phaseOffsetIndex = getPhaseOffsetBranchIndex(field.key);
     const isInactivePhaseOffset = phaseOffsetIndex != null && phaseOffsetIndex > activeBranchCount;
-    const sourceValue = isInactivePhaseOffset ? field.missingRawValue : params[field.key];
+    const sourceValue = isInactivePhaseOffset ? field.missingRawValue : flat[field.key];
     const encodedValue = field.encode(sourceValue);
     if (!isValidNonNegativeInt(encodedValue)) return null;
     if (encodedValue > field.maxEncodedValue) return null;
@@ -347,6 +471,7 @@ export function decodeShareParams(value: unknown): ShareParams | null {
     }
   }
 
+  unflattenOverrides(decoded);
   return decoded;
 }
 

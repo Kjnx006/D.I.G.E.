@@ -45,6 +45,7 @@ export default function CollapsibleSection({
         className={`grid overflow-hidden transition-[grid-template-rows,margin,opacity] duration-300 ease-out ${
           collapsed ? 'grid-rows-[0fr] mt-0 opacity-0' : 'grid-rows-[1fr] mt-3 opacity-100'
         }`}
+        inert={collapsed || undefined}
       >
         <div className="min-h-0 overflow-hidden">{children}</div>
       </div>

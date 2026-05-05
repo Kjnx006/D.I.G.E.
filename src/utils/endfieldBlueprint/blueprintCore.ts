@@ -480,6 +480,22 @@ export interface BuildExportParamsPayloadOptions {
   targetPower?: number;
 }
 
+export function getExportTargetPower(
+  solution: SolutionResult | null | undefined,
+  options: { targetPower?: number } = {}
+): number {
+  const explicitTarget = Number(options.targetPower);
+  if (Number.isFinite(explicitTarget)) {
+    return explicitTarget;
+  }
+  const avgPower = Number(solution?.avgPower);
+  const waste = Number(solution?.waste);
+  if (Number.isFinite(avgPower) && Number.isFinite(waste)) {
+    return avgPower - waste;
+  }
+  return 0;
+}
+
 export function buildExportParamsPayload({
   params,
   solution,
@@ -496,7 +512,7 @@ export function buildExportParamsPayload({
           maxWaste: toFiniteOrNull(params.maxWaste),
           maxBranches: toFiniteOrNull(params.maxBranches),
           ...buildPhaseOffsetParamPayload(params),
-          exclude_belt: typeof params.exclude_belt === 'boolean' ? params.exclude_belt : null,
+          excludeBelt: typeof params.excludeBelt === 'boolean' ? params.excludeBelt : null,
           primaryFuelId: params.primaryFuelId ?? null,
           secondaryFuelId: params.secondaryFuelId ?? null,
           inputSourceId: params.inputSourceId ?? null,

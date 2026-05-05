@@ -166,5 +166,9 @@
   "updateAvailable": "Versi baru tersedia. Segarkan untuk mendapatkan konten terbaru.",
   "updateNow": "Segarkan",
   "zoomIn": "Perbesar",
-  "zoomOut": "Perkecil"
+  "zoomOut": "Perkecil",
+  "burnTime": "Waktu bakar",
+  "editFuelValues": "Edit nilai bahan bakar",
+  "customFuelSettings": "Pengaturan Bahan Bakar",
+  "confirm": "Konfirmasi"
 }

@@ -1,7 +1,15 @@
+import { useState } from 'react';
 import { useI18n } from '../../../i18n';
 import type { CalcParams } from '../../../types/calc';
 import type { Fuel } from '../../../utils/constants';
-import { FUEL_OPTIONS, SECONDARY_FUEL_OPTIONS } from '../../../utils/constants';
+import {
+  FUEL_OPTIONS,
+  isCustomFuel,
+  resolveFuel,
+  SECONDARY_FUEL_OPTIONS,
+} from '../../../utils/constants';
+import CustomFuelModal from '../../modals/CustomFuelModal';
+import Icon from '../../ui/Icon';
 import type { SelectOption } from '../../ui/Select';
 import Select from '../../ui/Select';
 import SidebarSection from './SidebarSection';
@@ -14,6 +22,7 @@ export interface FuelConfigFieldProps {
 
 export default function FuelConfigField({ params, onChange, locale }: FuelConfigFieldProps) {
   const { t } = useI18n();
+  const [customModalTarget, setCustomModalTarget] = useState<string | null>(null);
 
   const getFuelName = (fuel: { name?: Fuel['name'] } | undefined) =>
     fuel?.name?.[locale] || fuel?.name?.en || '';
@@ -34,8 +43,49 @@ export default function FuelConfigField({ params, onChange, locale }: FuelConfig
     </>
   );
 
-  const primaryFuel = FUEL_OPTIONS.find((f) => f.id === params.primaryFuelId);
-  const secondaryFuel = SECONDARY_FUEL_OPTIONS.find((f) => f.id === params.secondaryFuelId);
+  const handleFuelChange = (key: string, fuelId: string) => {
+    onChange(key, fuelId);
+    if (isCustomFuel(fuelId)) {
+      setCustomModalTarget(fuelId);
+    }
+  };
+
+  const handleCustomConfirm = (power: number, burnTime: number) => {
+    if (!customModalTarget) return;
+    const prev = params.fuelOverrides || {};
+    onChange('fuelOverrides', { ...prev, [customModalTarget]: { power, burnTime } });
+  };
+
+  const customModalValues = customModalTarget
+    ? resolveFuel(customModalTarget, params.fuelOverrides)
+    : null;
+
+  const renderFuelInfo = (fuelId: string) => {
+    const resolved = resolveFuel(fuelId, params.fuelOverrides);
+    if (!resolved) return null;
+    if (isCustomFuel(fuelId)) {
+      return (
+        <div className="flex items-center gap-2">
+          <p className="text-sm text-endfield-text/70">
+            {resolved.power}w / {resolved.burnTime}s
+          </p>
+          <button
+            type="button"
+            onClick={() => setCustomModalTarget(fuelId)}
+            className="text-endfield-text/50 hover:text-endfield-text transition-colors"
+            title={t('editFuelValues')}
+          >
+            <Icon name="edit" className="!w-4 !h-4" />
+          </button>
+        </div>
+      );
+    }
+    return (
+      <p className="text-sm text-endfield-text/70">
+        {resolved.power}w / {resolved.burnTime}s
+      </p>
+    );
+  };
 
   return (
     <SidebarSection icon="local_gas_station" title={t('fuelConfig')} className="space-y-4">
@@ -51,15 +101,11 @@ export default function FuelConfigField({ params, onChange, locale }: FuelConfig
           id="primary-fuel-select"
           value={params.primaryFuelId}
           options={primaryOptions}
-          onChange={(opt) => onChange('primaryFuelId', opt.value)}
+          onChange={(opt) => handleFuelChange('primaryFuelId', opt.value)}
           renderOption={renderFuelOption}
           ariaLabelledby="primary-fuel-label"
         />
-        {primaryFuel && (
-          <p className="text-sm text-endfield-text/70">
-            {primaryFuel.power}w / {primaryFuel.burnTime}s
-          </p>
-        )}
+        {renderFuelInfo(params.primaryFuelId)}
       </div>
 
       <div className="space-y-2">
@@ -74,18 +120,26 @@ export default function FuelConfigField({ params, onChange, locale }: FuelConfig
           id="secondary-fuel-select"
           value={params.secondaryFuelId}
           options={secondaryOptions}
-          onChange={(opt) => onChange('secondaryFuelId', opt.value)}
+          onChange={(opt) => handleFuelChange('secondaryFuelId', opt.value)}
           renderOption={renderFuelOption}
           ariaLabelledby="secondary-fuel-label"
         />
-        {!secondaryFuel || secondaryFuel.power === 0 ? (
+        {params.secondaryFuelId === 'none' ? (
           <p className="text-sm text-endfield-text/50">{t('secondaryFuelHint')}</p>
         ) : (
-          <p className="text-sm text-endfield-text/70">
-            {secondaryFuel.power}w / {secondaryFuel.burnTime}s
-          </p>
+          renderFuelInfo(params.secondaryFuelId)
         )}
       </div>
+
+      {customModalTarget && customModalValues && (
+        <CustomFuelModal
+          key={customModalTarget}
+          show
+          onClose={() => setCustomModalTarget(null)}
+          currentValues={{ power: customModalValues.power, burnTime: customModalValues.burnTime }}
+          onConfirm={handleCustomConfirm}
+        />
+      )}
     </SidebarSection>
   );
 }

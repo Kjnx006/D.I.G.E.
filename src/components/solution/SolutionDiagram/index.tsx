@@ -129,9 +129,9 @@ export default function SolutionDiagram({ solution, params }: SolutionDiagramPro
     | { name?: Record<string, string> }
     | undefined;
   const inputSourceId = solution?.inputSourceId;
-  const exclude_belt = solution?.exclude_belt;
+  const excludeBelt = solution?.excludeBelt;
   const showPackerWarning = inputSourceId === 'packer';
-  const showExcludeBeltWarning = exclude_belt === false;
+  const showExcludeBeltWarning = excludeBelt === false;
   const hasOscillating = Array.isArray(oscillating) && oscillating.length > 0;
   const canExportBlueprint = mode === 'blueprint' && hasOscillating;
 

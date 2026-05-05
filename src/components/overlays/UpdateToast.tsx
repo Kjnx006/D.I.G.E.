@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
-import { applyUpdate, onNeedRefresh } from '../../pwa';
 import { useI18n } from '../../i18n';
+import { applyUpdate, onNeedRefresh } from '../../pwa';
 
 export default function UpdateToast() {
   const { t } = useI18n();
@@ -26,7 +26,7 @@ export default function UpdateToast() {
         type="button"
         onClick={() => setShow(false)}
         className="text-endfield-text-muted hover:text-endfield-text-light text-lg leading-none cursor-pointer"
-        aria-label="close"
+        aria-label={t('close')}
       >
         &times;
       </button>

@@ -19,6 +19,7 @@ import ChangelogBody from './ChangelogBody';
 const QQ_GROUP_URL = 'https://qm.qq.com/q/zL6wp3emTQ';
 
 export function shouldShowAnnouncement(): boolean {
+  if (typeof window === 'undefined') return false;
   const dismissedId = localStorage.getItem(ANNOUNCEMENT_DISMISSED_KEY);
   return dismissedId !== ANNOUNCEMENT_ID;
 }

@@ -4,13 +4,20 @@ import {
   analyzeSplitterComplexity,
   CONSTANTS,
   DEFAULT_INPUT_SOURCE_ID,
-  FUELS,
+  generateValidDenominators,
   getOscillatingPower,
   INPUT_SOURCES,
   PARAM_LIMITS,
+  resolveFuel,
 } from './constants';
 
 export type FactoryDesignerParams = CalcParams;
+
+/** Number of full oscillation periods to run before sampling steady-state behavior */
+const WARMUP_CYCLES = 2;
+
+/** Maximum simulation duration in seconds — prevents runaway computation */
+const MAX_SIMULATION_PERIOD = 100_000;
 
 const PART_FACE = {
   UP: 'UP',
@@ -163,7 +170,7 @@ function buildSolutionOutput({
       isPrimary: true,
       inputInterval,
       inputSourceId,
-      exclude_belt: excludeBelt,
+      excludeBelt: excludeBelt,
       avgPower: baseConfig.totalPower,
       waste: baseConfig.totalPower - targetPower,
       variance: 0,
@@ -212,7 +219,7 @@ function buildSolutionOutput({
     isPrimary: solution.isPrimary,
     inputInterval,
     inputSourceId,
-    exclude_belt: excludeBelt,
+    excludeBelt: excludeBelt,
     avgPower: solution.avgPower,
     waste: solution.waste,
     variance: solution.variance,
@@ -310,7 +317,7 @@ class PowerCycleSimulator {
     if (a === 0 || b === 0) {
       return 0;
     }
-    return Math.abs(a * b) / this._gcd(a, b);
+    return Math.abs(a / this._gcd(a, b)) * b;
   }
 
   _getCyclePeriod(denominators: number[]): number {
@@ -332,11 +339,11 @@ class PowerCycleSimulator {
     fuel: Fuel
   ): SimulateCycleResult {
     const period = this._getCyclePeriod(oscillatingBranches.map((b) => b.denominator));
-    if (period > 100000) {
+    if (period > MAX_SIMULATION_PERIOD) {
       return { success: false, reason: 'period_too_long' };
     }
 
-    const warmupCycles = 2;
+    const warmupCycles = WARMUP_CYCLES;
     const maxPhaseOffset = oscillatingBranches.reduce((maxOffset, branch) => {
       const offsetSeconds =
         normalizePhaseOffsetCells(branch.phaseOffsetCells) * CONSTANTS.BELT_INTERVAL;
@@ -479,8 +486,20 @@ export class FactoryDesigner {
     this.targetPower = params.targetPower;
     this.minBatteryPercent = params.minBatteryPercent;
     this.maxWaste = params.maxWaste;
-    this.primaryFuel = FUELS[params.primaryFuelId];
-    this.secondaryFuel = params.secondaryFuelId !== 'none' ? FUELS[params.secondaryFuelId] : null;
+    const resolvedPrimary = resolveFuel(params.primaryFuelId, params.fuelOverrides);
+    if (!resolvedPrimary) {
+      throw new Error(`Unknown primary fuel: ${params.primaryFuelId}`);
+    }
+    this.primaryFuel = resolvedPrimary;
+
+    const resolvedSecondary =
+      params.secondaryFuelId !== 'none'
+        ? resolveFuel(params.secondaryFuelId, params.fuelOverrides)
+        : null;
+    if (params.secondaryFuelId !== 'none' && !resolvedSecondary) {
+      throw new Error(`Unknown secondary fuel: ${params.secondaryFuelId}`);
+    }
+    this.secondaryFuel = resolvedSecondary ?? null;
 
     const inputSourceId = params.inputSourceId || DEFAULT_INPUT_SOURCE_ID;
     this.inputSource = INPUT_SOURCES[inputSourceId] || INPUT_SOURCES[DEFAULT_INPUT_SOURCE_ID];
@@ -499,28 +518,15 @@ export class FactoryDesigner {
       const num = Number(val);
       return normalizePhaseOffsetCells(Number.isFinite(num) ? num : 0);
     });
-    this.excludeBelt = Boolean(params.exclude_belt ?? params.excludeBelt ?? true);
+    this.excludeBelt = Boolean(params.excludeBelt ?? true);
 
-    this.validDenominators = this._generateValidDenominators();
+    this.validDenominators = generateValidDenominators();
     this.simulator = new PowerCycleSimulator({
       targetPower: this.targetPower,
       minBatteryPercent: this.minBatteryPercent,
       batteryCapacity: this.batteryCapacity,
       inputInterval: this.inputInterval,
     });
-  }
-
-  _generateValidDenominators(): number[] {
-    const denominators: number[] = [];
-    for (let x = 0; x < 10; x += 1) {
-      for (let y = 0; y < 7; y += 1) {
-        const value = 2 ** x * 3 ** y;
-        if (value > 1 && value <= 512) {
-          denominators.push(value);
-        }
-      }
-    }
-    return denominators.sort((a, b) => a - b);
   }
 
   _getDirectBaseConfigs(): Array<{ generators: number; totalPower: number; belts: number }> {
@@ -571,14 +577,18 @@ export class FactoryDesigner {
     return { generators, totalPower, belts };
   }
 
-  _getCombinations(arr: number[], length: number): number[][] {
+  /**
+   * Generate combinations with repetition (multiset) — intentional because
+   * multiple branches can share the same denominator.
+   */
+  _getCombinationsWithRepetition(arr: number[], length: number): number[][] {
     if (length === 1) {
       return arr.map((x) => [x]);
     }
 
     const combinations: number[][] = [];
     arr.forEach((v, i) => {
-      const subs = this._getCombinations(arr.slice(i), length - 1);
+      const subs = this._getCombinationsWithRepetition(arr.slice(i), length - 1);
       subs.forEach((sub) => {
         combinations.push([v, ...sub]);
       });
@@ -606,7 +616,7 @@ export class FactoryDesigner {
     }
 
     for (let r = 1; r <= this.maxBranches; r += 1) {
-      const combinations = this._getCombinations(effectiveDenominators, r);
+      const combinations = this._getCombinationsWithRepetition(effectiveDenominators, r);
 
       for (const combo of combinations) {
         const theoryPower = combo.reduce(
@@ -719,27 +729,6 @@ export class FactoryDesigner {
         );
       }
     }
-
-    allOscillatingSolutions.sort((a, b) => {
-      const keyA = [
-        a.branchCount,
-        Math.round(a.variance * 10) / 10,
-        Math.round(a.waste * 10) / 10,
-        a.isPrimary ? 0 : 1,
-      ];
-      const keyB = [
-        b.branchCount,
-        Math.round(b.variance * 10) / 10,
-        Math.round(b.waste * 10) / 10,
-        b.isPrimary ? 0 : 1,
-      ];
-      for (let i = 0; i < keyA.length; i += 1) {
-        if (keyA[i] !== keyB[i]) {
-          return keyA[i] - keyB[i];
-        }
-      }
-      return 0;
-    });
 
     const uniqueSolutions: OscillatingSolutionInput[] = [];
     const seenSignatures = new Set<string>();

@@ -19,6 +19,22 @@ export interface Fuel {
   image: string;
 }
 
+const CUSTOM_FUEL_BASE = {
+  name: {
+    en: 'Custom Fuel',
+    zh: '自定义燃料',
+    ja: 'カスタム燃料',
+    ko: '사용자 지정 연료',
+    ru: 'Своё топливо',
+    fr: 'Carburant perso.',
+    de: 'Eigener Brennstoff',
+    id: 'Bahan Bakar Kustom',
+  },
+  power: 100,
+  burnTime: 10,
+  image: '',
+};
+
 export const FUELS: Record<string, Fuel> = {
   ore: {
     id: 'ore',
@@ -114,27 +130,65 @@ export const FUELS: Record<string, Fuel> = {
     },
     power: 3200,
     burnTime: 40,
-    image: '',
+    image: '/fuels/wulingMid.webp',
+  },
+  customPrimary: {
+    id: 'customPrimary',
+    ...CUSTOM_FUEL_BASE,
+  },
+  customSecondary: {
+    id: 'customSecondary',
+    ...CUSTOM_FUEL_BASE,
   },
 };
 
+// 根据覆盖值解析燃料
+export function resolveFuel(
+  fuelId: string,
+  overrides?: Record<string, { power?: number; burnTime?: number }>
+): Fuel | undefined {
+  const base = FUELS[fuelId];
+  if (!base) return undefined;
+  const ov = overrides?.[fuelId];
+  if (!ov) return base;
+  return {
+    ...base,
+    power: ov.power ?? base.power,
+    burnTime: ov.burnTime ?? base.burnTime,
+  };
+}
+
+export function isCustomFuel(fuelId: string): boolean {
+  return fuelId === 'customPrimary' || fuelId === 'customSecondary';
+}
+
 // 燃料选项列表（用于下拉菜单）
-export const FUEL_OPTIONS = Object.values(FUELS);
+export const FUEL_OPTIONS = Object.values(FUELS).filter((f) => f.id !== 'customSecondary');
 
 // 副燃料选项（包含"无"）
 export const SECONDARY_FUEL_OPTIONS = [
   {
     id: 'none',
-    name: { en: 'None', zh: '无', ja: 'なし', ko: '없음', ru: 'Нет', fr: 'Aucun', de: 'Keiner', id: 'Kosong' },
+    name: {
+      en: 'None',
+      zh: '无',
+      ja: 'なし',
+      ko: '없음',
+      ru: 'Нет',
+      fr: 'Aucun',
+      de: 'Keiner',
+      id: 'Kosong',
+    },
     power: 0,
     burnTime: 0,
   },
-  ...FUEL_OPTIONS,
+  ...Object.values(FUELS).filter((f) => f.id !== 'customPrimary'),
 ];
 
 // 参数范围限制（用于 UI 滑块、分享编码等）
 export const PARAM_LIMITS = {
   MAX_TARGET_POWER: 32767,
+  MAX_BURN_TIME: 511,
   MAX_MAX_WASTE: 4095,
   MAX_BATTERY_PERCENT: 100,
   MIN_BRANCHES: 1,

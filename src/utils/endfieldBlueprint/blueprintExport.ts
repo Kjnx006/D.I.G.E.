@@ -9,6 +9,7 @@ import {
   buildExportParamsPayload,
   getBranchDenominatorToken,
   getBranchPowerToken,
+  getExportTargetPower,
   getIndexedBranchStem,
 } from './blueprintCore';
 import { buildBranchPngBlob } from './drawBranchPng';
@@ -60,30 +61,17 @@ function downloadBlob(blob: Blob, fileName: string): void {
   anchor.download = fileName;
   anchor.rel = 'noopener';
   document.body.appendChild(anchor);
-  anchor.click();
-  anchor.remove();
-  URL.revokeObjectURL(url);
+  try {
+    anchor.click();
+  } finally {
+    anchor.remove();
+    URL.revokeObjectURL(url);
+  }
 }
 
 async function blobToU8(blob: Blob): Promise<Uint8Array> {
   const buffer = await blob.arrayBuffer();
   return new Uint8Array(buffer);
-}
-
-function getExportTargetPower(
-  solution: SolutionResult | null | undefined,
-  options: { targetPower?: number } = {}
-): number {
-  const explicitTarget = Number(options.targetPower);
-  if (Number.isFinite(explicitTarget)) {
-    return explicitTarget;
-  }
-  const avgPower = Number(solution?.avgPower);
-  const waste = Number(solution?.waste);
-  if (Number.isFinite(avgPower) && Number.isFinite(waste)) {
-    return avgPower - waste;
-  }
-  return 0;
 }
 
 export interface BlueprintExportOptions {

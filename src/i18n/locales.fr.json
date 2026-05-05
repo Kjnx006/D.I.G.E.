@@ -166,5 +166,9 @@
   "updateAvailable": "Une nouvelle version est disponible. Actualisez pour obtenir le dernier contenu.",
   "updateNow": "Actualiser",
   "zoomIn": "Zoom avant",
-  "zoomOut": "Zoom arrière"
+  "zoomOut": "Zoom arrière",
+  "burnTime": "Durée de combustion",
+  "editFuelValues": "Modifier les valeurs",
+  "customFuelSettings": "Carburant personnalisé",
+  "confirm": "Confirmer"
 }

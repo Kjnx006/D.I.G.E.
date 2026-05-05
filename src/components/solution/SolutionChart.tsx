@@ -1,5 +1,6 @@
 import {
   Chart as ChartJS,
+  type ChartOptions,
   Filler,
   Legend,
   LinearScale,
@@ -58,107 +59,130 @@ export default function SolutionChart({
     isCustom: false,
   });
 
-  const sourceBatteryLog = preciseValues
-    ? solution?.preciseBatteryLog || solution?.batteryLog
-    : solution?.batteryLog;
-  const sourcePowerLog = preciseValues
-    ? solution?.precisePowerLog || solution?.powerLog
-    : solution?.powerLog;
-  const sourceBurnStateLog = preciseValues
-    ? solution?.preciseBurnStateLog || solution?.burnStateLog
-    : solution?.burnStateLog;
+  const {
+    batteryData,
+    powerData,
+    burnStateData,
+    xValues,
+    secondsPerPoint,
+    maxX,
+    minVisibleSpanPoints,
+  } = useMemo(() => {
+    const sourceBatteryLog = preciseValues
+      ? solution?.preciseBatteryLog || solution?.batteryLog
+      : solution?.batteryLog;
+    const sourcePowerLog = preciseValues
+      ? solution?.precisePowerLog || solution?.powerLog
+      : solution?.powerLog;
+    const sourceBurnStateLog = preciseValues
+      ? solution?.preciseBurnStateLog || solution?.burnStateLog
+      : solution?.burnStateLog;
 
-  const hasData = !!(solution && sourceBatteryLog && sourceBatteryLog.length > 0);
+    let batteryData = sourceBatteryLog ? [...sourceBatteryLog] : [];
+    let powerData = sourcePowerLog ? [...sourcePowerLog] : [];
+    let burnStateData = sourceBurnStateLog ? sourceBurnStateLog.map((series) => [...series]) : [];
 
-  let batteryData = sourceBatteryLog ? [...sourceBatteryLog] : [];
-  let powerData = sourcePowerLog ? [...sourcePowerLog] : [];
-  let burnStateData = sourceBurnStateLog ? sourceBurnStateLog.map((series) => [...series]) : [];
+    // For base-only/direct solutions we may have a single sample.
+    // Duplicate it so the chart renders a visible horizontal segment.
+    if (batteryData.length === 1) {
+      const batteryValue = batteryData[0] ?? 0;
+      const powerValue = powerData[0] ?? 0;
+      batteryData = [batteryValue, batteryValue];
+      powerData = [powerValue, powerValue];
+      burnStateData = burnStateData.map((series) => {
+        const state = series[0] ?? 0;
+        return [state, state];
+      });
+    }
 
-  // For base-only/direct solutions we may have a single sample.
-  // Duplicate it so the chart renders a visible horizontal segment.
-  if (batteryData.length === 1) {
-    const batteryValue = batteryData[0] ?? 0;
-    const powerValue = powerData[0] ?? 0;
-    batteryData = [batteryValue, batteryValue];
-    powerData = [powerValue, powerValue];
-    burnStateData = burnStateData.map((series) => {
-      const state = series[0] ?? 0;
-      return [state, state];
-    });
-  }
+    const rawBatteryData = batteryData;
+    const rawPowerData = powerData;
+    const rawBurnStateData = burnStateData;
+    const rawPointCount = rawBatteryData.length;
+    const rawPeriod = Math.max(0, solution?.period ?? 0);
+    const usingPreciseSource = preciseValues && Array.isArray(solution?.preciseBatteryLog);
+    const rawSecondsPerPoint = usingPreciseSource
+      ? 1
+      : rawPeriod > 0 && rawPointCount > 1
+        ? rawPeriod / (rawPointCount - 1)
+        : 1;
 
-  const rawBatteryData = batteryData;
-  const rawPowerData = powerData;
-  const rawBurnStateData = burnStateData;
-  const rawPointCount = rawBatteryData.length;
-  const rawPeriod = Math.max(0, solution?.period ?? 0);
-  const usingPreciseSource = preciseValues && Array.isArray(solution?.preciseBatteryLog);
-  const rawSecondsPerPoint = usingPreciseSource
-    ? 1
-    : rawPeriod > 0 && rawPointCount > 1
-      ? rawPeriod / (rawPointCount - 1)
-      : 1;
+    let secondsPerPoint = rawSecondsPerPoint;
 
-  let secondsPerPoint = rawSecondsPerPoint;
+    if (!preciseValues && rawPeriod > 0 && rawPointCount > 1) {
+      const sampleCount = Math.floor(rawPeriod / TARGET_SECONDS_PER_POINT) + 1;
+      const lastRawIndex = rawPointCount - 1;
+      const getNearestRawIndex = (tSec: number) => {
+        const rawPos = tSec / rawSecondsPerPoint;
+        return Math.max(0, Math.min(lastRawIndex, Math.round(rawPos)));
+      };
+      const sampleLinear = (arr: number[], tSec: number) => {
+        const rawPos = tSec / rawSecondsPerPoint;
+        const i0 = Math.max(0, Math.min(lastRawIndex, Math.floor(rawPos)));
+        const i1 = Math.max(0, Math.min(lastRawIndex, i0 + 1));
+        const ratio = Math.max(0, Math.min(1, rawPos - i0));
+        const v0 = arr[i0] ?? 0;
+        const v1 = arr[i1] ?? v0;
+        return v0 + (v1 - v0) * ratio;
+      };
 
-  if (!preciseValues && rawPeriod > 0 && rawPointCount > 1) {
-    const sampleCount = Math.floor(rawPeriod / TARGET_SECONDS_PER_POINT) + 1;
-    const lastRawIndex = rawPointCount - 1;
-    const getNearestRawIndex = (tSec: number) => {
-      const rawPos = tSec / rawSecondsPerPoint;
-      return Math.max(0, Math.min(lastRawIndex, Math.round(rawPos)));
-    };
-    const sampleLinear = (arr: number[], tSec: number) => {
-      const rawPos = tSec / rawSecondsPerPoint;
-      const i0 = Math.max(0, Math.min(lastRawIndex, Math.floor(rawPos)));
-      const i1 = Math.max(0, Math.min(lastRawIndex, i0 + 1));
-      const ratio = Math.max(0, Math.min(1, rawPos - i0));
-      const v0 = arr[i0] ?? 0;
-      const v1 = arr[i1] ?? v0;
-      return v0 + (v1 - v0) * ratio;
-    };
+      batteryData = Array.from({ length: sampleCount }, (_, sampleIdx) => {
+        const tSec = sampleIdx * TARGET_SECONDS_PER_POINT;
+        return sampleLinear(rawBatteryData, tSec);
+      });
 
-    batteryData = Array.from({ length: sampleCount }, (_, sampleIdx) => {
-      const tSec = sampleIdx * TARGET_SECONDS_PER_POINT;
-      return sampleLinear(rawBatteryData, tSec);
-    });
-
-    powerData = Array.from({ length: sampleCount }, (_, sampleIdx) => {
-      const tSec = sampleIdx * TARGET_SECONDS_PER_POINT;
-      const i = getNearestRawIndex(tSec);
-      return rawPowerData[i] ?? 0;
-    });
-
-    burnStateData = rawBurnStateData.map((series) =>
-      Array.from({ length: sampleCount }, (_, sampleIdx) => {
+      powerData = Array.from({ length: sampleCount }, (_, sampleIdx) => {
         const tSec = sampleIdx * TARGET_SECONDS_PER_POINT;
         const i = getNearestRawIndex(tSec);
-        return series[i] ?? 0;
-      })
+        return rawPowerData[i] ?? 0;
+      });
+
+      burnStateData = rawBurnStateData.map((series) =>
+        Array.from({ length: sampleCount }, (_, sampleIdx) => {
+          const tSec = sampleIdx * TARGET_SECONDS_PER_POINT;
+          const i = getNearestRawIndex(tSec);
+          return series[i] ?? 0;
+        })
+      );
+
+      secondsPerPoint = TARGET_SECONDS_PER_POINT;
+    }
+
+    if (!preciseValues && batteryData.length > MAX_CHART_POINTS) {
+      const compactStep = Math.ceil(batteryData.length / MAX_CHART_POINTS);
+      const lastIndex = batteryData.length - 1;
+      const keepCompact = (_: unknown, i: number) => i % compactStep === 0 || i === lastIndex;
+      batteryData = batteryData.filter(keepCompact);
+      powerData = powerData.filter(keepCompact);
+      burnStateData = burnStateData.map((series) => series.filter(keepCompact));
+      secondsPerPoint *= compactStep;
+    }
+
+    const pointCount = batteryData.length;
+    const maxX = Math.max(0, pointCount - 1);
+    const maxVisibleSeconds = Math.max(0, maxX * secondsPerPoint);
+    const minVisibleSeconds = Math.min(
+      MIN_VISIBLE_SECONDS,
+      maxVisibleSeconds || MIN_VISIBLE_SECONDS
     );
+    const minVisibleSpanPoints =
+      secondsPerPoint > 0
+        ? Math.min(maxX + 1, minVisibleSeconds / secondsPerPoint)
+        : Math.min(20, maxX + 1);
+    const xValues = batteryData.map((_, i) => i);
 
-    secondsPerPoint = TARGET_SECONDS_PER_POINT;
-  }
+    return {
+      batteryData,
+      powerData,
+      burnStateData,
+      xValues,
+      secondsPerPoint,
+      maxX,
+      minVisibleSpanPoints,
+    };
+  }, [solution, preciseValues]);
 
-  if (!preciseValues && batteryData.length > MAX_CHART_POINTS) {
-    const compactStep = Math.ceil(batteryData.length / MAX_CHART_POINTS);
-    const lastIndex = batteryData.length - 1;
-    const keepCompact = (_: unknown, i: number) => i % compactStep === 0 || i === lastIndex;
-    batteryData = batteryData.filter(keepCompact);
-    powerData = powerData.filter(keepCompact);
-    burnStateData = burnStateData.map((series) => series.filter(keepCompact));
-    secondsPerPoint *= compactStep;
-  }
-
-  const pointCount = batteryData.length;
-  const maxX = Math.max(0, pointCount - 1);
-  const maxVisibleSeconds = Math.max(0, maxX * secondsPerPoint);
-  const minVisibleSeconds = Math.min(MIN_VISIBLE_SECONDS, maxVisibleSeconds || MIN_VISIBLE_SECONDS);
-  const minVisibleSpanPoints =
-    secondsPerPoint > 0
-      ? Math.min(maxX + 1, minVisibleSeconds / secondsPerPoint)
-      : Math.min(20, maxX + 1);
-  const xValues = batteryData.map((_, i) => i);
+  const hasData = !!(solution && batteryData.length > 0);
   const toSeconds = useCallback((value: number) => value * secondsPerPoint, [secondsPerPoint]);
   const toIndex = useCallback(
     (value: number) => (secondsPerPoint > 0 ? value / secondsPerPoint : 0),
@@ -307,7 +331,7 @@ export default function SolutionChart({
     ]
   );
 
-  const options: Record<string, unknown> = {
+  const options = {
     responsive: true,
     maintainAspectRatio: false,
     animation: false as const,
@@ -426,7 +450,7 @@ export default function SolutionChart({
         max: Math.max(1, burnStateDatasets.length + 0.5),
       },
     },
-  };
+  } as ChartOptions<'line'>;
 
   useEffect(() => {
     const chart = chartRef.current;
@@ -618,7 +642,7 @@ export default function SolutionChart({
 
   return (
     <div className="h-56 sm:h-72 notranslate" translate="no">
-      <Line ref={chartRef} data={data} options={options as never} />
+      <Line ref={chartRef} data={data} options={options} />
     </div>
   );
 }

@@ -16,7 +16,7 @@ export default function OtherSettingsField({
   onShowExcludeBeltWarning,
 }: OtherSettingsFieldProps) {
   const { t } = useI18n();
-  const excludeBelt = params.exclude_belt !== false;
+  const excludeBelt = params.excludeBelt !== false;
 
   return (
     <SidebarSection icon="settings" title={t('otherSettings')} className="space-y-2">
@@ -37,7 +37,7 @@ export default function OtherSettingsField({
           </div>
           <Toggle
             checked={excludeBelt}
-            onChange={(checked) => onChange('exclude_belt', checked)}
+            onChange={(checked) => onChange('excludeBelt', checked)}
             ariaLabel={t('excludeBelt')}
           />
         </div>

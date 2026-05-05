@@ -15,8 +15,8 @@ export interface CalcParams {
   phaseOffsetBranch1?: number;
   phaseOffsetBranch2?: number;
   phaseOffsetBranch3?: number;
-  exclude_belt?: boolean;
   excludeBelt?: boolean;
+  fuelOverrides?: Record<string, { power?: number; burnTime?: number }>;
   [key: string]: unknown;
 }
 
@@ -39,7 +39,7 @@ export interface SolutionResult {
   isPrimary: boolean;
   inputInterval: number;
   inputSourceId: string;
-  exclude_belt: boolean;
+  excludeBelt: boolean;
   avgPower: number;
   waste: number;
   variance: number;

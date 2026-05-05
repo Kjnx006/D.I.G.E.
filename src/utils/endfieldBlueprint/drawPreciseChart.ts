@@ -14,6 +14,7 @@ import {
 } from 'chart.js';
 import type { SolutionResult } from '../../types/calc';
 import { CONSTANTS, formatTime } from '../constants';
+import { getExportTargetPower } from './blueprintCore';
 import {
   canvasToBlob,
   ensureCanvasFontReady,
@@ -22,22 +23,6 @@ import {
 } from './drawUtils';
 
 ChartJS.register(LinearScale, PointElement, LineElement, Title, Tooltip, Legend, Filler);
-
-function getExportTargetPower(
-  solution: SolutionResult | null | undefined,
-  options: { targetPower?: number } = {}
-): number {
-  const explicitTarget = Number(options.targetPower);
-  if (Number.isFinite(explicitTarget)) {
-    return explicitTarget;
-  }
-  const avgPower = Number(solution?.avgPower);
-  const waste = Number(solution?.waste);
-  if (Number.isFinite(avgPower) && Number.isFinite(waste)) {
-    return avgPower - waste;
-  }
-  return 0;
-}
 
 function getPreciseChartLabels(labels: Record<string, string> = {}): Record<string, string> {
   return {
