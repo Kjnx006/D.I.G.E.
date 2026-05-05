@@ -3,7 +3,7 @@
 D.I.G.E.（Dijiang Integrated Generator Efficiency）是一个面向《明日方舟：终末地》热能池系统的发电方案计算器，用于在目标功率、最小蓄电量与功率浪费约束下，自动求解可行且高效的发电配置。
 
 - 在线地址：https://dige.aunly.cn
-- 项目仓库：https://github.com/djkcyl/D.I.G.E.
+- 项目仓库：https://github.com/djkcyl/D.I.G.E./
 
 ## 核心功能
 
